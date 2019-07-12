@@ -4,4 +4,22 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="Casting.fs" />
+    <Compile Include="KoreanNumericConverter.fs" />
+    <Compile Include="KoreanNumericFormatter.fs" />
+    <Compile Include="CoreExtension.fs" />
+    <Compile Include="KoreanChar.fs" />
+    <Compile Include="HangulKeyLayout.fs" />
+    <Compile Include="FParsec.fs" />
+    <Compile Include="DubeolsikParsers.fs" />
+    <Compile Include="DubeolsikKeyLayout.fs" />
+    <Compile Include="SebeolsikParsers.fs" />
+    <Compile Include="Sebeolsik391KeyLayout.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FParsec" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>
