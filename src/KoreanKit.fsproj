@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="FSharp.fs" />
     <Compile Include="Casting.fs" />
     <Compile Include="KoreanNumericConverter.fs" />
     <Compile Include="KoreanNumericFormatter.fs" />
-    <Compile Include="CoreExtension.fs" />
     <Compile Include="KoreanChar.fs" />
     <Compile Include="HangulKeyLayout.fs" />
     <Compile Include="FParsec.fs" />
