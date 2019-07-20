@@ -39,9 +39,11 @@ let isJungseong c = '\u1161' <= c && c <= '\u1175'
 let isJongseong c = '\u11A8' <= c && c <= '\u11C2'
 
 let choseongToIndex c =
-    if c |> isChoseong then Some (int c - int '\u1100') else None
+    if c |> isChoseong then Some (int c - int '\u1100')
+    else None
 let jungseongToIndex c =
-    if c |> isJungseong then Some (int c - int '\u1161') else None
+    if c |> isJungseong then Some (int c - int '\u1161')
+    else None
 let jongseongToIndex c =
     if c = '\u0000' then Some 0
     elif c |> isJongseong then Some (int c - int '\u11A8' + 1)
