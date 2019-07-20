@@ -28,7 +28,7 @@ module Rembris.Globalization.KoreanNumericConverter
 open System
 open Rembris.FSharp
 
-type FormatKind = Hanja | Native | NativePrenoun
+type FormatKind = Hanja | HanjaDigit | Native | NativePrenoun
 
 let hanjaDigits = [|"영"; "일"; "이"; "삼"; "사"; "오"; "육"; "칠"; "팔"; "구"|]
 let nativeDigits = [|""; "하나"; "둘"; "셋"; "넷"; "다섯"; "여섯"; "일곱"; "여덟"; "아홉"|]
@@ -56,6 +56,9 @@ let inline chunkOf length number =
 let toHanjaWord power digit =
     hanjaDigits.[digit] + lowerUnits.[power]
 
+let toHanjaDigitWord _ digit =
+    hanjaDigits.[digit]
+
 /// The digit can be one of 1 to 9.
 /// The power is an nth power of 10 and can be one of 0 to 3.
 // 1 |> toNativeWord 0 = "하나"
@@ -82,6 +85,7 @@ let toNativePrenounWord power digit =
 
 let toWord = function
     | Hanja -> toHanjaWord
+    | HanjaDigit -> toHanjaDigitWord
     | Native -> toNativeWord
     | NativePrenoun -> toNativePrenounWord
 
@@ -108,18 +112,22 @@ let naturalToKorean format =
     Seq.rev >>
     String.concat " "
 
-let integerToKorean format number =
-    if number > 0L then naturalToKorean format number
-    elif number < 0L then "음수 " + naturalToKorean format (abs number)
-    else hanjaDigits.[0]
-
 let numberSeqToKorean =
     Seq.map (fun digit -> hanjaDigits.[int digit - int '0']) >>
     String.concat ""
+
+let integerToKorean format number =
+    match format with
+    | HanjaDigit -> numberSeqToKorean number
+    | _ ->
+        let number' = Int64.Parse number
+        if number' > 0L then naturalToKorean format number'
+        elif number' < 0L then "음수 " + naturalToKorean format (abs number')
+        else hanjaDigits.[0]
 
 [<CompiledName("ToKorean")>]
 let toKorean format (number: string) =
     match number.Split '.' with
     | [|intPart; fracPart|] ->
-         integerToKorean format (Int64.Parse intPart) + " 점 " + (numberSeqToKorean fracPart)
-    | _ -> integerToKorean format (Int64.Parse number)
+         integerToKorean format intPart + " 점 " + numberSeqToKorean fracPart
+    | _ -> integerToKorean format number
