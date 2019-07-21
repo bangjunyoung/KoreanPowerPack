@@ -90,35 +90,38 @@ let toWord = function
     | NativePrenoun -> toNativePrenounWord
 
 /// Convert a number less than 10000 to Korean.
-let smallNaturalToKorean format =
-    chunkOf 1 >>
-    Seq.mapi (fun power digit -> (power, digit)) >>
-    Seq.filter (fun (_, digit) -> digit <> 0) >>
-    Seq.map (fun (power, digit) -> digit |> (toWord format) power) >>
-    Seq.rev >>
-    String.concat ""
+let smallNaturalToKorean format number =
+    number
+    |> chunkOf 1
+    |> Seq.mapi (fun power digit -> (power, digit))
+    |> Seq.filter (fun (_, digit) -> digit <> 0)
+    |> Seq.map (fun (power, digit) -> digit |> (toWord format) power)
+    |> Seq.rev
+    |> String.concat ""
 
-let naturalToKorean format =
-    chunkOf 4 >>
-    Seq.mapi (fun index number ->
+let naturalToKorean format number =
+    number
+    |> chunkOf 4
+    |> Seq.mapi (fun index number ->
         let format' =
             match format with
             | Native | NativePrenoun when index <> 0 -> Hanja
             | _ -> format
-        smallNaturalToKorean format' number) >>
-    Seq.zip higherUnits >>
-    Seq.filter (fun (_, number) -> number <> "") >>
-    Seq.map (fun (unit, number) -> number + unit) >>
-    Seq.rev >>
-    String.concat " "
+        smallNaturalToKorean format' number)
+    |> Seq.zip higherUnits
+    |> Seq.filter (fun (_, number) -> number <> "")
+    |> Seq.map (fun (unit, number) -> number + unit)
+    |> Seq.rev
+    |> String.concat " "
 
-let numberSeqToKorean =
-    Seq.map (fun digit -> hanjaDigits.[int digit - int '0']) >>
-    String.concat ""
+let digitSeqToKorean digitSeq =
+    digitSeq
+    |> Seq.map (fun digit -> hanjaDigits.[int digit - int '0'])
+    |> String.concat ""
 
 let integerToKorean format number =
     match format with
-    | HanjaDigit -> numberSeqToKorean number
+    | HanjaDigit -> digitSeqToKorean number
     | _ ->
         let number' = Int64.Parse number
         if number' > 0L then naturalToKorean format number'
@@ -129,5 +132,5 @@ let integerToKorean format number =
 let toKorean format (number: string) =
     match number.Split '.' with
     | [|intPart; fracPart|] ->
-         integerToKorean format intPart + " 점 " + numberSeqToKorean fracPart
+         integerToKorean format intPart + " 점 " + digitSeqToKorean fracPart
     | _ -> integerToKorean format number
