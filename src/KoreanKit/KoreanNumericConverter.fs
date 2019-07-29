@@ -28,7 +28,7 @@ module Rembris.Globalization.KoreanNumericConverter
 open System
 open Rembris.FSharp
 
-type FormatKind = Hanja | HanjaDigit | Native | NativePrenoun
+type FormatKind = Hanja | HanjaDigit | HanjaMixed | Native | NativePrenoun
 
 let hanjaDigits = [|"영"; "일"; "이"; "삼"; "사"; "오"; "육"; "칠"; "팔"; "구"|]
 let nativeDigits = [|""; "하나"; "둘"; "셋"; "넷"; "다섯"; "여섯"; "일곱"; "여덟"; "아홉"|]

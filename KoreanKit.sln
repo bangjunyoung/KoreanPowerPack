@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "KoreanKit", "src\KoreanKit.fsproj", "{69A67531-15B1-4D32-B49E-35D01EBACC2A}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "KoreanKit", "src\KoreanKit\KoreanKit.fsproj", "{69A67531-15B1-4D32-B49E-35D01EBACC2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
