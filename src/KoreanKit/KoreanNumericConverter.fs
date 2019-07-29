@@ -59,6 +59,8 @@ let toHanjaWord power digit =
 let toHanjaDigitWord _ digit =
     hanjaDigits.[digit]
 
+let toHanjaMixedWord _ digit = string digit
+
 /// The digit can be one of 1 to 9.
 /// The power is an nth power of 10 and can be one of 0 to 3.
 // 1 |> toNativeWord 0 = "하나"
@@ -86,6 +88,7 @@ let toNativePrenounWord power digit =
 let toWord = function
     | Hanja -> toHanjaWord
     | HanjaDigit -> toHanjaDigitWord
+    | HanjaMixed -> toHanjaMixedWord
     | Native -> toNativeWord
     | NativePrenoun -> toNativePrenounWord
 
@@ -123,7 +126,7 @@ let integerToKorean format number =
     match format with
     | HanjaDigit -> digitSeqToKorean number
     | _ ->
-        let number' = Int64.Parse number
+        let number' = int64 number
         if number' > 0L then naturalToKorean format number'
         elif number' < 0L then "음수 " + naturalToKorean format (abs number')
         else hanjaDigits.[0]

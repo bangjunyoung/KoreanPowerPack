@@ -33,7 +33,8 @@ open KoreanNumericConverter
 [<AllowNullLiteral>]
 type KoreanNumericFormatter() =
     static let validFormats =
-        ["한자", Hanja; "한자개별", HanjaDigit; "고유", Native; "고유관형", NativePrenoun]
+        ["한자", Hanja; "한자개별", HanjaDigit; "한자혼합", HanjaMixed
+         "고유", Native; "고유관형", NativePrenoun]
         |> Map.ofList
 
     static let (|ValidFormat|_|) format =
