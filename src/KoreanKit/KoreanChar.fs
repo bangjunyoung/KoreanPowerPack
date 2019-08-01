@@ -140,8 +140,8 @@ let decomposeWith table syllable =
 let decompose = decomposeWith jamoTable
 let decomposeCompat = decomposeWith compatJamoTable
 
-let compose choseong jungseong jongseong = 
-    let choIndex = 
+let compose choseong jungseong jongseong =
+    let choIndex =
         match compatChoseongToIndex choseong with
         | Some index -> index
         | None ->
