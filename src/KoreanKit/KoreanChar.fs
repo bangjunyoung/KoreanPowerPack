@@ -141,27 +141,17 @@ let decompose = decomposeWith jamoTable
 let decomposeCompat = decomposeWith compatJamoTable
 
 let compose choseong jungseong jongseong =
-    let choIndex =
-        match compatChoseongToIndex choseong with
+    let convert argName f g x =
+        match f x with
         | Some index -> index
         | None ->
-            match choseongToIndex choseong with
+            match g x with
             | Some index -> index
-            | None -> invalidArg "choseong" "not a choseong"
-    let jungIndex =
-        match compatJungseongToIndex jungseong with
-        | Some index -> index
-        | None ->
-            match jungseongToIndex jungseong with
-            | Some index -> index
-            | None -> invalidArg "jungseong" "not a jungseong"
-    let jongIndex =
-        match compatJongseongToIndex jongseong with
-        | Some index -> index
-        | None ->
-            match jongseongToIndex jongseong with
-            | Some index -> index
-            | None -> invalidArg "jongseong" "not a jongseong"
+            | None -> invalidArg argName ("not a " + argName)
+
+    let choIndex = convert "choseong" compatChoseongToIndex choseongToIndex choseong
+    let jungIndex = convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong
+    let jongIndex = convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
 
     let composeFromIndexes choIndex jungIndex jongIndex =
         int HangulSyllableFirst +
