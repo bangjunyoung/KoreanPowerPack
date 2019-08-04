@@ -27,7 +27,7 @@ module Rembris.Globalization.DubeolsikParsers
 
 open FParsec
 open Rembris.FParsec
-open Rembris.Globalization.KoreanChar
+open KoreanChar
 
 type Jamo = string
 
@@ -44,24 +44,31 @@ type Syllable =
         | ChoJungseong(cho, jung) -> composeCompat cho jung ""
         | ChoJungJongseong(cho, jung, jong) -> composeCompat cho jung jong
 
-let choseong = anyOfStrings [|"ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
-                              "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"|]
-let jungseong = anyOfStrings [|"ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"
-                               "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"
-                               "ㅖ"; "ㅗ"; "ㅛ"; "ㅜ"; "ㅠ"; "ㅡ"; "ㅣ"|]
-let bokjongseong = anyOfStrings [|"ㄱㅅ"; "ㄴㅈ"; "ㄴㅎ"; "ㄹㄱ"; "ㄹㅁ"; "ㄹㅂ"
-                                  "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅂㅅ"|]
-let danjongseong = anyOfStrings [|"ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅅ"
-                                  "ㅆ"; "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"|]
+let choseong = anyStringOf [
+    "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
+    "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+]
+let jungseong = anyStringOf [
+    "ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"
+    "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"
+    "ㅖ"; "ㅗ"; "ㅛ"; "ㅜ"; "ㅠ"; "ㅡ"; "ㅣ"
+]
+let bokjongseong = anyStringOf [
+    "ㄱㅅ"; "ㄴㅈ"; "ㄴㅎ"; "ㄹㄱ"; "ㄹㅁ"; "ㄹㅂ"
+    "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅂㅅ"
+]
+let danjongseong = anyStringOf [
+    "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅅ"
+    "ㅆ"; "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+]
 
-let syllable : Parser<Syllable, unit> =
-    choice [
-        tuple3BT choseong jungseong ((bokjongseong .>>? notFollowedBy jungseong) <|>
-                                     (danjongseong .>>? notFollowedBy jungseong))
-            |>> ChoJungJongseong
-        tuple2BT choseong jungseong |>> ChoJungseong
-        choseong |>> Choseong
-        jungseong |>> Jungseong
-    ]
+let syllable : Parser<Syllable, unit> = choice [
+    tuple3BT choseong jungseong ((bokjongseong .>>? notFollowedBy jungseong) <|>
+                                 (danjongseong .>>? notFollowedBy jungseong))
+        |>> ChoJungJongseong
+    tuple2BT choseong jungseong |>> ChoJungseong
+    choseong |>> Choseong
+    jungseong |>> Jungseong
+]
 
 let syllableChar = syllable |>> char

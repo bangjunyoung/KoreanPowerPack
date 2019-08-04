@@ -27,8 +27,8 @@ module Rembris.FParsec
 
 open FParsec
 
-/// Parse any one string in the sequence
-let anyOfStrings strings = strings |> Seq.map pstring |> Seq.reduce (<|>)
+/// Parse any string in the sequence
+let anyStringOf strings = strings |> Seq.map pstring |> choice
 
 /// Behaves like tuple2, but will backtrack to the beginning on failure
 let tuple2BT p1 p2 = p1 .>>.? p2
