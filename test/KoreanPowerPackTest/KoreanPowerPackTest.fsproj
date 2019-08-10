@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\KoreanKit\KoreanPowerPack.fsproj" />
+    <ProjectReference Include="..\..\src\KoreanPowerPack\KoreanPowerPack.fsproj" />
   </ItemGroup>
 
 </Project>
