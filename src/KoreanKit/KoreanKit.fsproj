@@ -8,6 +8,7 @@
     <Compile Include="FSharp.fs" />
     <Compile Include="Casting.fs" />
     <Compile Include="KoreanNumericConverter.fs" />
+    <Compile Include="CommonFormatterUtils.fs" />
     <Compile Include="KoreanNumericFormatter.fs" />
     <Compile Include="KoreanChar.fs" />
     <Compile Include="HangulKeyLayout.fs" />

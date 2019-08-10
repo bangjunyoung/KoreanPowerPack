@@ -28,24 +28,21 @@ namespace Rembris.Globalization
 open System
 open System.Runtime.InteropServices
 open KoreanNumericConverter
+open KoreanPowerPack.CommonFormatterUtils
+
+[<AutoOpen>]
+module internal KoreanNumericFormatter =
+    let validFormats =
+        ["한자", Hanja
+         "한자개별", HanjaDigit
+         "한자혼합", HanjaMixed
+         "고유", Native
+         "고유관형", NativePrenoun]
+        |> Map.ofList
 
 [<Sealed>]
 [<AllowNullLiteral>]
 type KoreanNumericFormatter() =
-    static let validFormats =
-        ["한자", Hanja; "한자개별", HanjaDigit; "한자혼합", HanjaMixed
-         "고유", Native; "고유관형", NativePrenoun]
-        |> Map.ofList
-
-    static let (|ValidFormat|_|) format =
-        if String.IsNullOrEmpty format then None
-        else validFormats |> Map.tryFind format
-
-    static let handleInvalidFormat format (arg: obj) =
-        match arg with
-        | :? IFormattable as arg' -> arg'.ToString(format, null)
-        | _ -> arg.ToString()
-
     member this.Format(format, arg: obj,
                        [<Optional; DefaultParameterValue(null: IFormatProvider)>]
                        formatProvider) =
@@ -61,9 +58,9 @@ type KoreanNumericFormatter() =
             if arg = null then
                 ""
             else
-                match format with
-                | ValidFormat format' -> string arg |> toKorean format'
-                | _ -> handleInvalidFormat format arg
+                match validFormats |> Map.tryFind format with
+                | Some format' -> string arg |> toKorean format'
+                | None -> handleInvalidFormat format arg
 
     interface IFormatProvider with
         member this.GetFormat(formatType) = 
