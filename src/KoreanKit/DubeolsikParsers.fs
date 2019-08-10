@@ -27,7 +27,6 @@ module Rembris.Globalization.DubeolsikParsers
 
 open FParsec
 open Rembris.FParsec
-open KoreanChar
 
 type Jamo = string
 
@@ -38,11 +37,17 @@ type Syllable =
     | ChoJungJongseong of Jamo * Jamo * Jamo
 
     static member op_Explicit(syllable) =
+        let compose choseong jungseong jongseong =
+            KoreanChar.compose
+                (choseong |> KoreanChar.compatChoseongToChar)
+                (jungseong |> KoreanChar.compatJungseongToChar)
+                (jongseong |> KoreanChar.compatJongseongToChar)
+
         match syllable with
-        | Choseong cho -> compatChoseongToChar cho
-        | Jungseong jung -> compatJungseongToChar jung
-        | ChoJungseong(cho, jung) -> composeCompat cho jung ""
-        | ChoJungJongseong(cho, jung, jong) -> composeCompat cho jung jong
+        | Choseong cho -> KoreanChar.compatChoseongToChar cho
+        | Jungseong jung -> KoreanChar.compatJungseongToChar jung
+        | ChoJungseong(cho, jung) -> compose cho jung ""
+        | ChoJungJongseong(cho, jung, jong) -> compose cho jung jong
 
 let choseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"

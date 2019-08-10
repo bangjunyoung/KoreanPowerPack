@@ -41,7 +41,7 @@ let unparse syllableDecomposer (str: string) =
 
     str
     |> Seq.map (fun c ->
-        try c |> syllableDecomposer |> String.concat ""
+        try c |> syllableDecomposer
         with _ -> c |> string)
     |> String.concat ""
 

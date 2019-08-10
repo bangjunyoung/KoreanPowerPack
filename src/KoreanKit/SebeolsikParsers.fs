@@ -27,9 +27,8 @@ module Rembris.Globalization.SebeolsikParsers
 
 open FParsec
 open Rembris.FParsec
-open Rembris.Globalization.KoreanChar
 
-type Jamo = char
+type Jamo = string
 
 type Syllable =
     | Choseong of Jamo
@@ -39,21 +38,37 @@ type Syllable =
     | ChoJungJongseong of Jamo * Jamo * Jamo
 
     static member op_Explicit(syllable) =
+        let compose choseong jungseong jongseong =
+            KoreanChar.compose
+                (choseong |> KoreanChar.choseongToChar)
+                (jungseong |> KoreanChar.jungseongToChar)
+                (jongseong |> KoreanChar.jongseongToChar)
+
         match syllable with
-        | Choseong cho -> cho
-        | Jungseong jung -> jung
-        | Jongseong jong -> jong
-        | ChoJungseong(cho, jung) -> compose cho jung '\u0000'
+        | Choseong cho -> KoreanChar.choseongToChar cho
+        | Jungseong jung -> KoreanChar.jungseongToChar jung
+        | Jongseong jong -> KoreanChar.jongseongToChar jong
+        | ChoJungseong(cho, jung) -> compose cho jung ""
         | ChoJungJongseong(cho, jung, jong) -> compose cho jung jong
 
-let choseong = anyOf [|'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
-                       'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'|]
-let jungseong = anyOf [|'ᅡ'; 'ᅢ'; 'ᅣ'; 'ᅤ'; 'ᅥ'; 'ᅦ'; 'ᅧ'; 'ᅨ'; 'ᅩ'; 'ᅪ'
-                        'ᅫ'; 'ᅬ'; 'ᅭ'; 'ᅮ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅲ'; 'ᅳ'; 'ᅴ'
-                        'ᅵ'|]
-let jongseong = anyOf [|'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'; 'ᆱ'
-                        'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
-                        'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'|]
+let choseong = anyStringOf [
+    "ᄀᄀ"; "ᄃᄃ"; "ᄇᄇ"; "ᄉᄉ"; "ᄌᄌ"
+    "ᄀ"; "ᄁ"; "ᄂ"; "ᄃ"; "ᄄ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄈ"; "ᄉ"
+    "ᄊ"; "ᄋ"; "ᄌ"; "ᄍ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
+]
+let jungseong = anyStringOf [
+    "ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"
+    "ᅡ"; "ᅢ"; "ᅣ"; "ᅤ"; "ᅥ"; "ᅦ"; "ᅧ"; "ᅨ"; "ᅩ"; "ᅪ"
+    "ᅫ"; "ᅬ"; "ᅭ"; "ᅮ"; "ᅯ"; "ᅰ"; "ᅱ"; "ᅲ"; "ᅳ"; "ᅴ"
+    "ᅵ"
+]
+let jongseong = anyStringOf [
+    "ᆨᆨ"; "ᆨᆺ"; "ᆫᆽ"; "ᆫᇂ"; "ᆯᆨ"; "ᆯᆷ"; "ᆯᆸ"
+    "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆸᆺ"; "ᆺᆺ"
+    "ᆨ"; "ᆩ"; "ᆪ"; "ᆫ"; "ᆬ"; "ᆭ"; "ᆮ"; "ᆯ"; "ᆰ"; "ᆱ"
+    "ᆲ"; "ᆳ"; "ᆴ"; "ᆵ"; "ᆶ"; "ᆷ"; "ᆸ"; "ᆹ"; "ᆺ"; "ᆻ"
+    "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
+]
 
 let syllable : Parser<Syllable, unit> =
     choice [

@@ -55,5 +55,7 @@ let unparse str =
     raiseIfNull "str" str
 
     str
-    |> HangulKeyLayout.unparse KoreanChar.decomposeCompat
+    |> HangulKeyLayout.unparse 
+        (KoreanChar.decomposeCompat >>
+         (fun (cho, jung, jong) -> cho + jung + jong))
     |> String.map dubeolsikToQwerty 
