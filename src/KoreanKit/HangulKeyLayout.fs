@@ -23,10 +23,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.Globalization.HangulKeyLayout
+module KoreanPowerPack.HangulKeyLayout
 
 open FParsec
-open Rembris.FSharp
+open KoreanPowerPack.FSharp
 
 let parse syllableParser str =
     assert (str <> null)

@@ -23,10 +23,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.Globalization.DubeolsikParsers
+module KoreanPowerPack.DubeolsikParsers
 
 open FParsec
-open Rembris.FParsec
+open KoreanPowerPack.FParsec
 
 type Jamo = string
 

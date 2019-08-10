@@ -23,10 +23,9 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.Globalization.KoreanNumericConverter
+module KoreanPowerPack.KoreanNumericConverter
 
-open System
-open Rembris.FSharp
+open KoreanPowerPack.FSharp
 
 type FormatKind = Hanja | HanjaDigit | HanjaMixed | Native | NativePrenoun
 

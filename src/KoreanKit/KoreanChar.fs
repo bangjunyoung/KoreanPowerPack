@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.Globalization.KoreanChar
+module KoreanPowerPack.KoreanChar
 
 let [<Literal>] HangulSyllableFirst = '가'
 let [<Literal>] HangulSyllableLast = '힣'

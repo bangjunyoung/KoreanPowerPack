@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace Rembris.FSharp
+namespace KoreanPowerPack.FSharp
 
 module String =
     let ofSeq (source: seq<char>) =

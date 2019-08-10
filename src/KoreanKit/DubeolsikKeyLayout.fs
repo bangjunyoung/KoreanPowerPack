@@ -23,10 +23,10 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.Globalization.DubeolsikKeyLayout
+module KoreanPowerPack.DubeolsikKeyLayout
 
-open Rembris.FSharp
-open Rembris.Globalization.HangulKeyLayout
+open KoreanPowerPack.FSharp
+open HangulKeyLayout
 
 let qwertyToDubeolsik, dubeolsikToQwerty =
     let qwerty =

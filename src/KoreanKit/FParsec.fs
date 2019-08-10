@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module Rembris.FParsec
+module KoreanPowerPack.FParsec
 
 open FParsec
 
@@ -32,5 +32,6 @@ let anyStringOf strings = strings |> Seq.map pstring |> choice
 
 /// Behaves like tuple2, but will backtrack to the beginning on failure
 let tuple2BT p1 p2 = p1 .>>.? p2
+
 /// Behaves like tuple3, but will backtrack to the beginning on failure
 let tuple3BT p1 p2 p3 = p1 .>>.? p2 .>>.? p3 |>> fun ((r1, r2), r3) -> r1, r2, r3

@@ -23,12 +23,12 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-namespace Rembris.Globalization
+namespace KoreanPowerPack
 
 open System
 open System.Runtime.InteropServices
 open KoreanNumericConverter
-open KoreanPowerPack.CommonFormatterUtils
+open CommonFormatterUtils
 
 [<AutoOpen>]
 module internal KoreanNumericFormatter =

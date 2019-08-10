@@ -24,7 +24,7 @@
 //
 
 [<AutoOpen>]
-module Rembris.FSharp.Casting
+module KoreanPowerPack.FSharp.Casting
 
 type BigIntCast = BigIntCast with
     static member inline (=>) (BigIntCast, x: int) = bigint x
