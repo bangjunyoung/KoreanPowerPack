@@ -11,6 +11,7 @@
     <Compile Include="CommonFormatterUtils.fs" />
     <Compile Include="KoreanNumericFormatter.fs" />
     <Compile Include="KoreanChar.fs" />
+    <Compile Include="KoreanJosaFormatter.fs" />
     <Compile Include="HangulKeyLayout.fs" />
     <Compile Include="FParsec.fs" />
     <Compile Include="DubeolsikParsers.fs" />
