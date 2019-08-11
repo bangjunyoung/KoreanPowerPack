@@ -31,22 +31,34 @@ open System.Text.RegularExpressions
 
 [<AutoOpen>]
 module internal KoreanJosaFormatter =
-    let josas = [|
-        [| "을";     "으로";   "은";     "이";     "과";     "이나";   "이고";
-           "이며";   "이면";   "이라";   "이란";   "아";     "이여";   "이시여" |]
-        [| "를";     "로";     "는";     "가";     "와";     "나";     "고";
-           "며";     "면";     "라";     "란" ;    "야";     "여"  ;   "시여" |]
-        [| "을(를)"; "(으)로"; "은(는)"; "이(가)"; "과(와)"; "(이)나"; "(이)고";
-           "(이)며"; "(이)면"; "(이)라"; "(이)란"; "아(야)"; "(이)여"; "(이)시여" |]
-    |]
+    let validJosas = 
+        [|"을", "를", "을(를)"
+          "으로", "로", "(으)로"
+          "은", "는", "은(는)"
+          "이", "가", "이(가)"
+          "과", "와", "과(와)"
+          "아", "야", "아(야)"
+          "이든", "든", "(이)든"
+          "이나", "나", "(이)나"
+          "이고", "고", "(이)고"
+          "이며", "며", "(이)며"
+          "이면", "면", "(이)면"
+          "이라", "라", "(이)라"
+          "이란", "란", "(이)란"
+          "이랑", "랑", "(이)랑"
+          "이야말로", "야말로", "(이)야말로"
+          "이여", "여", "(이)여"
+          "이시여", "시여", "(이)시여"|]
+        |> Array.unzip3
+        |> fun (a0, a1, a2) -> [|a0; a1; a2|]
 
-    let trimChars = [| ' '; '\''; '\"'; '>'; ')'; '}'; ']' |]
+    let trimChars = [|' '; '\''; '\"'; '>'; ')'; '}'; ']'|]
 
     let combine josa cheeon =
         let minorIndexOf josa =
-            match josas.[0] |> Array.tryFindIndex ((=) josa) with
+            match validJosas.[0] |> Array.tryFindIndex ((=) josa) with
             | Some index -> Some index
-            | None -> josas.[1] |> Array.tryFindIndex ((=) josa)
+            | None -> validJosas.[1] |> Array.tryFindIndex ((=) josa)
 
         match minorIndexOf josa with
         | None -> None
@@ -122,7 +134,7 @@ module internal KoreanJosaFormatter =
                     | _ -> 2
                 | _ -> 2
 
-            Some <| cheeon + josas.[majorIndex].[minorIndex]
+            Some <| cheeon + validJosas.[majorIndex].[minorIndex]
 
 [<Sealed>]
 [<AllowNullLiteral>]
