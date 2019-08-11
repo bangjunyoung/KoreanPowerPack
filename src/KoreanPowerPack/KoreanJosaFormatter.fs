@@ -29,7 +29,6 @@ open System
 open System.Runtime.InteropServices
 open System.Text.RegularExpressions
 open KoreanChar
-open CommonFormatterUtils
 
 [<AutoOpen>]
 module internal KoreanJosaFormatter =

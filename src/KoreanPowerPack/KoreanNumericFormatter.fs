@@ -28,7 +28,6 @@ namespace KoreanPowerPack
 open System
 open System.Runtime.InteropServices
 open KoreanNumericConverter
-open CommonFormatterUtils
 
 [<AutoOpen>]
 module internal KoreanNumericFormatter =
@@ -39,6 +38,11 @@ module internal KoreanNumericFormatter =
          "고유", Native
          "고유관형", NativePrenoun]
         |> Map.ofList
+
+    let handleInvalidFormat format (arg: obj) =
+        match arg with
+        | :? IFormattable as arg' -> arg'.ToString(format, null)
+        | _ -> arg.ToString()
 
 [<Sealed>]
 [<AllowNullLiteral>]
