@@ -47,9 +47,9 @@ let decomposeIntoIndexes syllable =
     sylIndex % (JungseongCount * JongseongCount) / JongseongCount,
     sylIndex % JongseongCount
 
-type JamoTable<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
+type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
-let jamoTable = {
+let jamos = {
     Choseong = [|
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
         "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
@@ -66,13 +66,7 @@ let jamoTable = {
     |]
 }
 
-let bokjongseongToCharTable = [|
-    "ᆨᆨ", 'ᆩ'; "ᆨᆺ", 'ᆪ'; "ᆫᆽ", 'ᆬ'; "ᆫᇂ", 'ᆭ'; "ᆯᆨ", 'ᆰ'
-    "ᆯᆷ", 'ᆱ'; "ᆯᆸ", 'ᆲ'; "ᆯᆺ", 'ᆳ'; "ᆯᇀ", 'ᆴ'; "ᆯᇁ", 'ᆵ'
-    "ᆯᇂ", 'ᆶ'; "ᆸᆺ", 'ᆹ'; "ᆺᆺ", 'ᆻ'
-|]
-
-let jamoCharTable = {
+let jamosAsChar = {
     Choseong = [|
         'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
         'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
@@ -89,7 +83,7 @@ let jamoCharTable = {
     |]
 }
 
-let compatJamoTable = {
+let compatJamos = {
     Choseong = [|
         "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
         "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
@@ -106,7 +100,7 @@ let compatJamoTable = {
     |]
 }
 
-let compatJamoCharTable = {
+let compatJamosAsChar = {
     Choseong = [|
         'ㄱ'; 'ㄲ'; 'ㄴ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅅ'
         'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
@@ -140,10 +134,14 @@ let jongseongToIndex c =
 
 let map key value = (key, value) ||> Array.zip |> Map.ofArray
 
-let choseongToCharMap = map jamoTable.Choseong jamoCharTable.Choseong
-let jungseongToCharMap = map jamoTable.Jungseong jamoCharTable.Jungseong
-let jongseongToCharMap = map jamoTable.Jongseong jamoCharTable.Jongseong
-let bokjongseongToCharMap = bokjongseongToCharTable |> Map.ofArray
+let choseongToCharMap = map jamos.Choseong jamosAsChar.Choseong
+let jungseongToCharMap = map jamos.Jungseong jamosAsChar.Jungseong
+let jongseongToCharMap = map jamos.Jongseong jamosAsChar.Jongseong
+let bokjongseongToCharMap = Map.ofArray [|
+    "ᆨᆨ", 'ᆩ'; "ᆨᆺ", 'ᆪ'; "ᆫᆽ", 'ᆬ'; "ᆫᇂ", 'ᆭ'; "ᆯᆨ", 'ᆰ'
+    "ᆯᆷ", 'ᆱ'; "ᆯᆸ", 'ᆲ'; "ᆯᆺ", 'ᆳ'; "ᆯᇀ", 'ᆴ'; "ᆯᇁ", 'ᆵ'
+    "ᆯᇂ", 'ᆶ'; "ᆸᆺ", 'ᆹ'; "ᆺᆺ", 'ᆻ'
+|]
 
 let choseongToChar choseong = choseongToCharMap |> Map.find choseong
 let jungseongToChar jungseong = jungseongToCharMap |> Map.find jungseong
@@ -152,9 +150,9 @@ let jongseongToChar jongseong =
     | Some jong -> jong
     | None -> jongseongToCharMap |> Map.find jongseong
 
-let compatChoseongToCharMap = map compatJamoTable.Choseong compatJamoCharTable.Choseong
-let compatJungseongToCharMap = map compatJamoTable.Jungseong compatJamoCharTable.Jungseong
-let compatJongseongToCharMap = map compatJamoTable.Jongseong compatJamoCharTable.Jongseong
+let compatChoseongToCharMap = map compatJamos.Choseong compatJamosAsChar.Choseong
+let compatJungseongToCharMap = map compatJamos.Jungseong compatJamosAsChar.Jungseong
+let compatJongseongToCharMap = map compatJamos.Jongseong compatJamosAsChar.Jongseong
 
 let compatChoseongToChar choseong = compatChoseongToCharMap |> Map.find choseong
 let compatJungseongToChar jungseong = compatJungseongToCharMap |> Map.find jungseong
@@ -162,9 +160,9 @@ let compatJongseongToChar jongseong = compatJongseongToCharMap |> Map.find jongs
 
 let mapJamoToIndex jamos = jamos |> Array.mapi (fun index c -> c, index) |> Map.ofArray
 
-let compatChoseongToIndexMap = mapJamoToIndex compatJamoCharTable.Choseong
-let compatJungseongToIndexMap = mapJamoToIndex compatJamoCharTable.Jungseong
-let compatJongseongToIndexMap = mapJamoToIndex compatJamoCharTable.Jongseong
+let compatChoseongToIndexMap = mapJamoToIndex compatJamosAsChar.Choseong
+let compatJungseongToIndexMap = mapJamoToIndex compatJamosAsChar.Jungseong
+let compatJongseongToIndexMap = mapJamoToIndex compatJamosAsChar.Jongseong
 
 let compatChoseongToIndex c = compatChoseongToIndexMap |> Map.tryFind c
 let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
@@ -196,5 +194,5 @@ let decomposeWith table syllable =
     let choIndex, jungIndex, jongIndex = syllable |> decomposeIntoIndexes
     table.Choseong.[choIndex], table.Jungseong.[jungIndex], table.Jongseong.[jongIndex]
 
-let decompose = decomposeWith jamoTable
-let decomposeCompat = decomposeWith compatJamoTable
+let decompose = decomposeWith jamos
+let decomposeCompat = decomposeWith compatJamos
