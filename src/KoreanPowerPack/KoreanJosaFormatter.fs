@@ -50,6 +50,7 @@ module internal KoreanJosaFormatter =
             | None -> josas.[1] |> Array.tryFindIndex ((=) josa)
 
         match minorIndexOf format with
+        | None -> None
         | Some minorIndex ->
             let (|NullOrEmpty|_|) str =
                 if String.IsNullOrEmpty str then Some NullOrEmpty
@@ -122,9 +123,7 @@ module internal KoreanJosaFormatter =
                     | _ -> 2
                 | _ -> 2
 
-            josas.[majorIndex].[minorIndex]
-
-        | None -> handleInvalidFormat format str
+            Some josas.[majorIndex].[minorIndex]
 
 [<Sealed>]
 [<AllowNullLiteral>]
@@ -145,7 +144,9 @@ type KoreanJosaFormatter() =
                 ""
             else
                 let argString = string arg
-                argString + chooseJosa format (argString.TrimEnd trimChars)
+                match chooseJosa format (argString.TrimEnd trimChars) with
+                | Some josa -> argString + josa
+                | None -> argString + format
 
     interface IFormatProvider with
         member this.GetFormat(formatType) = 
