@@ -28,7 +28,6 @@ namespace KoreanPowerPack
 open System
 open System.Runtime.InteropServices
 open System.Text.RegularExpressions
-open KoreanChar
 
 [<AutoOpen>]
 module internal KoreanJosaFormatter =
@@ -43,13 +42,13 @@ module internal KoreanJosaFormatter =
 
     let trimChars = [| ' '; '\''; '\"'; '>'; ')'; '}'; ']' |]
 
-    let chooseJosa format str =
+    let combine josa cheeon =
         let minorIndexOf josa =
             match josas.[0] |> Array.tryFindIndex ((=) josa) with
             | Some index -> Some index
             | None -> josas.[1] |> Array.tryFindIndex ((=) josa)
 
-        match minorIndexOf format with
+        match minorIndexOf josa with
         | None -> None
         | Some minorIndex ->
             let (|NullOrEmpty|_|) str =
@@ -67,7 +66,7 @@ module internal KoreanJosaFormatter =
 
             let (|Hangul|_|) (str: string) =
                 let lastChar = str.[str.Length - 1]
-                if lastChar |> isSyllable then Some lastChar
+                if lastChar |> KoreanChar.isSyllable then Some lastChar
                 else None
 
             let (|LatinSingleChar|_|) (str: string) =
@@ -92,21 +91,21 @@ module internal KoreanJosaFormatter =
                 str.IndexOf value >= 0
 
             let majorIndex =
-                match str with
+                match cheeon with
                 | NullOrEmpty -> 2
                 | Number lastChar
                 | Hangul lastChar ->
-                    let _, _, jongseong = decomposeCompat lastChar
-                    match format with
+                    let _, _, jongseong = KoreanChar.decomposeCompat lastChar
+                    match josa with
                     | "로" | "으로" -> 
                         if jongseong = "" || jongseong = "ㄹ" then 1 else 0
                     | _ -> if jongseong = "" then 1 else 0
                 | LatinSingleChar lastChar ->
-                    match format with
+                    match josa with
                     | "로" | "으로" -> if lastChar = 'l' then 1 else 0
                     | _ -> if lastChar == "lmnr"  then 0 else 1
                 | Latin (secondLastChar, lastChar) ->
-                    match format with
+                    match josa with
                     | "로" | "으로" -> if lastChar = 'l' then 1 else 0
                     | _ -> 
                         if lastChar == "afijosuvwxyz" ||
@@ -123,7 +122,7 @@ module internal KoreanJosaFormatter =
                     | _ -> 2
                 | _ -> 2
 
-            Some josas.[majorIndex].[minorIndex]
+            Some <| cheeon + josas.[majorIndex].[minorIndex]
 
 [<Sealed>]
 [<AllowNullLiteral>]
@@ -144,8 +143,8 @@ type KoreanJosaFormatter() =
                 ""
             else
                 let argString = string arg
-                match chooseJosa format (argString.TrimEnd trimChars) with
-                | Some josa -> argString + josa
+                match combine format (argString.TrimEnd trimChars) with
+                | Some combined -> combined
                 | None -> argString + format
 
     interface IFormatProvider with
