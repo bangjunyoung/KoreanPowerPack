@@ -99,7 +99,7 @@ module internal KoreanJosaFormatter =
                 if Char.IsPunctuation(lastChar) then Some lastChar
                 else None
 
-            let (==) (value: char) (str: string) =
+            let (=~) (value: char) (str: string) =
                 str.IndexOf value >= 0
 
             let majorIndex =
@@ -115,17 +115,17 @@ module internal KoreanJosaFormatter =
                 | LatinSingleChar lastChar ->
                     match josa with
                     | "로" | "으로" -> if lastChar = 'l' then 1 else 0
-                    | _ -> if lastChar == "lmnr"  then 0 else 1
+                    | _ -> if lastChar =~ "lmnr"  then 0 else 1
                 | Latin (secondLastChar, lastChar) ->
                     match josa with
                     | "로" | "으로" -> if lastChar = 'l' then 1 else 0
                     | _ -> 
-                        if lastChar == "afijosuvwxyz" ||
-                           secondLastChar == "lmn" && lastChar == "cdkpqt" ||
-                           secondLastChar == "aeiou" && lastChar = 'r' ||
-                           secondLastChar = 'r' && lastChar = 'e' then 1
-                        elif lastChar == "lmn" ||
-                             secondLastChar = 'n' && lastChar = 'g' then 0
+                        if lastChar =~ "afijosuvwxyz" ||
+                           secondLastChar =~ "lmn" && lastChar =~ "cdkpqt" ||
+                           secondLastChar =~ "aeiou" && lastChar = 'r' ||
+                           (secondLastChar, lastChar) = ('r', 'e') then 1
+                        elif lastChar =~ "lmn" ||
+                             (secondLastChar, lastChar) = ('n', 'g') then 0
                         else 2
                 | Punctuation lastChar ->
                     match lastChar with
