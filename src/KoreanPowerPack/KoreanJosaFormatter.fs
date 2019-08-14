@@ -31,38 +31,34 @@ open System.Text.RegularExpressions
 
 [<AutoOpen>]
 module internal KoreanJosaFormatter =
-    let validJosas = 
-        [|"을", "를", "을(를)"
-          "으로", "로", "(으)로"
-          "은", "는", "은(는)"
-          "이", "가", "이(가)"
-          "과", "와", "과(와)"
-          "아", "야", "아(야)"
-          "이든", "든", "(이)든"
-          "이나", "나", "(이)나"
-          "이고", "고", "(이)고"
-          "이며", "며", "(이)며"
-          "이면", "면", "(이)면"
-          "이라", "라", "(이)라"
-          "이란", "란", "(이)란"
-          "이랑", "랑", "(이)랑"
-          "이야말로", "야말로", "(이)야말로"
-          "이여", "여", "(이)여"
-          "이시여", "시여", "(이)시여"|]
-        |> Array.unzip3
-        |> fun (a0, a1, a2) -> [|a0; a1; a2|]
+    let validJosas = [|
+        "을", "를", "을(를)"
+        "으로", "로", "(으)로"
+        "은", "는", "은(는)"
+        "이", "가", "이(가)"
+        "과", "와", "과(와)"
+        "아", "야", "아(야)"
+        "이든", "든", "(이)든"
+        "이나", "나", "(이)나"
+        "이고", "고", "(이)고"
+        "이며", "며", "(이)며"
+        "이면", "면", "(이)면"
+        "이라", "라", "(이)라"
+        "이란", "란", "(이)란"
+        "이랑", "랑", "(이)랑"
+        "이야말로", "야말로", "(이)야말로"
+        "이여", "여", "(이)여"
+        "이시여", "시여", "(이)시여"
+    |]
 
     let trimChars = [|' '; '\''; '\"'; '>'; ')'; '}'; ']'|]
 
     let combine josa cheeon =
-        let minorIndexOf josa =
-            match validJosas.[0] |> Array.tryFindIndex ((=) josa) with
-            | Some index -> Some index
-            | None -> validJosas.[1] |> Array.tryFindIndex ((=) josa)
-
-        match minorIndexOf josa with
+        match validJosas
+              |> Array.tryFindIndex
+                  (fun (form0, form1, _) -> form0 = josa || form1 = josa) with
         | None -> None
-        | Some minorIndex ->
+        | Some index ->
             let (|NullOrEmpty|_|) str =
                 if String.IsNullOrEmpty str then Some NullOrEmpty
                 else None
@@ -102,39 +98,40 @@ module internal KoreanJosaFormatter =
             let (=~) (value: char) (str: string) =
                 str.IndexOf value >= 0
 
-            let majorIndex =
+            let josa =
+                let (form0, form1, form2) = validJosas.[index]
                 match cheeon with
-                | NullOrEmpty -> 2
+                | NullOrEmpty -> form2
                 | Number lastChar
                 | Hangul lastChar ->
                     let _, _, jongseong = KoreanChar.decomposeCompat lastChar
                     match josa with
                     | "로" | "으로" -> 
-                        if jongseong = "" || jongseong = "ㄹ" then 1 else 0
-                    | _ -> if jongseong = "" then 1 else 0
+                        if jongseong = "" || jongseong = "ㄹ" then form1 else form0
+                    | _ -> if jongseong = "" then form1 else form0
                 | LatinSingleChar lastChar ->
                     match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then 1 else 0
-                    | _ -> if lastChar =~ "lmnr"  then 0 else 1
+                    | "로" | "으로" -> if lastChar = 'l' then form1 else form0
+                    | _ -> if lastChar =~ "lmnr"  then form0 else form1
                 | Latin (secondLastChar, lastChar) ->
                     match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then 1 else 0
+                    | "로" | "으로" -> if lastChar = 'l' then form1 else form0
                     | _ -> 
                         if lastChar =~ "afijosuvwxyz" ||
                            secondLastChar =~ "lmn" && lastChar =~ "cdkpqt" ||
                            secondLastChar =~ "aeiou" && lastChar = 'r' ||
-                           (secondLastChar, lastChar) = ('r', 'e') then 1
+                           (secondLastChar, lastChar) = ('r', 'e') then form1
                         elif lastChar =~ "lmn" ||
-                             (secondLastChar, lastChar) = ('n', 'g') then 0
-                        else 2
+                             (secondLastChar, lastChar) = ('n', 'g') then form0
+                        else form2
                 | Punctuation lastChar ->
                     match lastChar with
-                    | '#' -> 0
-                    | '%' -> 1
-                    | _ -> 2
-                | _ -> 2
+                    | '#' -> form0
+                    | '%' -> form1
+                    | _ -> form2
+                | _ -> form2
 
-            Some <| cheeon + validJosas.[majorIndex].[minorIndex]
+            Some <| cheeon + josa
 
 [<Sealed>]
 [<AllowNullLiteral>]
