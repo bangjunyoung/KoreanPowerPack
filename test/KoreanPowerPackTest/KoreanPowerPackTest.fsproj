@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <Compile Include="KoreanJosaFormatterTests.fs" />
-    <Compile Include="DubeolsikKeyLayoutTest.fs" />
-    <Compile Include="Sebeolsik391KeyLayoutTest.fs" />
+    <Compile Include="DubeolsikKeyLayoutTests.fs" />
+    <Compile Include="Sebeolsik391KeyLayoutTests.fs" />
   </ItemGroup>
 
   <ItemGroup>
