@@ -56,7 +56,7 @@ module internal KoreanJosaFormatter =
     let combine josa cheeon =
         match validJosas
               |> Array.tryFindIndex
-                  (fun (form0, form1, _) -> form0 = josa || form1 = josa) with
+                  (fun (formC, formV, _) -> formC = josa || formV = josa) with
         | None -> None
         | Some index ->
             let (|NullOrEmpty|_|) str =
@@ -99,37 +99,37 @@ module internal KoreanJosaFormatter =
                 str.IndexOf value >= 0
 
             let josa =
-                let (form0, form1, form2) = validJosas.[index]
+                let (formC, formV, formA) = validJosas.[index]
                 match cheeon with
-                | NullOrEmpty -> form2
+                | NullOrEmpty -> formA
                 | Number lastChar
                 | Hangul lastChar ->
                     let _, _, jongseong = KoreanChar.decomposeCompat lastChar
                     match josa with
                     | "로" | "으로" -> 
-                        if jongseong = "" || jongseong = "ㄹ" then form1 else form0
-                    | _ -> if jongseong = "" then form1 else form0
+                        if jongseong = "" || jongseong = "ㄹ" then formV else formC
+                    | _ -> if jongseong = "" then formV else formC
                 | LatinSingleChar lastChar ->
                     match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then form1 else form0
-                    | _ -> if lastChar =~ "lmnr"  then form0 else form1
+                    | "로" | "으로" -> if lastChar = 'l' then formV else formC
+                    | _ -> if lastChar =~ "lmnr"  then formC else formV
                 | Latin (secondLastChar, lastChar) ->
                     match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then form1 else form0
+                    | "로" | "으로" -> if lastChar = 'l' then formV else formC
                     | _ -> 
                         if lastChar =~ "afijosuvwxyz" ||
                            secondLastChar =~ "lmn" && lastChar =~ "cdkpqt" ||
                            secondLastChar =~ "aeiou" && lastChar = 'r' ||
-                           (secondLastChar, lastChar) = ('r', 'e') then form1
+                           (secondLastChar, lastChar) = ('r', 'e') then formV
                         elif lastChar =~ "lmn" ||
-                             (secondLastChar, lastChar) = ('n', 'g') then form0
-                        else form2
+                             (secondLastChar, lastChar) = ('n', 'g') then formC
+                        else formA
                 | Punctuation lastChar ->
                     match lastChar with
-                    | '#' -> form0
-                    | '%' -> form1
-                    | _ -> form2
-                | _ -> form2
+                    | '#' -> formC
+                    | '%' -> formV
+                    | _ -> formA
+                | _ -> formA
 
             Some <| cheeon + josa
 
