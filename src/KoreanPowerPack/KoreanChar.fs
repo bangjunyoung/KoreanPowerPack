@@ -121,16 +121,20 @@ let isChoseong c = '\u1100' <= c && c <= '\u1112'
 let isJungseong c = '\u1161' <= c && c <= '\u1175'
 let isJongseong c = '\u11A8' <= c && c <= '\u11C2'
 
-let choseongToIndex c =
-    if c |> isChoseong then Some (int c - int '\u1100')
+let choseongToIndex (c: char) =
+    let index = int c - int '\u1100'
+    if 0 <= index && index < ChoseongCount then Some index
     else None
-let jungseongToIndex c =
-    if c |> isJungseong then Some (int c - int '\u1161')
+let jungseongToIndex (c: char) =
+    let index = int c - int '\u1161'
+    if 0 <= index && index < JungseongCount then Some index
     else None
 let jongseongToIndex c =
     if c = '\u0000' then Some 0
-    elif c |> isJongseong then Some (int c - int '\u11A8' + 1)
-    else None
+    else
+        let index = int c - int '\u11A8' + 1
+        if 0 <= index && index < JongseongCount then Some index
+        else None
 
 let map key value = (key, value) ||> Array.zip |> Map.ofArray
 
