@@ -26,7 +26,6 @@
 module KoreanPowerPack.SebeolsikParsers
 
 open FParsec
-open KoreanPowerPack.FParsec
 
 type Jamo = string
 
