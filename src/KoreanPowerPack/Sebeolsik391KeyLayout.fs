@@ -63,7 +63,12 @@ let unparse str =
     raiseIfNull "str" str
 
     str
-    |> HangulKeyLayout.unparse
-        (KoreanChar.decompose >>
-         fun (cho, jung, jong) -> cho + jung + jong)
+    |> HangulKeyLayout.unparse (fun c ->
+        if c |> KoreanChar.isJungseong then
+            KoreanChar.decomposeJungseong c
+        elif c |> KoreanChar.isSyllable then
+            let (cho, jung, jong) = KoreanChar.decomposeIntoStrings c
+            cho + jung + jong
+        else
+            string c)
     |> String.map sebeolsik391ToQwerty

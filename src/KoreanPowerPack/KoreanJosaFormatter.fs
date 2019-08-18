@@ -104,7 +104,7 @@ module internal KoreanJosaFormatter =
                 | NullOrEmpty -> formA
                 | Number lastChar
                 | Hangul lastChar ->
-                    let _, _, jongseong = KoreanChar.decomposeCompat lastChar
+                    let _, _, jongseong = KoreanChar.decomposeCompatIntoStrings lastChar
                     match josa with
                     | "로" | "으로" -> 
                         if jongseong = "" || jongseong = "ㄹ" then formV else formC

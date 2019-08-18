@@ -35,7 +35,7 @@ module internal KoreanChar =
     let [<Literal>] JungseongCount = 21
     let [<Literal>] JongseongCount = 28
 
-    let composeFromIndexes choIndex jungIndex jongIndex =
+    let composeIndexes choIndex jungIndex jongIndex =
         int HangulSyllableFirst +
             choIndex * (JungseongCount * JongseongCount) +
             jungIndex * JongseongCount +
@@ -50,7 +50,7 @@ module internal KoreanChar =
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
-    let jamos = {
+    let jamosAsString = {
         Choseong = [|
             "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
             "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
@@ -61,13 +61,13 @@ module internal KoreanChar =
             "ᅵ"
         |]
         Jongseong = [|
-            ""; "ᆨ"; "ᆩ"; "ᆪ"; "ᆫ"; "ᆬ"; "ᆭ"; "ᆮ"; "ᆯ"; "ᆰ"
-            "ᆱ"; "ᆲ"; "ᆳ"; "ᆴ"; "ᆵ"; "ᆶ"; "ᆷ"; "ᆸ"; "ᆹ"; "ᆺ"
-            "ᆻ"; "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
+            ""; "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"
+            "ᆯᆷ"; "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"
+            "ᆺᆺ"; "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
         |]
     }
 
-    let jamosAsChar = {
+    let jamos = {
         Choseong = [|
             'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
             'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
@@ -84,10 +84,10 @@ module internal KoreanChar =
         |]
     }
 
-    let compatJamos = {
+    let compatJamosAsString = {
         Choseong = [|
-            "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
-            "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+            "ㄱ"; "ㄱㄱ"; "ㄴ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅅ"
+            "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
         |]
         Jungseong = [|
             "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"; "ㅖ"; "ㅗ"; "ㅗㅏ"
@@ -101,7 +101,7 @@ module internal KoreanChar =
         |]
     }
 
-    let compatJamosAsChar = {
+    let compatJamos = {
         Choseong = [|
             'ㄱ'; 'ㄲ'; 'ㄴ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅅ'
             'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
@@ -137,37 +137,11 @@ module internal KoreanChar =
             if 0 <= index && index < JongseongCount then Some index
             else None
 
-    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
+    let mapToIndex source = source |> Array.mapi (fun i c -> c, i) |> Map.ofArray
 
-    let choseongToCharMap = map jamos.Choseong jamosAsChar.Choseong
-    let jungseongToCharMap = map jamos.Jungseong jamosAsChar.Jungseong
-    let jongseongToCharMap = map jamos.Jongseong jamosAsChar.Jongseong
-    let bokjongseongToCharMap = Map.ofArray [|
-        "ᆨᆨ", 'ᆩ'; "ᆨᆺ", 'ᆪ'; "ᆫᆽ", 'ᆬ'; "ᆫᇂ", 'ᆭ'; "ᆯᆨ", 'ᆰ'
-        "ᆯᆷ", 'ᆱ'; "ᆯᆸ", 'ᆲ'; "ᆯᆺ", 'ᆳ'; "ᆯᇀ", 'ᆴ'; "ᆯᇁ", 'ᆵ'
-        "ᆯᇂ", 'ᆶ'; "ᆸᆺ", 'ᆹ'; "ᆺᆺ", 'ᆻ'
-    |]
-
-    let choseongToChar choseong = choseongToCharMap |> Map.find choseong
-    let jungseongToChar jungseong = jungseongToCharMap |> Map.find jungseong
-    let jongseongToChar jongseong =
-        match bokjongseongToCharMap |> Map.tryFind jongseong with
-        | Some jong -> jong
-        | None -> jongseongToCharMap |> Map.find jongseong
-
-    let compatChoseongToCharMap = map compatJamos.Choseong compatJamosAsChar.Choseong
-    let compatJungseongToCharMap = map compatJamos.Jungseong compatJamosAsChar.Jungseong
-    let compatJongseongToCharMap = map compatJamos.Jongseong compatJamosAsChar.Jongseong
-
-    let compatChoseongToChar choseong = compatChoseongToCharMap |> Map.find choseong
-    let compatJungseongToChar jungseong = compatJungseongToCharMap |> Map.find jungseong
-    let compatJongseongToChar jongseong = compatJongseongToCharMap |> Map.find jongseong
-
-    let mapJamoToIndex jamos = jamos |> Array.mapi (fun i c -> c, i) |> Map.ofArray
-
-    let compatChoseongToIndexMap = mapJamoToIndex compatJamosAsChar.Choseong
-    let compatJungseongToIndexMap = mapJamoToIndex compatJamosAsChar.Jungseong
-    let compatJongseongToIndexMap = mapJamoToIndex compatJamosAsChar.Jongseong
+    let compatChoseongToIndexMap = mapToIndex compatJamos.Choseong
+    let compatJungseongToIndexMap = mapToIndex compatJamos.Jungseong
+    let compatJongseongToIndexMap = mapToIndex compatJamos.Jongseong
 
     let compatChoseongToIndex c = compatChoseongToIndexMap |> Map.tryFind c
     let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
@@ -177,6 +151,72 @@ module internal KoreanChar =
     let isCompatJungseong = compatJungseongToIndex >> Option.isSome
     let isCompatJongseong = compatJongseongToIndex >> Option.isSome
 
+    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
+
+    let bokchoseongStringToCharMap =
+        map [|"ᄀᄀ"; "ᄃᄃ"; "ᄇᄇ"; "ᄉᄉ"; "ᄌᄌ"|]
+            [|'ᄁ'; 'ᄄ'; 'ᄈ'; 'ᄉ'; 'ᄍ'|]
+    let bokjungseongStringToCharMap =
+        map [|"ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"|]
+            [|'ᅪ'; 'ᅫ'; 'ᅬ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅴ'|]
+    let bokjongseongStringToCharMap =
+        map [|"ᆨᆨ"; "ᆨᆺ"; "ᆫᆽ"; "ᆫᇂ"; "ᆯᆨ"; "ᆯᆷ"; "ᆯᆸ"
+              "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆸᆺ"; "ᆺᆺ"|]
+            [|'ᆩ'; 'ᆪ'; 'ᆬ'; 'ᆭ'; 'ᆰ'; 'ᆱ'; 'ᆲ'
+              'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆹ'; 'ᆻ'|]
+
+    let compatBokchoseongStringToCharMap =
+        map [|"ㄱㄱ"; "ㄷㄷ"; "ㅂㅂ"; "ㅅㅅ"|]
+            [|'ㄲ'; 'ㄷ'; 'ㅂ'; 'ㅆ'|]
+    let compatBokjungseongStringToCharMap =
+        map [|"ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"|]
+            [|'ㅘ'; 'ㅙ'; 'ㅚ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅢ'|]
+    let compatBokjongseongStringToCharMap =
+        map [|"ㄱㄱ"; "ㄱㅅ"; "ㄴㅈ"; "ㄴㅎ"; "ㄹㄱ"; "ㄹㅁ"; "ㄹㅂ"
+              "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅂㅅ"; "ㅅㅅ"|]
+            [|'ㄲ'; 'ㄳ'; 'ㄵ'; 'ㄶ'; 'ㄺ'; 'ㄻ'; 'ㄼ'
+              'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅄ'; 'ㅆ'|]
+
+    let choseongToChar choseong =
+        match String.length choseong with
+        | 1 -> if choseong.[0] |> isChoseong then Some choseong.[0] else None
+        | 2 -> bokchoseongStringToCharMap |> Map.tryFind choseong
+        | _ -> None
+    let jungseongToChar jungseong =
+        match String.length jungseong with
+        | 1 -> if jungseong.[0] |> isJungseong then Some jungseong.[0] else None
+        | 2 -> bokjungseongStringToCharMap |> Map.tryFind jungseong
+        | _ -> None
+    let jongseongToChar jongseong =
+        match String.length jongseong with
+        | 0 -> Some '\u0000'
+        | 1 -> if jongseong.[0] |> isJongseong then Some jongseong.[0] else None
+        | 2 -> bokjongseongStringToCharMap |> Map.tryFind jongseong
+        | _ -> None
+
+    let compatChoseongToChar choseong =
+        match String.length choseong with
+        | 1 -> if choseong.[0] |> isCompatChoseong
+               then Some choseong.[0]
+               else None
+        | 2 -> compatBokchoseongStringToCharMap |> Map.tryFind choseong
+        | _ -> None
+    let compatJungseongToChar jungseong =
+        match String.length jungseong with
+        | 1 -> if jungseong.[0] |> isCompatJungseong
+               then Some jungseong.[0]
+               else None
+        | 2 -> compatBokjungseongStringToCharMap |> Map.tryFind jungseong
+        | _ -> None
+    let compatJongseongToChar jongseong =
+        match String.length jongseong with
+        | 0 -> Some '\u0000'
+        | 1 -> if jongseong.[0] |> isCompatJongseong
+               then Some jongseong.[0]
+               else None
+        | 2 -> compatBokjongseongStringToCharMap |> Map.tryFind jongseong
+        | _ -> None
+
     let compose choseong jungseong jongseong =
         let convert argName f g x =
             match f x with
@@ -184,25 +224,62 @@ module internal KoreanChar =
             | None ->
                 match g x with
                 | Some index -> index
-                | None -> invalidArg argName ("not a " + argName)
+                | None -> invalidArg argName <| sprintf "%A is not a %s" x argName
 
         let choIndex = convert "choseong" compatChoseongToIndex choseongToIndex choseong
         let jungIndex = convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong
         let jongIndex = convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
 
-        composeFromIndexes choIndex jungIndex jongIndex
+        composeIndexes choIndex jungIndex jongIndex
 
-    let decomposeWith table syllable =
+    let composeStrings choseong jungseong jongseong =
+        let convert argName f g x =
+            match f x with
+            | Some c -> c
+            | None ->
+                match g x with
+                | Some c -> c
+                | None -> invalidArg argName <| sprintf "%A is not a %s" x argName
+
+        let cho = convert "choseong" compatChoseongToChar choseongToChar choseong
+        let jung = convert "jungseong" compatJungseongToChar jungseongToChar jungseong
+        let jong = convert "jongseong" compatJongseongToChar jongseongToChar jongseong
+
+        compose cho jung jong
+
+    let bokjungseongCharToStringMap =
+        map [|'ᅪ'; 'ᅫ'; 'ᅬ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅴ'|]
+            [|"ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"|]
+
+    let decomposeJungseong c =
+        match bokjungseongCharToStringMap |> Map.tryFind c with
+        | Some jung -> jung
+        | None -> string "1"
+
+    let compatBokjungseongCharToStringMap =
+        map [|'ㅘ'; 'ㅙ'; 'ㅚ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅢ'|]
+            [|"ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"|]
+
+    let decomposeCompatJungseong c =
+        match compatBokjungseongCharToStringMap |> Map.tryFind c with
+        | Some jung -> jung
+        | None -> string c
+
+    let decomposeInto collection syllable =
         if not (syllable |> isSyllable) then
             invalidArg "syllable" <| sprintf "%c is not a Hangul syllable" syllable
 
         let choIndex, jungIndex, jongIndex = syllable |> decomposeIntoIndexes
-        table.Choseong.[choIndex], table.Jungseong.[jungIndex], table.Jongseong.[jongIndex]
 
-    let decompose = decomposeWith jamos
-    let decomposeCompat = decomposeWith compatJamos
+        collection.Choseong.[choIndex],
+        collection.Jungseong.[jungIndex],
+        collection.Jongseong.[jongIndex]
 
-open KoreanPowerPack.FSharp
+    let decompose = decomposeInto jamos
+    let decomposeCompat = decomposeInto compatJamos
+    let decomposeIntoStrings = decomposeInto jamosAsString
+    let decomposeCompatIntoStrings = decomposeInto compatJamosAsString
+
 open KoreanChar
 
 type KoreanChar private () =
@@ -219,22 +296,17 @@ type KoreanChar private () =
     static member Compose(choseong, jungseong, jongseong) =
         compose choseong jungseong jongseong
 
-    static member Decompose syllable =
-        decomposeWith jamosAsChar syllable
-
-    static member DecomposeCompat syllable =
-        decomposeWith compatJamosAsChar syllable
+    static member Compose(choseong, jungseong, jongseong) =
+        composeStrings choseong jungseong jongseong
 
     static member Decompose syllable =
-        raiseIfNull "syllable" syllable
-        if String.length syllable <> 1 then
-            invalidArg "syllable" "syllable must contain only one character"
-
-        decomposeWith jamos syllable.[0]
+        decompose syllable
 
     static member DecomposeCompat syllable =
-        raiseIfNull "syllable" syllable
-        if String.length syllable <> 1 then
-            invalidArg "syllable" "syllable must contain only one character"
+        decomposeCompat syllable
 
-        decomposeWith compatJamos syllable.[0]
+    static member DecomposeIntoStrings syllable =
+        decomposeIntoStrings syllable
+
+    static member DecomposeCompatIntoStrings syllable =
+        decomposeCompatIntoStrings syllable

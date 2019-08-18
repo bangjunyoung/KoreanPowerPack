@@ -36,17 +36,15 @@ type Syllable =
     | ChoJungJongseong of Jamo * Jamo * Jamo
 
     static member op_Explicit(syllable) =
-        let compose choseong jungseong jongseong =
-            KoreanChar.compose
-                (choseong |> KoreanChar.compatChoseongToChar)
-                (jungseong |> KoreanChar.compatJungseongToChar)
-                (jongseong |> KoreanChar.compatJongseongToChar)
-
         match syllable with
-        | Choseong cho -> KoreanChar.compatChoseongToChar cho
-        | Jungseong jung -> KoreanChar.compatJungseongToChar jung
-        | ChoJungseong(cho, jung) -> compose cho jung ""
-        | ChoJungJongseong(cho, jung, jong) -> compose cho jung jong
+        | Choseong cho ->
+            KoreanChar.compatChoseongToChar cho |> Option.get
+        | Jungseong jung ->
+            KoreanChar.compatJungseongToChar jung |> Option.get
+        | ChoJungseong (cho, jung) ->
+            KoreanChar.composeStrings cho jung ""
+        | ChoJungJongseong (cho, jung, jong) ->
+            KoreanChar.composeStrings cho jung jong
 
 let choseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
