@@ -137,7 +137,7 @@ module internal KoreanChar =
             if 0 <= index && index < JongseongCount then Some index
             else None
 
-    let map key value = (key, value) ||> Array.zip |> Map.ofArray
+    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
 
     let choseongToCharMap = map jamos.Choseong jamosAsChar.Choseong
     let jungseongToCharMap = map jamos.Jungseong jamosAsChar.Jungseong
@@ -163,7 +163,7 @@ module internal KoreanChar =
     let compatJungseongToChar jungseong = compatJungseongToCharMap |> Map.find jungseong
     let compatJongseongToChar jongseong = compatJongseongToCharMap |> Map.find jongseong
 
-    let mapJamoToIndex jamos = jamos |> Array.mapi (fun index c -> c, index) |> Map.ofArray
+    let mapJamoToIndex jamos = jamos |> Array.mapi (fun i c -> c, i) |> Map.ofArray
 
     let compatChoseongToIndexMap = mapJamoToIndex compatJamosAsChar.Choseong
     let compatJungseongToIndexMap = mapJamoToIndex compatJamosAsChar.Jungseong
