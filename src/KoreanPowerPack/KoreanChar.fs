@@ -25,6 +25,8 @@
 
 namespace KoreanPowerPack
 
+open KoreanPowerPack.FSharp
+
 module internal KoreanChar =
     let [<Literal>] HangulSyllableFirst = '가'
     let [<Literal>] HangulSyllableLast = '힣'
@@ -95,9 +97,10 @@ module internal KoreanChar =
             "ㅣ"
         |]
         Jongseong = [|
-            ""; "ㄱ"; "ㄲ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄹ"; "ㄹㄱ"
-            "ㄹㅁ"; "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅅ"; "ㅅ"
-            "ㅆ"; "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+            ""
+            "ㄱ"; "ㄲ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄹ"; "ㄹㄱ"; "ㄹㅁ"
+            "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅅ"; "ㅅ"; "ㅆ"
+            "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
         |]
     }
 
@@ -112,9 +115,10 @@ module internal KoreanChar =
             'ㅣ'
         |]
         Jongseong = [|
-            '\u0000'; 'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄹ'; 'ㄺ'
-            'ㄻ'; 'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅄ'; 'ㅅ'
-            'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
+            '\u0000'
+            'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄹ'; 'ㄺ'; 'ㄻ'
+            'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅄ'; 'ㅅ'; 'ㅆ'
+            'ㅇ'; 'ㅈ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
         |]
     }
 
@@ -155,7 +159,7 @@ module internal KoreanChar =
 
     let bokchoseongStringToCharMap =
         map [|"ᄀᄀ"; "ᄃᄃ"; "ᄇᄇ"; "ᄉᄉ"; "ᄌᄌ"|]
-            [|'ᄁ'; 'ᄄ'; 'ᄈ'; 'ᄉ'; 'ᄍ'|]
+            [|'ᄁ'; 'ᄄ'; 'ᄈ'; 'ᄊ'; 'ᄍ'|]
     let bokjungseongStringToCharMap =
         map [|"ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"|]
             [|'ᅪ'; 'ᅫ'; 'ᅬ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅴ'|]
@@ -167,7 +171,7 @@ module internal KoreanChar =
 
     let compatBokchoseongStringToCharMap =
         map [|"ㄱㄱ"; "ㄷㄷ"; "ㅂㅂ"; "ㅅㅅ"|]
-            [|'ㄲ'; 'ㄷ'; 'ㅂ'; 'ㅆ'|]
+            [|'ㄲ'; 'ㄸ'; 'ㅃ'; 'ㅆ'|]
     let compatBokjungseongStringToCharMap =
         map [|"ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"|]
             [|'ㅘ'; 'ㅙ'; 'ㅚ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅢ'|]
@@ -177,51 +181,84 @@ module internal KoreanChar =
             [|'ㄲ'; 'ㄳ'; 'ㄵ'; 'ㄶ'; 'ㄺ'; 'ㄻ'; 'ㄼ'
               'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅄ'; 'ㅆ'|]
 
-    let choseongToChar choseong =
-        match String.length choseong with
-        | 1 -> if choseong.[0] |> isChoseong
-               then Some choseong.[0]
-               else None
-        | 2 -> bokchoseongStringToCharMap |> Map.tryFind choseong
-        | _ -> None
-    let jungseongToChar jungseong =
-        match String.length jungseong with
-        | 1 -> if jungseong.[0] |> isJungseong
-               then Some jungseong.[0]
-               else None
-        | 2 -> bokjungseongStringToCharMap |> Map.tryFind jungseong
-        | _ -> None
-    let jongseongToChar jongseong =
-        match String.length jongseong with
+    let jamoStrings = [|
+        "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
+        "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
+
+        "ᅡ"; "ᅢ"; "ᅣ"; "ᅤ"; "ᅥ"; "ᅦ"; "ᅧ"; "ᅨ"; "ᅩ"; "ᅩᅡ"
+        "ᅩᅢ"; "ᅩᅵ"; "ᅭ"; "ᅮ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅲ"; "ᅳ"; "ᅳᅵ"
+        "ᅵ"
+
+        "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"; "ᆯᆷ"
+        "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"; "ᆺᆺ"
+        "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
+
+        "ㄱ"; "ㄱㄱ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㄹㄱ"
+        "ㄹㅁ"; "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅂㅅ"
+        "ㅅ"; "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+
+        "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"; "ㅖ"; "ㅗ"; "ㅗㅏ"
+        "ㅗㅐ"; "ㅗㅣ"; "ㅛ"; "ㅜ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅠ"; "ㅡ"; "ㅡㅣ"
+        "ㅣ"
+    |]
+    let jamoChars = [|
+        'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
+        'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
+
+        'ᅡ'; 'ᅢ'; 'ᅣ'; 'ᅤ'; 'ᅥ'; 'ᅦ'; 'ᅧ'; 'ᅨ'; 'ᅩ'; 'ᅪ'
+        'ᅫ'; 'ᅬ'; 'ᅭ'; 'ᅮ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅲ'; 'ᅳ'; 'ᅴ'
+        'ᅵ'
+
+        'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'; 'ᆱ'
+        'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
+        'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
+
+        'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㄺ'
+        'ㄻ'; 'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅄ'
+        'ㅅ'; 'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
+
+        'ㅏ'; 'ㅐ'; 'ㅑ'; 'ㅒ'; 'ㅓ'; 'ㅔ'; 'ㅕ'; 'ㅖ'; 'ㅗ'; 'ㅘ'
+        'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
+        'ㅣ'
+    |]
+
+    let bokjamosAsString' = [|
+        "ᄀᄀ"; "ᄃᄃ"; "ᄇᄇ"; "ᄉᄉ"; "ᄌᄌ"
+        "ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"
+        "ᆨᆨ"; "ᆨᆺ"; "ᆫᆽ"; "ᆫᇂ"; "ᆯᆨ"; "ᆯᆷ"; "ᆯᆸ"
+        "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆸᆺ"; "ᆺᆺ"
+
+        "ㄱㄱ"; "ㄱㅅ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷㄷ"; "ㄹㄱ"; "ㄹㅁ"; "ㄹㅂ"
+        "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅂㅂ"; "ㅂㅅ"; "ㅅㅅ"
+        "ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"
+    |]
+    let bokjamosAsChar' = [|
+        'ᄁ'; 'ᄄ'; 'ᄈ'; 'ᄊ'; 'ᄍ'
+        'ᅪ'; 'ᅫ'; 'ᅬ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅴ'
+        'ᆩ'; 'ᆪ'; 'ᆬ'; 'ᆭ'; 'ᆰ'; 'ᆱ'; 'ᆲ'
+        'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆹ'; 'ᆻ'
+
+        'ㄲ'; 'ㄳ'; 'ㄵ'; 'ㄶ'; 'ㄸ'; 'ㄺ'; 'ㄻ'; 'ㄼ'
+        'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅃ'; 'ㅄ'; 'ㅆ'
+        'ㅘ'; 'ㅙ'; 'ㅚ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅢ'
+    |]
+
+    let jamoNormalizationMap = map jamoStrings jamoChars
+    let jamoDenormalizationMap = map jamoChars jamoStrings
+
+    let normalizeJamo jamo =
+        match String.length jamo with
         | 0 -> Some '\u0000'
-        | 1 -> if jongseong.[0] |> isJongseong
-               then Some jongseong.[0]
-               else None
-        | 2 -> bokjongseongStringToCharMap |> Map.tryFind jongseong
+        | 1 -> match jamoChars |> Array.tryBinarySearch jamo.[0] with
+               | Some index -> Some jamoChars.[index]
+               | None -> None
+        | 2 -> jamoNormalizationMap |> Map.tryFind jamo
         | _ -> None
 
-    let compatChoseongToChar choseong =
-        match String.length choseong with
-        | 1 -> if choseong.[0] |> isCompatChoseong
-               then Some choseong.[0]
-               else None
-        | 2 -> compatBokchoseongStringToCharMap |> Map.tryFind choseong
-        | _ -> None
-    let compatJungseongToChar jungseong =
-        match String.length jungseong with
-        | 1 -> if jungseong.[0] |> isCompatJungseong
-               then Some jungseong.[0]
-               else None
-        | 2 -> compatBokjungseongStringToCharMap |> Map.tryFind jungseong
-        | _ -> None
-    let compatJongseongToChar jongseong =
-        match String.length jongseong with
-        | 0 -> Some '\u0000'
-        | 1 -> if jongseong.[0] |> isCompatJongseong
-               then Some jongseong.[0]
-               else None
-        | 2 -> compatBokjongseongStringToCharMap |> Map.tryFind jongseong
-        | _ -> None
+    let denormalizeJamo jamo =
+        match jamoDenormalizationMap |> Map.tryFind jamo with
+        | Some jamoAsString -> jamoAsString
+        | None -> string jamo
 
     let compose choseong jungseong jongseong =
         let convert argName f g x =
@@ -239,37 +276,18 @@ module internal KoreanChar =
         composeIndexes choIndex jungIndex jongIndex
 
     let composeStrings choseong jungseong jongseong =
-        let convert argName f g x =
-            match f x with
-            | Some c -> c
-            | None ->
-                match g x with
-                | Some c -> c
-                | None -> invalidArg argName <| sprintf "%A is not a %s" x argName
+        let invalid argName arg =
+            invalidArg argName <| sprintf "%A is not a %s" arg argName
 
-        let cho = convert "choseong" compatChoseongToChar choseongToChar choseong
-        let jung = convert "jungseong" compatJungseongToChar jungseongToChar jungseong
-        let jong = convert "jongseong" compatJongseongToChar jongseongToChar jongseong
+        let cho = normalizeJamo choseong
+        let jung = normalizeJamo jungseong
+        let jong = normalizeJamo jongseong
 
-        compose cho jung jong
-
-    let bokjungseongCharToStringMap =
-        map [|'ᅪ'; 'ᅫ'; 'ᅬ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅴ'|]
-            [|"ᅩᅡ"; "ᅩᅢ"; "ᅩᅵ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅳᅵ"|]
-
-    let decomposeJungseong c =
-        match bokjungseongCharToStringMap |> Map.tryFind c with
-        | Some jung -> jung
-        | None -> string "1"
-
-    let compatBokjungseongCharToStringMap =
-        map [|'ㅘ'; 'ㅙ'; 'ㅚ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅢ'|]
-            [|"ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"|]
-
-    let decomposeCompatJungseong c =
-        match compatBokjungseongCharToStringMap |> Map.tryFind c with
-        | Some jung -> jung
-        | None -> string c
+        match cho, jung, jong with
+        | Some cho, Some jung, Some jong -> compose cho jung jong
+        | None, _, _ -> invalid "choseong" choseong
+        | _, None, _ -> invalid "jungseong" jungseong
+        | _, _, None -> invalid "jongseong" jongseong
 
     let decomposeInto collection syllable =
         if not (syllable |> isSyllable) then
