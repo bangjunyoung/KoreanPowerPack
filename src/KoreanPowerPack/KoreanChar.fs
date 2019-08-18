@@ -202,6 +202,7 @@ module internal KoreanChar =
     let decompose = decomposeWith jamos
     let decomposeCompat = decomposeWith compatJamos
 
+open KoreanPowerPack.FSharp
 open KoreanChar
 
 type KoreanChar private () =
@@ -223,3 +224,17 @@ type KoreanChar private () =
 
     static member DecomposeCompat syllable =
         decomposeWith compatJamosAsChar syllable
+
+    static member Decompose syllable =
+        raiseIfNull "syllable" syllable
+        if String.length syllable <> 1 then
+            invalidArg "syllable" "syllable must contain only one character"
+
+        decomposeWith jamos syllable.[0]
+
+    static member DecomposeCompat syllable =
+        raiseIfNull "syllable" syllable
+        if String.length syllable <> 1 then
+            invalidArg "syllable" "syllable must contain only one character"
+
+        decomposeWith compatJamos syllable.[0]
