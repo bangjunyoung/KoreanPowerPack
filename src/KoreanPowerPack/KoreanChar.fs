@@ -179,18 +179,24 @@ module internal KoreanChar =
 
     let choseongToChar choseong =
         match String.length choseong with
-        | 1 -> if choseong.[0] |> isChoseong then Some choseong.[0] else None
+        | 1 -> if choseong.[0] |> isChoseong
+               then Some choseong.[0]
+               else None
         | 2 -> bokchoseongStringToCharMap |> Map.tryFind choseong
         | _ -> None
     let jungseongToChar jungseong =
         match String.length jungseong with
-        | 1 -> if jungseong.[0] |> isJungseong then Some jungseong.[0] else None
+        | 1 -> if jungseong.[0] |> isJungseong
+               then Some jungseong.[0]
+               else None
         | 2 -> bokjungseongStringToCharMap |> Map.tryFind jungseong
         | _ -> None
     let jongseongToChar jongseong =
         match String.length jongseong with
         | 0 -> Some '\u0000'
-        | 1 -> if jongseong.[0] |> isJongseong then Some jongseong.[0] else None
+        | 1 -> if jongseong.[0] |> isJongseong
+               then Some jongseong.[0]
+               else None
         | 2 -> bokjongseongStringToCharMap |> Map.tryFind jongseong
         | _ -> None
 
