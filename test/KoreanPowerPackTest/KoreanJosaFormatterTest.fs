@@ -49,18 +49,18 @@ let validJosas = [
 
 let generateTestCaseData testStrings expected =
     validJosas
-    |> List.collect (fun (form0, form1, form2) ->
+    |> List.collect (fun (formC, formV, formA) ->
         testStrings
         |> List.collect (fun cheeon ->
-            if expected |> List.exists ((=) (cheeon + form0)) then
-                [cheeon, form0, cheeon + form0
-                 cheeon, form1, cheeon + form0]
-            elif expected |> List.exists ((=) (cheeon + form1)) then
-                [cheeon, form0, cheeon + form1
-                 cheeon, form1, cheeon + form1]
+            if expected |> List.exists ((=) (cheeon + formC)) then
+                [cheeon, formC, cheeon + formC
+                 cheeon, formV, cheeon + formC]
+            elif expected |> List.exists ((=) (cheeon + formV)) then
+                [cheeon, formC, cheeon + formV
+                 cheeon, formV, cheeon + formV]
             else
-                [cheeon, form0, cheeon + form2
-                 cheeon, form1, cheeon + form2]))
+                [cheeon, formC, cheeon + formA
+                 cheeon, formV, cheeon + formA]))
     |> List.map (fun (cheeon, josa, combined) ->
         TestCaseData(cheeon, josa).Returns(combined))
 
