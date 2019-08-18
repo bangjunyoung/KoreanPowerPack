@@ -52,7 +52,7 @@ module internal KoreanChar =
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
-    let jamosAsString = {
+    let jamoStringCollection = {
         Choseong = [|
             "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
             "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
@@ -63,13 +63,14 @@ module internal KoreanChar =
             "ᅵ"
         |]
         Jongseong = [|
-            ""; "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"
-            "ᆯᆷ"; "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"
-            "ᆺᆺ"; "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
+            "" 
+            "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"; "ᆯᆷ"
+            "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"; "ᆺᆺ"
+            "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
         |]
     }
 
-    let jamos = {
+    let jamoCharCollection = {
         Choseong = [|
             'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
             'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
@@ -80,13 +81,14 @@ module internal KoreanChar =
             'ᅵ'
         |]
         Jongseong = [|
-            '\u0000'; 'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'
-            'ᆱ'; 'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'
-            'ᆻ'; 'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
+            '\u0000'
+            'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'; 'ᆱ'
+            'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
+            'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
         |]
     }
 
-    let compatJamosAsString = {
+    let compatJamoStringCollection = {
         Choseong = [|
             "ㄱ"; "ㄱㄱ"; "ㄴ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅅ"
             "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
@@ -104,7 +106,7 @@ module internal KoreanChar =
         |]
     }
 
-    let compatJamos = {
+    let compatJamoCharCollection = {
         Choseong = [|
             'ㄱ'; 'ㄲ'; 'ㄴ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅅ'
             'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
@@ -143,9 +145,9 @@ module internal KoreanChar =
 
     let mapToIndex source = source |> Array.mapi (fun i c -> c, i) |> Map.ofArray
 
-    let compatChoseongToIndexMap = mapToIndex compatJamos.Choseong
-    let compatJungseongToIndexMap = mapToIndex compatJamos.Jungseong
-    let compatJongseongToIndexMap = mapToIndex compatJamos.Jongseong
+    let compatChoseongToIndexMap = mapToIndex compatJamoCharCollection.Choseong
+    let compatJungseongToIndexMap = mapToIndex compatJamoCharCollection.Jungseong
+    let compatJongseongToIndexMap = mapToIndex compatJamoCharCollection.Jongseong
 
     let compatChoseongToIndex c = compatChoseongToIndexMap |> Map.tryFind c
     let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
@@ -154,9 +156,6 @@ module internal KoreanChar =
     let isCompatChoseong = compatChoseongToIndex >> Option.isSome
     let isCompatJungseong = compatJungseongToIndex >> Option.isSome
     let isCompatJongseong = compatJongseongToIndex >> Option.isSome
-
-    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
-
 
     let jamoStrings = [|
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
@@ -198,6 +197,8 @@ module internal KoreanChar =
         'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
         'ㅣ'
     |]
+
+    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
 
     let jamoNormalizationMap = map jamoStrings jamoChars
     let jamoDenormalizationMap = map jamoChars jamoStrings
@@ -255,10 +256,10 @@ module internal KoreanChar =
         collection.Jungseong.[jungIndex],
         collection.Jongseong.[jongIndex]
 
-    let decompose = decomposeInto jamos
-    let decomposeCompat = decomposeInto compatJamos
-    let decomposeIntoStrings = decomposeInto jamosAsString
-    let decomposeCompatIntoStrings = decomposeInto compatJamosAsString
+    let decompose = decomposeInto jamoCharCollection
+    let decomposeCompat = decomposeInto compatJamoCharCollection
+    let decomposeIntoStrings = decomposeInto jamoStringCollection
+    let decomposeCompatIntoStrings = decomposeInto compatJamoStringCollection
 
 open KoreanChar
 
