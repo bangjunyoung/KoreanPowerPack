@@ -31,7 +31,7 @@ open NUnit.Framework
 [<TestCase('\uD7A3', ExpectedResult = true)>]
 [<TestCase('\uABFF', ExpectedResult = false)>]
 [<TestCase('\uD7A4', ExpectedResult = false)>]
-let ``IsSyllable works as expected`` c =
+let ``IsSyllable returns expected result`` c =
     KoreanChar.IsSyllable c
 
 [<TestCase('\u1100', ExpectedResult = true)>]
@@ -39,7 +39,7 @@ let ``IsSyllable works as expected`` c =
 [<TestCase('\u1009', ExpectedResult = false)>]
 [<TestCase('\u1113', ExpectedResult = false)>]
 [<TestCase('\u3131', ExpectedResult = false)>]
-let ``IsChoseong works as expected`` c =
+let ``IsChoseong returns expected result`` c =
     KoreanChar.IsChoseong c
 
 [<TestCase('\u1161', ExpectedResult = true)>]
@@ -47,7 +47,7 @@ let ``IsChoseong works as expected`` c =
 [<TestCase('\u1160', ExpectedResult = false)>]
 [<TestCase('\u1176', ExpectedResult = false)>]
 [<TestCase('\u314F', ExpectedResult = false)>]
-let ``IsJungseong works as expected`` c =
+let ``IsJungseong returns expected result`` c =
     KoreanChar.IsJungseong c
 
 [<TestCase('\u11A8', ExpectedResult = true)>]
@@ -55,7 +55,7 @@ let ``IsJungseong works as expected`` c =
 [<TestCase('\u11A7', ExpectedResult = false)>]
 [<TestCase('\u11C3', ExpectedResult = false)>]
 [<TestCase('\u3131', ExpectedResult = false)>]
-let ``IsJongseong works as expected`` c =
+let ``IsJongseong returns expected result`` c =
     KoreanChar.IsJongseong c
 
 [<TestCase('\u3131', ExpectedResult = true)>]
@@ -63,14 +63,14 @@ let ``IsJongseong works as expected`` c =
 [<TestCase('\u3130', ExpectedResult = false)>]
 [<TestCase('\u314F', ExpectedResult = false)>]
 [<TestCase('\u3133', ExpectedResult = false)>]
-let ``IsCompatChoseong works as expected`` c =
+let ``IsCompatChoseong returns expected result`` c =
     KoreanChar.IsCompatChoseong c
 
 [<TestCase('\u314F', ExpectedResult = true)>]
 [<TestCase('\u3163', ExpectedResult = true)>]
 [<TestCase('\u314E', ExpectedResult = false)>]
 [<TestCase('\u3164', ExpectedResult = false)>]
-let ``IsCompatJungseong works as expected`` c =
+let ``IsCompatJungseong returns expected result`` c =
     KoreanChar.IsCompatJungseong c
 
 [<TestCase('\u3131', ExpectedResult = true)>]
@@ -78,14 +78,14 @@ let ``IsCompatJungseong works as expected`` c =
 [<TestCase('\u3138', ExpectedResult = false)>]
 [<TestCase('\u3143', ExpectedResult = false)>]
 [<TestCase('\u3149', ExpectedResult = false)>]
-let ``IsCompatJongseong works as expected`` c =
+let ``IsCompatJongseong returns expected result`` c =
     KoreanChar.IsCompatJongseong c
 
 [<TestCase('\u1101', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
-let ``Compose with chars works as expected`` (cho: char) jung jong =
+let ``Compose with chars returns expected result`` (cho: char) jung jong =
     KoreanChar.Compose(cho, jung, jong)
 
 [<TestCase("\u1101", "\u116A", "\u11A9", ExpectedResult = '꽊')>]
 [<TestCase("\u1100\u1100", "\u1169\u1161", "\u11A8\u11A8", ExpectedResult = '꽊')>]
-let ``Compose with strings works as expected`` (cho: string) jung jong =
+let ``Compose with strings returns expected result`` (cho: string) jung jong =
     KoreanChar.Compose(cho, jung, jong)

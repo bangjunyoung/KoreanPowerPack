@@ -103,9 +103,9 @@ let testNumbers =
     generateTestCaseData testStrings expected
 
 [<TestCaseSource("testHangul")>]
-let ``should handle Hangul strings``cheeon josa =
+let ``handle Hangul strings``cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]
-let ``should handle numbers`` cheeon josa =
+let ``handle numbers`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)

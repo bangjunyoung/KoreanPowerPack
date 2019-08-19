@@ -38,7 +38,7 @@ open NUnit.Framework
 [<TestCase("hkhohlnjnpnlml", ExpectedResult = "ㅘㅙㅚㅝㅞㅟㅢ")>]
 [<TestCase("gkfrrgkfeegkfqqgkfttgkfwwgkf",
     ExpectedResult = "핡ㄱ할ㄷㄷ핣ㅂ핤ㅅ할ㅈㅈ할")>]
-let ``parse works as expected`` actual =
+let ``parse returns expected result`` actual =
     DubeolsikKeyLayout.parse actual
 
 [<TestCase("키스의 고유 조건은 입술끼리 만나야 되고 특별한 요령은 필요치 않다",
@@ -53,5 +53,5 @@ let ``parse works as expected`` actual =
 [<TestCase("핡ㄱ할ㄷㄷ핣ㅂ핤ㅅ할ㅈㅈ할",
     ExpectedResult = "gkfrrgkfeegkfqqgkfttgkfwwgkf")>]
 [<TestCase("ㄱ", ExpectedResult = "r")>]
-let ``unparse works as expected``actual =
+let ``unparse returns expected result`` actual =
     DubeolsikKeyLayout.unparse actual
