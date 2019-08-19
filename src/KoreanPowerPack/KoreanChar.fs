@@ -197,23 +197,24 @@ module internal KoreanChar =
         'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
         'ㅣ'
     |]
+    assert (jamoStrings.Length = jamoChars.Length)
 
     let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
 
-    let jamoNormalizationMap = map jamoStrings jamoChars
-    let jamoDenormalizationMap = map jamoChars jamoStrings
+    let jamoCombineMap = map jamoStrings jamoChars
+    let jamoSplitMap = map jamoChars jamoStrings
 
-    let normalizeJamo jamo =
+    let combineJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'
         | 1 -> match jamoChars |> Array.tryBinarySearch jamo.[0] with
                | Some index -> Some jamoChars.[index]
                | None -> None
-        | 2 -> jamoNormalizationMap |> Map.tryFind jamo
+        | 2 -> jamoCombineMap |> Map.tryFind jamo
         | _ -> None
 
-    let denormalizeJamo jamo =
-        match jamoDenormalizationMap |> Map.tryFind jamo with
+    let splitJamo jamo =
+        match jamoSplitMap |> Map.tryFind jamo with
         | Some jamoAsString -> jamoAsString
         | None -> string jamo
 
@@ -236,9 +237,9 @@ module internal KoreanChar =
         let invalid argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
-        let cho = normalizeJamo choseong
-        let jung = normalizeJamo jungseong
-        let jong = normalizeJamo jongseong
+        let cho = combineJamo choseong
+        let jung = combineJamo jungseong
+        let jong = combineJamo jongseong
 
         match cho, jung, jong with
         | Some cho, Some jung, Some jong -> compose cho jung jong

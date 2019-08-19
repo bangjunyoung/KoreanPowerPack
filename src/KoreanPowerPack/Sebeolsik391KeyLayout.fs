@@ -65,7 +65,7 @@ let unparse str =
     str
     |> HangulKeyLayout.unparse (fun c ->
         if c |> KoreanChar.isJungseong then
-            KoreanChar.denormalizeJamo c
+            KoreanChar.splitJamo c
         elif c |> KoreanChar.isSyllable then
             let (cho, jung, jong) = KoreanChar.decomposeIntoStrings c
             cho + jung + jong
