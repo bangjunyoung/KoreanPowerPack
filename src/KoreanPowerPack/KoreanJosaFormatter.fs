@@ -53,7 +53,7 @@ module internal KoreanJosaFormatter =
 
     let trimChars = [|' '; '\''; '\"'; '>'; ')'; '}'; ']'|]
 
-    let combine josa cheeon =
+    let join cheeon josa =
         match validJosas
               |> Array.tryFindIndex
                   (fun (formV, formC, _, _) -> formC = josa || formV = josa) with
@@ -149,7 +149,7 @@ type KoreanJosaFormatter() =
                 ""
             else
                 let argString = string arg
-                match combine format (argString.TrimEnd trimChars) with
+                match join (argString.TrimEnd trimChars) format with
                 | Some combined -> combined
                 | None -> argString + format
 
