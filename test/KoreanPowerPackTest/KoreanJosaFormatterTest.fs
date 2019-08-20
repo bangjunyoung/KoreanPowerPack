@@ -91,7 +91,7 @@ let testHangulWords =
 
     generateTestCaseData testStrings expected
 
-let testLatinWords =
+let testWesternWords =
     let beforeFormV = [
         "Asia"; "elf"; "phi"; "Troj"; "halo"; "Mars"
         "you"; "luv"; "cow"; "six"; "by"; "jazz"
@@ -102,10 +102,17 @@ let testLatinWords =
         "bear"; "user"; "pair"; "door"; "tour"
         "orb";  "more"; "centre"
     ]
-    let beforeFormC = ["ball"; "mom"; "bun"; "ring"]
+    let beforeFormL = ["ball"]
+    let beforeFormC = ["mom"; "bun"; "ring"]
     let beforeFormA = ["mob"; "food"; "good"; "sec"; "bag"]
+    let testStrings = beforeFormV @ beforeFormC @ beforeFormL @ beforeFormA
 
-    ()
+    let expected =
+        join beforeFormV josasFormV @
+        join beforeFormC josasFormC @
+        join beforeFormL josasFormL
+
+    generateTestCaseData testStrings expected
 
 let testNumbers =
     let beforeFormV = ["2"; "3000000000000"]
@@ -122,6 +129,10 @@ let testNumbers =
 
 [<TestCaseSource("testHangulWords")>]
 let ``handle Hangul words``cheeon josa =
+    KoreanJosaFormatter().Format(josa, cheeon)
+
+[<TestCaseSource("testWesternWords")>]
+let ``handle Alphabet words``cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]
