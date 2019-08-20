@@ -38,9 +38,9 @@ type Syllable =
     static member op_Explicit(syllable) =
         match syllable with
         | Choseong cho ->
-            KoreanChar.combineJamo cho |> Option.get
+            KoreanChar.combineJamo cho
         | Jungseong jung ->
-            KoreanChar.combineJamo jung |> Option.get
+            KoreanChar.combineJamo jung
         | ChoJungseong (cho, jung) ->
             KoreanChar.composeStrings cho jung ""
         | ChoJungJongseong (cho, jung, jong) ->

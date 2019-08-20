@@ -204,7 +204,7 @@ module internal KoreanChar =
     let jamoCombineMap = map jamoStrings jamoChars
     let jamoSplitMap = map jamoChars jamoStrings
 
-    let combineJamo jamo =
+    let tryCombineJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'
         | 1 -> match jamoChars |> Array.tryBinarySearch jamo.[0] with
@@ -212,6 +212,11 @@ module internal KoreanChar =
                | None -> None
         | 2 -> jamoCombineMap |> Map.tryFind jamo
         | _ -> None
+
+    let combineJamo jamo =
+        match tryCombineJamo jamo with
+        | Some jamoAsChar -> jamoAsChar
+        | None -> invalidArg "jamo" <| sprintf "%s is not a jamo" jamo
 
     let splitJamo jamo =
         match jamoSplitMap |> Map.tryFind jamo with
@@ -237,9 +242,9 @@ module internal KoreanChar =
         let invalid argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
-        let cho = combineJamo choseong
-        let jung = combineJamo jungseong
-        let jong = combineJamo jongseong
+        let cho = tryCombineJamo choseong
+        let jung = tryCombineJamo jungseong
+        let jong = tryCombineJamo jongseong
 
         match cho, jung, jong with
         | Some cho, Some jung, Some jong -> compose cho jung jong
