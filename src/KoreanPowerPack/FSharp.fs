@@ -41,14 +41,17 @@ module Exception =
             invalidArgNull argName (argName + " can't be null")
 
 module Array =
-    let tryBinarySearch (value: 'a) (source: 'a[]) =
+    let tryBinarySearchWith comparer (value: 'a) (source: 'a[]) =
         let rec loop lo hi =
-            if lo <= hi then
+            if lo > hi then None
+            else
                 let mid = lo + (hi - lo) / 2
-                match sign <| compare value source.[mid] with
+                match sign <| comparer value source.[mid] with
                 | 0 -> Some mid
                 | 1 -> loop (mid + 1) hi
                 | _ -> loop lo (mid - 1)
-            else None
 
         loop 0 (source.Length - 1)
+
+    let tryBinarySearch value source =
+        source |> tryBinarySearchWith compare value
