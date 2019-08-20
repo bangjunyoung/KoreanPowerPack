@@ -36,7 +36,7 @@ type Syllable =
     | ChoJungseong of Jamo * Jamo
     | ChoJungJongseong of Jamo * Jamo * Jamo
 
-    static member op_Explicit(syllable) =
+    static member op_Explicit(syllable): char =
         match syllable with
         | Choseong cho ->
             KoreanChar.combineJamo cho
