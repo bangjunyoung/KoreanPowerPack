@@ -34,10 +34,11 @@ module List =
             f1 :: acc1, f2 :: acc2, f3 :: acc3, f4 :: acc4) 
 
 let validJosas = [
+    "로", "으로", "로", "(으)로"
+#if false
     "는", "은", "은", "은(는)"
     "를", "을", "을", "을(를)"
     "가", "이", "이", "이(가)"
-    "로", "으로", "로", "(으)로"
     "와", "과", "과", "과(와)"
     "나", "이나", "이나", "(이)나"
     "라", "이라", "이라", "(이)라"
@@ -51,6 +52,7 @@ let validJosas = [
     "야말로", "이야말로", "이야말로", "(이)야말로"
     "여", "이여", "이여", "(이)여"
     "시여", "이시여", "이시여", "(이)시여"
+#endif
 ]
 
 let josasFormV, josasFormC, josasFormL, josasFormA =
@@ -78,7 +80,7 @@ let generateTestCaseData testStrings expected =
     |> List.map (fun (cheeon, josa, combined) ->
         TestCaseData(cheeon, josa).Returns(combined))
 
-let testHangulWords =
+let testHangulLetters =
     let beforeFormV = ["피"]
     let beforeFormC = ["땀"]
     let beforeFormL = ["눈물"]
@@ -91,7 +93,7 @@ let testHangulWords =
 
     generateTestCaseData testStrings expected
 
-let testWesternWords =
+let testLatinLetters =
     let beforeFormV = [
         "Asia"; "elf"; "phi"; "Troj"; "halo"; "Mars"
         "you"; "luv"; "cow"; "six"; "by"; "jazz"
@@ -110,7 +112,8 @@ let testWesternWords =
     let expected =
         join beforeFormV josasFormV @
         join beforeFormC josasFormC @
-        join beforeFormL josasFormL
+        join beforeFormL josasFormL @
+        join beforeFormA josasFormA
 
     generateTestCaseData testStrings expected
 
@@ -127,14 +130,29 @@ let testNumbers =
 
     generateTestCaseData testStrings expected
 
-[<TestCaseSource("testHangulWords")>]
-let ``handle Hangul words``cheeon josa =
+let testPunctuations =
+    let beforeFormV = ["%"]
+    let beforeFormC = ["#"]
+    let testStrings = beforeFormV @ beforeFormC
+
+    let expected =
+        join beforeFormV josasFormV @
+        join beforeFormC josasFormC
+
+    generateTestCaseData testStrings expected
+
+[<TestCaseSource("testHangulLetters")>]
+let ``handle Hangul``cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
-[<TestCaseSource("testWesternWords")>]
-let ``handle Alphabet words``cheeon josa =
+[<TestCaseSource("testLatinLetters")>]
+let ``handle Latin letters``cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]
 let ``handle numbers`` cheeon josa =
+    KoreanJosaFormatter().Format(josa, cheeon)
+
+[<TestCaseSource("testPunctuations")>]
+let ``handle punctuations`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
