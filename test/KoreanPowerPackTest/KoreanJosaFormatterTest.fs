@@ -27,29 +27,43 @@ module KoreanPowerPack.KoreanJosaFormatterTest
 
 open NUnit.Framework
 
+module List =
+    let unzip4 source =
+        (source, ([], [], [], []))
+        ||> List.foldBack (fun (f1, f2, f3, f4) (acc1, acc2, acc3, acc4)  ->
+            f1 :: acc1, f2 :: acc2, f3 :: acc3, f4 :: acc4) 
+
 let validJosas = [
-    "을", "를", "을(를)"
-    "으로", "로", "(으)로"
-    "은", "는", "은(는)"
-    "이", "가", "이(가)"
-    "과", "와", "과(와)"
-    "아", "야", "아(야)"
-    "이든", "든", "(이)든"
-    "이나", "나", "(이)나"
-    "이고", "고", "(이)고"
-    "이며", "며", "(이)며"
-    "이면", "면", "(이)면"
-    "이라", "라", "(이)라"
-    "이란", "란", "(이)란"
-    "이랑", "랑", "(이)랑"
-    "이야말로", "야말로", "(이)야말로"
-    "이여", "여", "(이)여"
-    "이시여", "시여", "(이)시여"
+    "는", "은", "은", "은(는)"
+    "를", "을", "을", "을(를)"
+    "가", "이", "이", "이(가)"
+    "로", "으로", "로", "(으)로"
+    "와", "과", "과", "과(와)"
+    "나", "이나", "이나", "(이)나"
+    "라", "이라", "이라", "(이)라"
+    "라고", "이라고", "이라고", "(이)라고"
+    "란", "이란", "이란", "(이)란"
+    "랑", "이랑", "이랑", "(이)랑"
+    "로서", "으로서", "로서", "(으)로서"
+    "로써", "으로써", "로써", "(으)로써"
+    "나마", "이나마", "이나마", "(이)나마"
+    "야", "아", "아", "아(야)"
+    "야말로", "이야말로", "이야말로", "(이)야말로"
+    "여", "이여", "이여", "(이)여"
+    "시여", "이시여", "이시여", "(이)시여"
 ]
+
+let josasFormV, josasFormC, josasFormL, josasFormA =
+    validJosas |> List.unzip4
+
+let inline join cheeons josas =
+    (cheeons, josas)
+    ||> List.allPairs
+    |> List.map (fun (cheeon, josa) -> cheeon + josa)
 
 let generateTestCaseData testStrings expected =
     validJosas
-    |> List.collect (fun (formC, formV, formA) ->
+    |> List.collect (fun (formV, formC, _, formA) ->
         testStrings
         |> List.collect (fun cheeon ->
             if expected |> List.exists ((=) (cheeon + formC)) then
@@ -64,46 +78,50 @@ let generateTestCaseData testStrings expected =
     |> List.map (fun (cheeon, josa, combined) ->
         TestCaseData(cheeon, josa).Returns(combined))
 
-let testHangul =
-    let testStrings = ["비"; "눈"; "물"]
-    let expected = [
-        "비를"; "비로"; "비는"; "비가"; "비와"; "비야"
-        "비든"; "비나"; "비고"; "비며"; "비면"; "비라"
-        "비란"; "비랑"; "비야말로"; "비여"; "비시여"
-        "눈을"; "눈으로"; "눈은"; "눈이"; "눈과"; "눈아"
-        "눈이든"; "눈이나"; "눈이고"; "눈이며"; "눈이면"; "눈이라"
-        "눈이란"; "눈이랑"; "눈이야말로"; "눈이여"; "눈이시여"
-        "물을"; "물로"; "물은"; "물이"; "물과"; "물아"
-        "물이든"; "물이나"; "물이고"; "물이며"; "물이면"; "물이라"
-        "물이란"; "물이랑"; "물이야말로"; "물이여"; "물이시여"
-    ]
+let testHangulWords =
+    let beforeFormV = ["피"]
+    let beforeFormC = ["땀"]
+    let beforeFormL = ["눈물"]
+    let testStrings = beforeFormV @ beforeFormC @ beforeFormL
+
+    let expected =
+        join beforeFormV josasFormV @
+        join beforeFormC josasFormC @
+        join beforeFormL josasFormL
 
     generateTestCaseData testStrings expected
+
+let testLatinWords =
+    let beforeFormV = [
+        "Asia"; "elf"; "phi"; "Troj"; "halo"; "Mars"
+        "you"; "luv"; "cow"; "six"; "by"; "jazz"
+        "calc"; "fold"; "milk"; "help"; "silq"; "bolt"
+        "ramc"; "namd"; "timk"; "pump"; "memq"; "dreamt"
+        "sync"; "mind"; "link"; "ninp"; "ranq"; "hunt"
+        "marc"; "lord"; "park"; "warp"; "kirq"; "dart"
+        "bear"; "user"; "pair"; "door"; "tour"
+        "orb";  "more"; "centre"
+    ]
+    let beforeFormC = ["ball"; "mom"; "bun"; "ring"]
+    let beforeFormA = ["mob"; "food"; "good"; "sec"; "bag"]
+
+    ()
 
 let testNumbers =
-    let testStrings = ["0"; "1"; "2"; "3000000000000"]
-    let expected = [
-        "0을"; "0으로"; "0은"; "0이"; "0과"; "0아"
-        "0이든"; "0이나"; "0이고"; "0이며"; "0이면"; "0이라"
-        "0이란"; "0이랑"; "0이야말로"; "0이여"; "0이시여"
-        "1을"; "1로"; "1은"; "1이"; "1과"; "1아"
-        "1이든"; "1이나"; "1이고"; "1이며"; "1이면"; "1이라"
-        "1이란"; "1이랑"; "1이야말로"; "1이여"; "1이시여"
-        "2를"; "2로"; "2는"; "2가"; "2와"; "2야"
-        "2든"; "2나"; "2고"; "2며"; "2면"; "2라"
-        "2란"; "2랑"; "2야말로"; "2여"; "2시여"
-        "3000000000000를"; "3000000000000로"; "3000000000000는"
-        "3000000000000가"; "3000000000000와"; "3000000000000야"
-        "3000000000000든"; "3000000000000나"; "3000000000000고"
-        "3000000000000며"; "3000000000000면"; "3000000000000라"
-        "3000000000000란"; "3000000000000랑"; "3000000000000야말로"
-        "3000000000000여"; "3000000000000시여"
-    ]
+    let beforeFormV = ["2"; "3000000000000"]
+    let beforeFormC = ["0"]
+    let beforeFormL = ["1"]
+    let testStrings = beforeFormV @ beforeFormC @ beforeFormL
+
+    let expected =
+        join beforeFormV josasFormV @
+        join beforeFormC josasFormC @
+        join beforeFormL josasFormL
 
     generateTestCaseData testStrings expected
 
-[<TestCaseSource("testHangul")>]
-let ``handle Hangul strings``cheeon josa =
+[<TestCaseSource("testHangulWords")>]
+let ``handle Hangul words``cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]

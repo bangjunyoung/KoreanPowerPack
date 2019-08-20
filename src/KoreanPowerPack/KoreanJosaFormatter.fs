@@ -32,23 +32,23 @@ open System.Text.RegularExpressions
 [<AutoOpen>]
 module internal KoreanJosaFormatter =
     let validJosas = [|
-        "을", "를", "을(를)"
-        "으로", "로", "(으)로"
-        "은", "는", "은(는)"
-        "이", "가", "이(가)"
-        "과", "와", "과(와)"
-        "아", "야", "아(야)"
-        "이든", "든", "(이)든"
-        "이나", "나", "(이)나"
-        "이고", "고", "(이)고"
-        "이며", "며", "(이)며"
-        "이면", "면", "(이)면"
-        "이라", "라", "(이)라"
-        "이란", "란", "(이)란"
-        "이랑", "랑", "(이)랑"
-        "이야말로", "야말로", "(이)야말로"
-        "이여", "여", "(이)여"
-        "이시여", "시여", "(이)시여"
+        "는", "은", "은", "은(는)"
+        "를", "을", "을", "을(를)"
+        "가", "이", "이", "이(가)"
+        "로", "으로", "로", "(으)로"
+        "와", "과", "과", "과(와)"
+        "나", "이나", "이나", "(이)나"
+        "라", "이라", "이라", "(이)라"
+        "라고", "이라고", "이라고", "(이)라고"
+        "란", "이란", "이란", "(이)란"
+        "랑", "이랑", "이랑", "(이)랑"
+        "로서", "으로서", "로서", "(으)로서"
+        "로써", "으로써", "로써", "(으)로써"
+        "나마", "이나마", "이나마", "(이)나마"
+        "야", "아", "아", "아(야)"
+        "야말로", "이야말로", "이야말로", "(이)야말로"
+        "여", "이여", "이여", "(이)여"
+        "시여", "이시여", "이시여", "(이)시여"
     |]
 
     let trimChars = [|' '; '\''; '\"'; '>'; ')'; '}'; ']'|]
@@ -56,7 +56,7 @@ module internal KoreanJosaFormatter =
     let combine josa cheeon =
         match validJosas
               |> Array.tryFindIndex
-                  (fun (formC, formV, _) -> formC = josa || formV = josa) with
+                  (fun (formV, formC, _, _) -> formC = josa || formV = josa) with
         | None -> None
         | Some index ->
             let (|NullOrEmpty|_|) str =
@@ -99,31 +99,28 @@ module internal KoreanJosaFormatter =
                 str.IndexOf value >= 0
 
             let josa =
-                let (formC, formV, formA) = validJosas.[index]
+                let (formV, formC, formL, formA) = validJosas.[index]
                 match cheeon with
                 | NullOrEmpty -> formA
                 | Number lastChar
                 | Hangul lastChar ->
                     let _, _, jongseong = KoreanChar.decomposeCompatIntoStrings lastChar
-                    match josa with
-                    | "로" | "으로" -> 
-                        if jongseong = "" || jongseong = "ㄹ" then formV else formC
-                    | _ -> if jongseong = "" then formV else formC
+                    if jongseong = "" then formV
+                    elif jongseong = "ㄹ" then formL
+                    else formC
                 | LatinSingleChar lastChar ->
-                    match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then formV else formC
-                    | _ -> if lastChar =~ "lmnr"  then formC else formV
+                    if lastChar = 'l' then formL
+                    elif lastChar =~ "mnr"  then formC
+                    else formV
                 | Latin (secondLastChar, lastChar) ->
-                    match josa with
-                    | "로" | "으로" -> if lastChar = 'l' then formV else formC
-                    | _ -> 
-                        if lastChar =~ "afijosuvwxyz" ||
-                           secondLastChar =~ "lmn" && lastChar =~ "cdkpqt" ||
-                           secondLastChar =~ "aeiou" && lastChar = 'r' ||
-                           (secondLastChar, lastChar) = ('r', 'e') then formV
-                        elif lastChar =~ "lmn" ||
-                             (secondLastChar, lastChar) = ('n', 'g') then formC
-                        else formA
+                    if lastChar = 'l' then formL
+                    elif lastChar =~ "afijosuvwxyz" ||
+                        secondLastChar =~ "lmnr" && lastChar =~ "cdkpqt" ||
+                        secondLastChar =~ "aeiou" && lastChar = 'r' ||
+                        secondLastChar = 'r' && lastChar =~ "begh" then formV
+                    elif lastChar =~ "mn" ||
+                         (secondLastChar, lastChar) = ('n', 'g') then formC
+                    else formA
                 | Punctuation lastChar ->
                     match lastChar with
                     | '#' -> formC
