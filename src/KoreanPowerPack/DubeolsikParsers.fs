@@ -46,31 +46,31 @@ type Syllable =
         | ChoJungJongseong (cho, jung, jong) ->
             KoreanChar.composeStrings cho jung jong
 
-let choseong = anyStringOf [
+let pchoseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
     "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
 ]
-let jungseong = anyStringOf [
+let pjungseong = anyStringOf [
     "ㅗㅏ"; "ㅗㅐ"; "ㅗㅣ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅡㅣ"
     "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"
     "ㅖ"; "ㅗ"; "ㅛ"; "ㅜ"; "ㅠ"; "ㅡ"; "ㅣ"
 ]
-let bokjongseong = anyStringOf [
+let pbokjongseong = anyStringOf [
     "ㄱㅅ"; "ㄴㅈ"; "ㄴㅎ"; "ㄹㄱ"; "ㄹㅁ"; "ㄹㅂ"
     "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅂㅅ"
 ]
-let danjongseong = anyStringOf [
+let pdanjongseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅅ"
     "ㅆ"; "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
 ]
 
-let syllable : Parser<Syllable, unit> = choice [
-    tuple3BT choseong jungseong ((bokjongseong .>>? notFollowedBy jungseong) <|>
-                                 (danjongseong .>>? notFollowedBy jungseong))
+let psyllable: Parser<Syllable, unit> = choice [
+    tuple3BT pchoseong pjungseong ((pbokjongseong .>>? notFollowedBy pjungseong) <|>
+                                   (pdanjongseong .>>? notFollowedBy pjungseong))
         |>> ChoJungJongseong
-    tuple2BT choseong jungseong |>> ChoJungseong
-    choseong |>> Choseong
-    jungseong |>> Jungseong
+    tuple2BT pchoseong pjungseong |>> ChoJungseong
+    pchoseong |>> Choseong
+    pjungseong |>> Jungseong
 ]
 
-let syllableChar = syllable |>> char
+let psyllableChar = psyllable |>> char

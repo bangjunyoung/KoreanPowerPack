@@ -56,7 +56,7 @@ let parse str =
 
     str
     |> String.map qwertyToSebeolsik391
-    |> HangulKeyLayout.parse SebeolsikParsers.syllableChar
+    |> HangulKeyLayout.parse SebeolsikParsers.psyllableChar
 
 [<CompiledName("Unparse")>]
 let unparse str =
