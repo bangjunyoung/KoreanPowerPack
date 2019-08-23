@@ -37,7 +37,7 @@ module internal KoreanChar =
     let [<Literal>] JungseongCount = 21
     let [<Literal>] JongseongCount = 28
 
-    let composeIndexes choIndex jungIndex jongIndex =
+    let composeFromIndexes choIndex jungIndex jongIndex =
         int HangulSyllableFirst +
             choIndex * (JungseongCount * JongseongCount) +
             jungIndex * JongseongCount +
@@ -236,7 +236,7 @@ module internal KoreanChar =
         let jungIndex = convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong
         let jongIndex = convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
 
-        composeIndexes choIndex jungIndex jongIndex
+        composeFromIndexes choIndex jungIndex jongIndex
 
     let composeStrings choseong jungseong jongseong =
         let invalid argName arg =
