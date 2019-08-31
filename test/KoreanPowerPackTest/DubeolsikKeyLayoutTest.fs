@@ -27,31 +27,46 @@ module KoreanPowerPack.DubeolsikKeyLayoutTest
 
 open NUnit.Framework
 
-[<TestCase("zltmdml rhdb whrjsdms dlqtnfRlfl aksskdi ehlrh xmrqufgks dyfuddms vlfdycl dksgek",
-    ExpectedResult = "키스의 고유 조건은 입술끼리 만나야 되고 특별한 요령은 필요치 않다")>]
-[<TestCase("zhdrhanfrhk dndbrk emfdjrks qldtnsms ckrp ajrdjdi xmrqufgks aktdl wkf vygusehlsek",
-    ExpectedResult = "콩고물과 우유가 들어간 빙수는 차게 먹어야 특별한 맛이 잘 표현된다")>]
-[<TestCase("dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma",
-    ExpectedResult = "유쾌했던 땃쥐 토끼풀 쫓기 바쁨")>]
-[<TestCase("rreeqqttww", ExpectedResult = "ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ")>]
-[<TestCase("REQTW", ExpectedResult = "ㄲㄸㅃㅆㅉ")>]
-[<TestCase("hkhohlnjnpnlml", ExpectedResult = "ㅘㅙㅚㅝㅞㅟㅢ")>]
-[<TestCase("gkfrrgkfeegkfqqgkfttgkfwwgkf",
-    ExpectedResult = "핡ㄱ할ㄷㄷ핣ㅂ핤ㅅ할ㅈㅈ할")>]
+let parseTestParameters =
+    [
+        ("rreeqqttww",
+         "ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ")
+        ("REQTW",
+         "ㄲㄸㅃㅆㅉ")
+        ("hkhohlnjnpnlml",
+         "ㅘㅙㅚㅝㅞㅟㅢ")
+        ("dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma",
+         "유쾌했던 땃쥐 토끼풀 쫓기 바쁨")
+        ("skRtl tkrt qkedmfu dkswekrk todtjs gkfxdkajrejs tkfrdmf qkfqdms",
+         "낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은")
+        ("dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek.",
+         "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.")
+    ]
+    |> List.map (fun (actual, expected) ->
+        TestCaseData(actual).Returns(expected))
+
+[<TestCaseSource("parseTestParameters")>]
 let ``parse returns expected result`` actual =
     DubeolsikKeyLayout.parse actual
 
-[<TestCase("키스의 고유 조건은 입술끼리 만나야 되고 특별한 요령은 필요치 않다",
-    ExpectedResult = "zltmdml rhdb whrjsdms dlqtnfRlfl aksskdi ehlrh xmrqufgks dyfuddms vlfdycl dksgek")>]
-[<TestCase("콩고물과 우유가 들어간 빙수는 차게 먹어야 특별한 맛이 잘 표현된다",
-    ExpectedResult = "zhdrhanfrhk dndbrk emfdjrks qldtnsms ckrp ajrdjdi xmrqufgks aktdl wkf vygusehlsek")>]
-[<TestCase("유쾌했던 땃쥐 토끼풀 쫓기 바쁨",
-    ExpectedResult = "dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma")>]
-[<TestCase("ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ", ExpectedResult = "rreeqqttww")>]
-[<TestCase("ㄲㄸㅃㅆㅉ", ExpectedResult = "REQTW")>]
-[<TestCase("ㅘㅙㅚㅝㅞㅟㅢ", ExpectedResult = "hkhohlnjnpnlml")>]
-[<TestCase("핡ㄱ할ㄷㄷ핣ㅂ핤ㅅ할ㅈㅈ할",
-    ExpectedResult = "gkfrrgkfeegkfqqgkfttgkfwwgkf")>]
-[<TestCase("ㄱ", ExpectedResult = "r")>]
+let unparseTestParameters =
+    [
+        ("ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ",
+         "rreeqqttww")
+        ("ㄲㄸㅃㅆㅉ",
+         "REQTW")
+        ("ㅘㅙㅚㅝㅞㅟㅢ",
+         "hkhohlnjnpnlml")
+        ("유쾌했던 땃쥐 토끼풀 쫓기 바쁨",
+         "dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma")
+        ("낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은",
+         "skRtl tkrt qkedmfu dkswekrk todtjs gkfxdkajrejs tkfrdmf qkfqdms")
+        ("외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.",
+         "dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek.")
+    ]
+    |> List.map (fun (actual, expected) ->
+        TestCaseData(actual).Returns(expected))
+
+[<TestCaseSource("unparseTestParameters")>]
 let ``unparse returns expected result`` actual =
     DubeolsikKeyLayout.unparse actual
