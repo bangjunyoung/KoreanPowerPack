@@ -238,7 +238,7 @@ module internal KoreanChar =
 
         composeFromIndexes choIndex jungIndex jongIndex
 
-    let composeStrings choseong jungseong jongseong =
+    let composeWithStrings choseong jungseong jongseong =
         let invalid argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
@@ -252,7 +252,7 @@ module internal KoreanChar =
         | _, None, _ -> invalid "jungseong" jungseong
         | _, _, None -> invalid "jongseong" jongseong
 
-    let decomposeInto collection syllable =
+    let decomposeWith collection syllable =
         if not (syllable |> isSyllable) then
             invalidArg "syllable" <| sprintf "%c is not a Hangul syllable" syllable
 
@@ -262,10 +262,10 @@ module internal KoreanChar =
         collection.Jungseong.[jungIndex],
         collection.Jongseong.[jongIndex]
 
-    let decompose = decomposeInto jamoCharCollection
-    let decomposeCompat = decomposeInto compatJamoCharCollection
-    let decomposeIntoStrings = decomposeInto jamoStringCollection
-    let decomposeCompatIntoStrings = decomposeInto compatJamoStringCollection
+    let decompose = decomposeWith jamoCharCollection
+    let decomposeCompat = decomposeWith compatJamoCharCollection
+    let decomposeIntoStrings = decomposeWith jamoStringCollection
+    let decomposeCompatIntoStrings = decomposeWith compatJamoStringCollection
 
 open KoreanChar
 
@@ -284,7 +284,7 @@ type KoreanChar private () =
         compose choseong jungseong jongseong
 
     static member Compose(choseong, jungseong, jongseong) =
-        composeStrings choseong jungseong jongseong
+        composeWithStrings choseong jungseong jongseong
 
     static member Decompose syllable =
         decompose syllable

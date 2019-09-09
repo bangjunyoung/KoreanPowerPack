@@ -42,9 +42,9 @@ type Syllable =
         | Jungseong jung ->
             KoreanChar.combineJamo jung
         | ChoJungseong (cho, jung) ->
-            KoreanChar.composeStrings cho jung ""
+            KoreanChar.composeWithStrings cho jung ""
         | ChoJungJongseong (cho, jung, jong) ->
-            KoreanChar.composeStrings cho jung jong
+            KoreanChar.composeWithStrings cho jung jong
 
 let pchoseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
