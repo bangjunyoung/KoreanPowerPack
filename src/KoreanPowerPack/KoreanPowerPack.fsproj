@@ -9,6 +9,7 @@
     <Compile Include="Casting.fs" />
     <Compile Include="KoreanNumericConverter.fs" />
     <Compile Include="KoreanNumericFormatter.fs" />
+    <Compile Include="KoreanCharInternal.fs" />
     <Compile Include="KoreanChar.fs" />
     <Compile Include="KoreanJosaFormatter.fs" />
     <Compile Include="HangulKeyLayout.fs" />

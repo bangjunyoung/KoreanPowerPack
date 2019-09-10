@@ -26,183 +26,18 @@
 namespace KoreanPowerPack
 
 open KoreanPowerPack.FSharp
+open KoreanCharInternal
 
-module internal KoreanChar =
-    let [<Literal>] HangulSyllableFirst = '가'
-    let [<Literal>] HangulSyllableLast = '힣'
-
+module KoreanChar =
     let isSyllable c = HangulSyllableFirst <= c && c <= HangulSyllableLast
-
-    let [<Literal>] ChoseongCount = 19
-    let [<Literal>] JungseongCount = 21
-    let [<Literal>] JongseongCount = 28
-
-    let composeFromIndexes choIndex jungIndex jongIndex =
-        int HangulSyllableFirst +
-            choIndex * (JungseongCount * JongseongCount) +
-            jungIndex * JongseongCount +
-            jongIndex
-        |> char
-
-    let decomposeIntoIndexes syllable =
-        let sylIndex = int syllable - int HangulSyllableFirst
-        sylIndex / (JungseongCount * JongseongCount),
-        sylIndex % (JungseongCount * JongseongCount) / JongseongCount,
-        sylIndex % JongseongCount
-
-    type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
-
-    let jamoStringCollection = {
-        Choseong = [|
-            "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
-            "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
-        |]
-        Jungseong = [|
-            "ᅡ"; "ᅢ"; "ᅣ"; "ᅤ"; "ᅥ"; "ᅦ"; "ᅧ"; "ᅨ"; "ᅩ"; "ᅩᅡ"
-            "ᅩᅢ"; "ᅩᅵ"; "ᅭ"; "ᅮ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅲ"; "ᅳ"; "ᅳᅵ"
-            "ᅵ"
-        |]
-        Jongseong = [|
-            ""
-            "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"; "ᆯᆷ"
-            "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"; "ᆺᆺ"
-            "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
-        |]
-    }
-
-    let jamoCharCollection = {
-        Choseong = [|
-            'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
-            'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
-        |]
-        Jungseong = [|
-            'ᅡ'; 'ᅢ'; 'ᅣ'; 'ᅤ'; 'ᅥ'; 'ᅦ'; 'ᅧ'; 'ᅨ'; 'ᅩ'; 'ᅪ'
-            'ᅫ'; 'ᅬ'; 'ᅭ'; 'ᅮ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅲ'; 'ᅳ'; 'ᅴ'
-            'ᅵ'
-        |]
-        Jongseong = [|
-            '\u0000'
-            'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'; 'ᆱ'
-            'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
-            'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
-        |]
-    }
-
-    let compatJamoStringCollection = {
-        Choseong = [|
-            "ㄱ"; "ㄱㄱ"; "ㄴ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅅ"
-            "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
-        |]
-        Jungseong = [|
-            "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"; "ㅖ"; "ㅗ"; "ㅗㅏ"
-            "ㅗㅐ"; "ㅗㅣ"; "ㅛ"; "ㅜ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅠ"; "ㅡ"; "ㅡㅣ"
-            "ㅣ"
-        |]
-        Jongseong = [|
-            ""
-            "ㄱ"; "ㄲ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄹ"; "ㄹㄱ"; "ㄹㅁ"
-            "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅅ"; "ㅅ"; "ㅆ"
-            "ㅇ"; "ㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
-        |]
-    }
-
-    let compatJamoCharCollection = {
-        Choseong = [|
-            'ㄱ'; 'ㄲ'; 'ㄴ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅅ'
-            'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
-        |]
-        Jungseong = [|
-            'ㅏ'; 'ㅐ'; 'ㅑ'; 'ㅒ'; 'ㅓ'; 'ㅔ'; 'ㅕ'; 'ㅖ'; 'ㅗ'; 'ㅘ'
-            'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
-            'ㅣ'
-        |]
-        Jongseong = [|
-            '\u0000'
-            'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄹ'; 'ㄺ'; 'ㄻ'
-            'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅄ'; 'ㅅ'; 'ㅆ'
-            'ㅇ'; 'ㅈ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
-        |]
-    }
 
     let isChoseong c = '\u1100' <= c && c <= '\u1112'
     let isJungseong c = '\u1161' <= c && c <= '\u1175'
     let isJongseong c = '\u11A8' <= c && c <= '\u11C2'
 
-    let choseongToIndex (c: char) =
-        let index = int c - int '\u1100'
-        if 0 <= index && index < ChoseongCount then Some index
-        else None
-    let jungseongToIndex (c: char) =
-        let index = int c - int '\u1161'
-        if 0 <= index && index < JungseongCount then Some index
-        else None
-    let jongseongToIndex c =
-        if c = '\u0000' then Some 0
-        else
-            let index = int c - int '\u11A8' + 1
-            if 0 <= index && index < JongseongCount then Some index
-            else None
-
-    let mapToIndex source = source |> Array.mapi (fun i c -> c, i) |> Map.ofArray
-
-    let compatChoseongToIndexMap = mapToIndex compatJamoCharCollection.Choseong
-    let compatJungseongToIndexMap = mapToIndex compatJamoCharCollection.Jungseong
-    let compatJongseongToIndexMap = mapToIndex compatJamoCharCollection.Jongseong
-
-    let compatChoseongToIndex c = compatChoseongToIndexMap |> Map.tryFind c
-    let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
-    let compatJongseongToIndex c = compatJongseongToIndexMap |> Map.tryFind c
-
     let isCompatChoseong = compatChoseongToIndex >> Option.isSome
     let isCompatJungseong = compatJungseongToIndex >> Option.isSome
     let isCompatJongseong = compatJongseongToIndex >> Option.isSome
-
-    let jamoStrings = [|
-        "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
-        "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
-
-        "ᅡ"; "ᅢ"; "ᅣ"; "ᅤ"; "ᅥ"; "ᅦ"; "ᅧ"; "ᅨ"; "ᅩ"; "ᅩᅡ"
-        "ᅩᅢ"; "ᅩᅵ"; "ᅭ"; "ᅮ"; "ᅮᅥ"; "ᅮᅦ"; "ᅮᅵ"; "ᅲ"; "ᅳ"; "ᅳᅵ"
-        "ᅵ"
-
-        "ᆨ"; "ᆨᆨ"; "ᆨᆺ"; "ᆫ"; "ᆫᆽ"; "ᆫᇂ"; "ᆮ"; "ᆯ"; "ᆯᆨ"; "ᆯᆷ"
-        "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"; "ᆺᆺ"
-        "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
-
-        "ㄱ"; "ㄱㄱ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㄹㄱ"
-        "ㄹㅁ"; "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅂㅅ"
-        "ㅅ"; "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
-
-        "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"; "ㅖ"; "ㅗ"; "ㅗㅏ"
-        "ㅗㅐ"; "ㅗㅣ"; "ㅛ"; "ㅜ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅠ"; "ㅡ"; "ㅡㅣ"
-        "ㅣ"
-    |]
-    let jamoChars = [|
-        'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
-        'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
-
-        'ᅡ'; 'ᅢ'; 'ᅣ'; 'ᅤ'; 'ᅥ'; 'ᅦ'; 'ᅧ'; 'ᅨ'; 'ᅩ'; 'ᅪ'
-        'ᅫ'; 'ᅬ'; 'ᅭ'; 'ᅮ'; 'ᅯ'; 'ᅰ'; 'ᅱ'; 'ᅲ'; 'ᅳ'; 'ᅴ'
-        'ᅵ'
-
-        'ᆨ'; 'ᆩ'; 'ᆪ'; 'ᆫ'; 'ᆬ'; 'ᆭ'; 'ᆮ'; 'ᆯ'; 'ᆰ'; 'ᆱ'
-        'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
-        'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
-
-        'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㄺ'
-        'ㄻ'; 'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅄ'
-        'ㅅ'; 'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
-
-        'ㅏ'; 'ㅐ'; 'ㅑ'; 'ㅒ'; 'ㅓ'; 'ㅔ'; 'ㅕ'; 'ㅖ'; 'ㅗ'; 'ㅘ'
-        'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
-        'ㅣ'
-    |]
-    assert (jamoStrings.Length = jamoChars.Length)
-
-    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
-
-    let jamoCombineMap = map jamoStrings jamoChars
-    let jamoSplitMap = map jamoChars jamoStrings
 
     let tryCombineJamo jamo =
         match String.length jamo with
@@ -252,7 +87,7 @@ module internal KoreanChar =
         | _, None, _ -> invalid "jungseong" jungseong
         | _, _, None -> invalid "jongseong" jongseong
 
-    let decomposeWith collection syllable =
+    let internal decomposeWith collection syllable =
         if not (syllable |> isSyllable) then
             invalidArg "syllable" <| sprintf "%c is not a Hangul syllable" syllable
 
