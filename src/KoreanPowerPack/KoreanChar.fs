@@ -50,13 +50,16 @@ module KoreanChar =
 
     let combineJamo jamo =
         match tryCombineJamo jamo with
-        | Some jamoAsChar -> jamoAsChar
+        | Some combinedJamo -> combinedJamo
         | None -> invalidArg "jamo" <| sprintf "%s is not a jamo" jamo
 
+    let trySplitJamo jamo =
+        jamoSplitMap |> Map.tryFind jamo
+
     let splitJamo jamo =
-        match jamoSplitMap |> Map.tryFind jamo with
-        | Some jamoAsString -> jamoAsString
-        | None -> string jamo
+        match trySplitJamo jamo with
+        | Some splittedJamo -> splittedJamo
+        | None -> invalidArg "jamo" <| sprintf "%c is not a jamo" jamo
 
     let compose choseong jungseong jongseong =
         let convert argName f g x =
@@ -74,7 +77,7 @@ module KoreanChar =
         composeFromIndexes choIndex jungIndex jongIndex
 
     let composeWithStrings choseong jungseong jongseong =
-        let invalid argName arg =
+        let invalidJamo argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
         let cho = tryCombineJamo choseong
@@ -83,9 +86,9 @@ module KoreanChar =
 
         match cho, jung, jong with
         | Some cho, Some jung, Some jong -> compose cho jung jong
-        | None, _, _ -> invalid "choseong" choseong
-        | _, None, _ -> invalid "jungseong" jungseong
-        | _, _, None -> invalid "jongseong" jongseong
+        | None, _, _ -> invalidJamo "choseong" choseong
+        | _, None, _ -> invalidJamo "jungseong" jungseong
+        | _, _, None -> invalidJamo "jongseong" jongseong
 
     let internal decomposeWith collection syllable =
         if not (syllable |> isSyllable) then
