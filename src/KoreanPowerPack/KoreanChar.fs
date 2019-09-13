@@ -106,6 +106,7 @@ module KoreanChar =
     let decomposeCompatIntoStrings = decomposeWith compatJamoStringCollection
 
 open KoreanChar
+open System.Runtime.InteropServices
 
 type KoreanChar private () =
     static member IsSyllable c = isSyllable c
@@ -118,10 +119,14 @@ type KoreanChar private () =
     static member IsCompatJungseong c = isCompatJungseong c
     static member IsCompatJongseong c = isCompatJongseong c
 
-    static member Compose(choseong, jungseong, jongseong) =
+    static member Compose(choseong, jungseong,
+                          [<Optional; DefaultParameterValue('\u0000')>]
+                          jongseong) =
         compose choseong jungseong jongseong
 
-    static member Compose(choseong, jungseong, jongseong) =
+    static member Compose(choseong, jungseong,
+                          [<Optional; DefaultParameterValue("")>]
+                          jongseong) =
         composeWithStrings choseong jungseong jongseong
 
     static member Decompose syllable =
