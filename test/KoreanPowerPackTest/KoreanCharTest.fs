@@ -26,66 +26,139 @@
 module KoreanPowerPack.KoreanCharTest
 
 open NUnit.Framework
+open KoreanChar
 
-[<TestCase('\uAC00', ExpectedResult = true)>]
-[<TestCase('\uD7A3', ExpectedResult = true)>]
-[<TestCase('\uABFF', ExpectedResult = false)>]
-[<TestCase('\uD7A4', ExpectedResult = false)>]
+[<TestCase('\uAC00')>]
+[<TestCase('\uD7A3')>]
 let ``isSyllable with valid arguments`` c =
-    KoreanChar.isSyllable c
+    Assert.That(isSyllable c)
 
-[<TestCase('\u1100', ExpectedResult = true)>]
-[<TestCase('\u1112', ExpectedResult = true)>]
-[<TestCase('\u1009', ExpectedResult = false)>]
-[<TestCase('\u1113', ExpectedResult = false)>]
-[<TestCase('\u3131', ExpectedResult = false)>]
+[<TestCase('\uABFF')>]
+[<TestCase('\uD7A4')>]
+let ``isSyllable with invalid arguments`` c =
+    Assert.That(isSyllable c, Is.False)
+
+[<TestCase('\u1100')>]
+[<TestCase('\u1112')>]
 let ``isChoseong with valid arguments`` c =
-    KoreanChar.isChoseong c
+    Assert.That(isChoseong c)
 
-[<TestCase('\u1161', ExpectedResult = true)>]
-[<TestCase('\u1175', ExpectedResult = true)>]
-[<TestCase('\u1160', ExpectedResult = false)>]
-[<TestCase('\u1176', ExpectedResult = false)>]
-[<TestCase('\u314F', ExpectedResult = false)>]
+[<TestCase('\u1009')>]
+[<TestCase('\u1113')>]
+[<TestCase('\u3131')>]
+let ``isChoseong with invalid arguments`` c =
+    Assert.That(isChoseong c, Is.False)
+
+[<TestCase('\u1161')>]
+[<TestCase('\u1175')>]
 let ``isJungseong with valid arguments`` c =
-    KoreanChar.isJungseong c
+    Assert.That(isJungseong c)
 
-[<TestCase('\u11A8', ExpectedResult = true)>]
-[<TestCase('\u11C2', ExpectedResult = true)>]
-[<TestCase('\u11A7', ExpectedResult = false)>]
-[<TestCase('\u11C3', ExpectedResult = false)>]
-[<TestCase('\u3131', ExpectedResult = false)>]
+[<TestCase('\u1160')>]
+[<TestCase('\u1176')>]
+[<TestCase('\u314F')>]
+let ``isJungseong with invalid arguments`` c =
+    Assert.That(isJungseong c, Is.False)
+
+[<TestCase('\u11A8')>]
+[<TestCase('\u11C2')>]
 let ``isJongseong with valid arguments`` c =
-    KoreanChar.isJongseong c
+    Assert.That(isJongseong c)
 
-[<TestCase('\u3131', ExpectedResult = true)>]
-[<TestCase('\u314E', ExpectedResult = true)>]
-[<TestCase('\u3130', ExpectedResult = false)>]
-[<TestCase('\u314F', ExpectedResult = false)>]
-[<TestCase('\u3133', ExpectedResult = false)>]
+[<TestCase('\u11A7')>]
+[<TestCase('\u11C3')>]
+[<TestCase('\u3131')>]
+let ``isJongseong with invalid arguments`` c =
+    Assert.That(isJongseong c, Is.False)
+
+[<TestCase('\u3131')>]
+[<TestCase('\u314E')>]
 let ``isCompatChoseong with valid arguments`` c =
-    KoreanChar.isCompatChoseong c
+    Assert.That(isCompatChoseong c)
 
-[<TestCase('\u314F', ExpectedResult = true)>]
-[<TestCase('\u3163', ExpectedResult = true)>]
-[<TestCase('\u314E', ExpectedResult = false)>]
-[<TestCase('\u3164', ExpectedResult = false)>]
+[<TestCase('\u3130')>]
+[<TestCase('\u314F')>]
+[<TestCase('\u3133')>]
+let ``isCompatChoseong with invalid arguments`` c =
+    Assert.That(isCompatChoseong c, Is.False)
+
+[<TestCase('\u314F')>]
+[<TestCase('\u3163')>]
 let ``isCompatJungseong with valid arguments`` c =
-    KoreanChar.isCompatJungseong c
+    Assert.That(isCompatJungseong c)
 
-[<TestCase('\u3131', ExpectedResult = true)>]
-[<TestCase('\u314E', ExpectedResult = true)>]
-[<TestCase('\u3138', ExpectedResult = false)>]
-[<TestCase('\u3143', ExpectedResult = false)>]
-[<TestCase('\u3149', ExpectedResult = false)>]
+[<TestCase('\u314E')>]
+[<TestCase('\u3164')>]
+let ``isCompatJungseong with invalid arguments`` c =
+    Assert.That(isCompatJungseong c, Is.False)
+
+[<TestCase('\u3131')>]
+[<TestCase('\u314E')>]
 let ``isCompatJongseong with valid arguments`` c =
-    KoreanChar.isCompatJongseong c
+    Assert.That(isCompatJongseong c)
 
+[<TestCase('\u3138')>]
+[<TestCase('\u3143')>]
+[<TestCase('\u3149')>]
+let ``isCompatJongseong with invalid arguments`` c =
+    Assert.That(isCompatJongseong c, Is.False)
+
+[<TestCase("", ExpectedResult = '\u0000')>]
+[<TestCase("\u1100", ExpectedResult = 'ᄀ')>]
+[<TestCase("\u1161", ExpectedResult = 'ᅡ')>]
+[<TestCase("\u11C2", ExpectedResult = 'ᇂ')>]
+[<TestCase("\u3131", ExpectedResult = 'ㄱ')>]
+[<TestCase("\u314F", ExpectedResult = 'ㅏ')>]
+[<TestCase("\u1100\u1100", ExpectedResult = 'ᄁ')>]
+[<TestCase("\u1169\u1161", ExpectedResult = 'ᅪ')>]
+[<TestCase("\u3131\u3145", ExpectedResult = 'ㄳ')>]
+[<TestCase("\u3157\u314F", ExpectedResult = 'ㅘ')>]
+let ``combineJamo with valid arguments`` jamo =
+     combineJamo jamo
+
+[<TestCase('\u1100', ExpectedResult = "ᄀ")>]
+[<TestCase('\u1161', ExpectedResult = "ᅡ")>]
+[<TestCase('\u11C2', ExpectedResult = "ᇂ")>]
+[<TestCase('\u3131', ExpectedResult = "ㄱ")>]
+[<TestCase('\u314F', ExpectedResult = "ㅏ")>]
+[<TestCase('ᄁ', ExpectedResult = "\u1100\u1100")>]
+[<TestCase('ᅪ', ExpectedResult = "\u1169\u1161")>]
+[<TestCase('ㄳ', ExpectedResult = "\u3131\u3145")>]
+[<TestCase('ㅘ', ExpectedResult = "\u3157\u314F")>]
+let ``splitJamo with valid arguments`` jamo =
+     splitJamo jamo
+
+[<TestCase('\u0000')>]
+[<TestCase('A')>]
+[<TestCase('가')>]
+let ``splitJamo with invalid arguments throws ArgumentException`` jamo =
+     Assert.That(System.Func<_>(fun () -> splitJamo jamo),
+        Throws.ArgumentException)
+
+[<TestCase('\u1101', '\u116A', '\u0000', ExpectedResult = '꽈')>]
 [<TestCase('\u1101', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
-let ``compose with valid arguments`` (cho: char) jung jong =
-    KoreanChar.compose cho jung jong
+[<TestCase('\u3132', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
+[<TestCase('\u3132', '\u3158', '\u11A9', ExpectedResult = '꽊')>]
+[<TestCase('\u3132', '\u3158', '\u3132', ExpectedResult = '꽊')>]
+let ``compose with valid arguments`` cho jung jong =
+    compose cho jung jong
 
+[<TestCase('\u10FF', '\u116A', '\u11A9')>]
+[<TestCase('\u3132', '\u1160', '\u11A9')>]
+[<TestCase('\u3132', '\u3158', '\u11C3')>]
+let ``compose with invalid arguments throws ArgumentException`` cho jung jong =
+    Assert.That(System.Func<_>(fun () -> compose cho jung jong),
+        Throws.ArgumentException)
+
+[<TestCase("\u1101", "\u116A", "", ExpectedResult = '꽈')>]
 [<TestCase("\u1101", "\u116A", "\u11A9", ExpectedResult = '꽊')>]
 [<TestCase("\u1100\u1100", "\u1169\u1161", "\u11A8\u11A8", ExpectedResult = '꽊')>]
-let ``composeWithStrings with valid arguments`` (cho: string) jung jong =
-    KoreanChar.composeWithStrings cho jung jong
+let ``composeWithStrings with valid arguments`` cho jung jong =
+    composeWithStrings cho jung jong
+
+[<TestCase("\u10FF", "\u116A", "\u11A9")>]
+[<TestCase("\u3132", "\u1160", "\u11A9")>]
+[<TestCase("\u3132", "\u3158", "\u11C3")>]
+let ``composeWithString with invalid arguments throws ArgumentException`` cho jung jong =
+    Assert.That(System.Func<_>(fun () -> composeWithStrings cho jung jong),
+        Throws.ArgumentException)

@@ -29,10 +29,15 @@ open NUnit.Framework
 
 let parseTestParameters =
     [
+        ("", "")
+        ("rsefaqtdwczxvg",
+         "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
         ("rreeqqttww",
          "ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ")
         ("REQTW",
          "ㄲㄸㅃㅆㅉ")
+        ("kijuhynbm l",
+         "ㅏㅑㅓㅕㅗㅛㅜㅠㅡ ㅣ")
         ("hkhohlnjnpnlml",
          "ㅘㅙㅚㅝㅞㅟㅢ")
         ("dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma",
@@ -46,11 +51,12 @@ let parseTestParameters =
         TestCaseData(actual).Returns(expected))
 
 [<TestCaseSource("parseTestParameters")>]
-let ``parse returns expected result`` actual =
+let ``parse with valid arguments`` actual =
     DubeolsikKeyLayout.parse actual
 
 let unparseTestParameters =
     [
+        ("", "")
         ("ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ",
          "rreeqqttww")
         ("ㄲㄸㅃㅆㅉ",
@@ -68,5 +74,5 @@ let unparseTestParameters =
         TestCaseData(actual).Returns(expected))
 
 [<TestCaseSource("unparseTestParameters")>]
-let ``unparse returns expected result`` actual =
+let ``unparse with valid arguments`` actual =
     DubeolsikKeyLayout.unparse actual
