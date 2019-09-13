@@ -35,7 +35,7 @@ let qwertyToSebeolsik391, sebeolsik391ToQwerty =
         "asdfghjkl;'" +
         "zxcvbnm,./" +
         "~!@#$%^&*()_+|" +
-        "QWERTYUIOP{}" + 
+        "QWERTYUIOP{}" +
         "ASDFGHJKL:\"" +
         "ZXCVBNM<>?"
     let sebeolsik391 =

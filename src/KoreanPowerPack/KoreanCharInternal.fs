@@ -147,7 +147,6 @@ module internal KoreanCharInternal =
     let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
     let compatJongseongToIndex c = compatJongseongToIndexMap |> Map.tryFind c
 
-
     let jamoStrings = [|
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
         "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"

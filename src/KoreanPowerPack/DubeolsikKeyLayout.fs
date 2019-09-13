@@ -32,10 +32,10 @@ let qwertyToDubeolsik, dubeolsikToQwerty =
     let qwerty =
         "qwertyuiop" +
         "asdfghjkl" +
-        "zxcvbnm" + 
+        "zxcvbnm" +
         "QWERTOP"
     let dubeolsik =
-        "ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ" + 
+        "ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔ" +
         "ㅁㄴㅇㄹㅎㅗㅓㅏㅣ" +
         "ㅋㅌㅊㅍㅠㅜㅡ" +
         "ㅃㅉㄸㄲㅆㅒㅖ"
@@ -64,4 +64,4 @@ let unparse str =
             string cho + jung + jong
         else
             string c)
-    |> String.map dubeolsikToQwerty 
+    |> String.map dubeolsikToQwerty

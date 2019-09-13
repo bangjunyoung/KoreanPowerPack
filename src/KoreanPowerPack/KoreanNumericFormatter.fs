@@ -52,7 +52,7 @@ type KoreanNumericFormatter() =
                        formatProvider) =
         (this :> ICustomFormatter).Format(format, arg, formatProvider)
 
-    member this.GetFormat(formatType) = 
+    member this.GetFormat(formatType) =
         (this :> IFormatProvider).GetFormat(formatType)
 
     interface ICustomFormatter with
@@ -67,5 +67,5 @@ type KoreanNumericFormatter() =
                 | None -> handleInvalidFormat format arg
 
     interface IFormatProvider with
-        member this.GetFormat(formatType) = 
+        member this.GetFormat(formatType) =
             if formatType = typeof<ICustomFormatter> then this :> obj else null
