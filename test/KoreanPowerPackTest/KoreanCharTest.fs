@@ -113,8 +113,8 @@ let ``isCompatJongseong with invalid arguments`` c =
 [<TestCase("\u1169\u1161", ExpectedResult = 'ᅪ')>]
 [<TestCase("\u3131\u3145", ExpectedResult = 'ㄳ')>]
 [<TestCase("\u3157\u314F", ExpectedResult = 'ㅘ')>]
-let ``combineJamo with valid arguments`` jamo =
-     combineJamo jamo
+let ``joinJamo with valid arguments`` jamo =
+     joinJamo jamo
 
 [<TestCase('\u1100', ExpectedResult = "ᄀ")>]
 [<TestCase('\u1161', ExpectedResult = "ᅡ")>]

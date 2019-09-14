@@ -39,18 +39,18 @@ module KoreanChar =
     let isCompatJungseong = compatJungseongToIndex >> Option.isSome
     let isCompatJongseong = compatJongseongToIndex >> Option.isSome
 
-    let tryCombineJamo jamo =
+    let tryJoinJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'
         | 1 -> match jamoChars |> Array.tryBinarySearch jamo.[0] with
                | Some index -> Some jamoChars.[index]
                | None -> None
-        | 2 -> jamoCombineMap |> Map.tryFind jamo
+        | 2 -> jamoJoinMap |> Map.tryFind jamo
         | _ -> None
 
-    let combineJamo jamo =
-        match tryCombineJamo jamo with
-        | Some combinedJamo -> combinedJamo
+    let joinJamo jamo =
+        match tryJoinJamo jamo with
+        | Some joinedJamo -> joinedJamo
         | None -> invalidArg "jamo" <| sprintf "%s is not a jamo" jamo
 
     let trySplitJamo jamo =
@@ -80,9 +80,9 @@ module KoreanChar =
         let invalidJamo argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
-        let cho = tryCombineJamo choseong
-        let jung = tryCombineJamo jungseong
-        let jong = tryCombineJamo jongseong
+        let cho = tryJoinJamo choseong
+        let jung = tryJoinJamo jungseong
+        let jong = tryJoinJamo jongseong
 
         match cho, jung, jong with
         | Some cho, Some jung, Some jong -> compose cho jung jong

@@ -191,5 +191,5 @@ module internal KoreanCharInternal =
 
     let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
 
-    let jamoCombineMap = map jamoStrings jamoChars
+    let jamoJoinMap = map jamoStrings jamoChars
     let jamoSplitMap = map jamoChars jamoStrings
