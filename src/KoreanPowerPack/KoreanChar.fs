@@ -35,9 +35,9 @@ module KoreanChar =
     let isJungseong c = '\u1161' <= c && c <= '\u1175'
     let isJongseong c = '\u11A8' <= c && c <= '\u11C2'
 
-    let isCompatChoseong = compatChoseongToIndex >> Option.isSome
-    let isCompatJungseong = compatJungseongToIndex >> Option.isSome
-    let isCompatJongseong = compatJongseongToIndex >> Option.isSome
+    let isCompatChoseong c = c |> compatChoseongToIndex |> Option.isSome
+    let isCompatJungseong c = c |> compatJungseongToIndex |> Option.isSome
+    let isCompatJongseong c = c |> compatJongseongToIndex |> Option.isSome
 
     let tryJoinJamo jamo =
         match String.length jamo with
