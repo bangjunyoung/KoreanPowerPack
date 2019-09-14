@@ -31,7 +31,7 @@ module List =
     let unzip4 source =
         (source, ([], [], [], []))
         ||> List.foldBack (fun (f1, f2, f3, f4) (acc1, acc2, acc3, acc4)  ->
-            f1 :: acc1, f2 :: acc2, f3 :: acc3, f4 :: acc4) 
+            f1 :: acc1, f2 :: acc2, f3 :: acc3, f4 :: acc4)
 
 let validJosas = [
     "로", "으로", "로", "(으)로"

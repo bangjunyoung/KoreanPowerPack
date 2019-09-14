@@ -50,4 +50,4 @@ let mapping from to' =
     fun c ->
         match map |> Map.tryFind c with
         | Some x -> x
-        | None -> c 
+        | None -> c
