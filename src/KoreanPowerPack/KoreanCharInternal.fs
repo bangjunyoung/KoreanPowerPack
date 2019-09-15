@@ -137,15 +137,12 @@ module internal KoreanCharInternal =
             if 0 <= index && index < JongseongCount then Some index
             else None
 
-    let mapToIndex source = source |> Array.mapi (fun i c -> c, i) |> Map.ofArray
-
-    let compatChoseongToIndexMap = mapToIndex compatJamoCharCollection.Choseong
-    let compatJungseongToIndexMap = mapToIndex compatJamoCharCollection.Jungseong
-    let compatJongseongToIndexMap = mapToIndex compatJamoCharCollection.Jongseong
-
-    let compatChoseongToIndex c = compatChoseongToIndexMap |> Map.tryFind c
-    let compatJungseongToIndex c = compatJungseongToIndexMap |> Map.tryFind c
-    let compatJongseongToIndex c = compatJongseongToIndexMap |> Map.tryFind c
+    let compatChoseongToIndex c =
+        compatJamoCharCollection.Choseong |> Array.tryBinarySearch c
+    let compatJungseongToIndex c =
+        compatJamoCharCollection.Jungseong |> Array.tryBinarySearch c
+    let compatJongseongToIndex c =
+        compatJamoCharCollection.Jongseong |> Array.tryBinarySearch c
 
     let jamoStrings = [|
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
