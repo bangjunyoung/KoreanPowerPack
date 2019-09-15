@@ -138,7 +138,7 @@ type KoreanJosaFormatter() =
                        formatProvider) =
         (this :> ICustomFormatter).Format(format, arg, formatProvider)
 
-    member this.GetFormat(formatType) = 
+    member this.GetFormat(formatType) =
         (this :> IFormatProvider).GetFormat(formatType)
 
     interface ICustomFormatter with
@@ -154,5 +154,5 @@ type KoreanJosaFormatter() =
                 | None -> argString + format
 
     interface IFormatProvider with
-        member this.GetFormat(formatType) = 
+        member this.GetFormat(formatType) =
             if formatType = typeof<ICustomFormatter> then this :> obj else null
