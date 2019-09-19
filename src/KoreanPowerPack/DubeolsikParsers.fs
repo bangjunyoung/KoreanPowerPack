@@ -26,6 +26,7 @@
 module KoreanPowerPack.DubeolsikParsers
 
 open FParsec
+open KoreanChar
 
 type Jamo = string
 
@@ -37,14 +38,10 @@ type Syllable =
 
     static member op_Explicit(syllable): char =
         match syllable with
-        | Choseong cho ->
-            KoreanChar.joinJamo cho
-        | Jungseong jung ->
-            KoreanChar.joinJamo jung
-        | ChoJungseong (cho, jung) ->
-            KoreanChar.composeWithStrings cho jung ""
-        | ChoJungJongseong (cho, jung, jong) ->
-            KoreanChar.composeWithStrings cho jung jong
+        | Choseong cho -> joinJamo cho
+        | Jungseong jung -> joinJamo jung
+        | ChoJungseong(cho, jung) -> composeWithStrings cho jung ""
+        | ChoJungJongseong(cho, jung, jong) -> composeWithStrings cho jung jong
 
 let pchoseong = anyStringOf [
     "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
