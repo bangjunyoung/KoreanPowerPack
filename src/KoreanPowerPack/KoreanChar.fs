@@ -51,7 +51,7 @@ module KoreanChar =
     let joinJamo jamo =
         match tryJoinJamo jamo with
         | Some joinedJamo -> joinedJamo
-        | None -> invalidArg "jamo" <| sprintf "%s is not a jamo" jamo
+        | None -> invalidArg "jamo" <| sprintf "%s is not a Hangul jamo" jamo
 
     let trySplitJamo jamo =
         jamoSplitMap |> Map.tryFind jamo
@@ -59,7 +59,7 @@ module KoreanChar =
     let splitJamo jamo =
         match trySplitJamo jamo with
         | Some splittedJamo -> splittedJamo
-        | None -> invalidArg "jamo" <| sprintf "%c is not a jamo" jamo
+        | None -> invalidArg "jamo" <| sprintf "%c is not a Hangul jamo" jamo
 
     let compose choseong jungseong jongseong =
         let convert argName f g x =
@@ -70,9 +70,10 @@ module KoreanChar =
                 | Some index -> index
                 | None -> invalidArg argName <| sprintf "%A is not a %s" x argName
 
-        let choIndex = convert "choseong" compatChoseongToIndex choseongToIndex choseong
-        let jungIndex = convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong
-        let jongIndex = convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
+        let choIndex, jungIndex, jongIndex =
+            convert "choseong"  compatChoseongToIndex  choseongToIndex  choseong,
+            convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong,
+            convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
 
         composeFromIndexes choIndex jungIndex jongIndex
 

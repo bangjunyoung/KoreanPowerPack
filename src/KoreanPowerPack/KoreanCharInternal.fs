@@ -122,27 +122,27 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let choseongToIndex (c: char) =
-        let index = int c - int '\u1100'
+    let choseongToIndex (choseong: char) =
+        let index = int choseong - int '\u1100'
         if 0 <= index && index < ChoseongCount then Some index
         else None
-    let jungseongToIndex (c: char) =
-        let index = int c - int '\u1161'
+    let jungseongToIndex (jungseong: char) =
+        let index = int jungseong - int '\u1161'
         if 0 <= index && index < JungseongCount then Some index
         else None
-    let jongseongToIndex c =
-        if c = '\u0000' then Some 0
+    let jongseongToIndex jongseong =
+        if jongseong = '\u0000' then Some 0
         else
-            let index = int c - int '\u11A8' + 1
+            let index = int jongseong - int '\u11A8' + 1
             if 0 <= index && index < JongseongCount then Some index
             else None
 
-    let compatChoseongToIndex c =
-        compatJamoCharCollection.Choseong |> Array.tryBinarySearch c
-    let compatJungseongToIndex c =
-        compatJamoCharCollection.Jungseong |> Array.tryBinarySearch c
-    let compatJongseongToIndex c =
-        compatJamoCharCollection.Jongseong |> Array.tryBinarySearch c
+    let compatChoseongToIndex choseong =
+        compatJamoCharCollection.Choseong |> Array.tryBinarySearch choseong
+    let compatJungseongToIndex jungseong =
+        compatJamoCharCollection.Jungseong |> Array.tryBinarySearch jungseong
+    let compatJongseongToIndex jongseong =
+        compatJamoCharCollection.Jongseong |> Array.tryBinarySearch jongseong
 
     let jamoStrings = [|
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
