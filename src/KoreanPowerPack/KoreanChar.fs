@@ -75,7 +75,11 @@ module KoreanChar =
             convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong,
             convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
 
-        composeFromIndexes choIndex jungIndex jongIndex
+        int HangulSyllableFirst +
+            choIndex * (JungseongCount * JongseongCount) +
+            jungIndex * JongseongCount +
+            jongIndex
+        |> char
 
     let composeWithStrings choseong jungseong jongseong =
         let invalidJamo argName arg =

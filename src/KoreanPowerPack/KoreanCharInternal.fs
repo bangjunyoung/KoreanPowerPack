@@ -35,13 +35,6 @@ module internal KoreanCharInternal =
     let [<Literal>] JungseongCount = 21
     let [<Literal>] JongseongCount = 28
 
-    let composeFromIndexes choIndex jungIndex jongIndex =
-        int HangulSyllableFirst +
-            choIndex * (JungseongCount * JongseongCount) +
-            jungIndex * JongseongCount +
-            jongIndex
-        |> char
-
     let decomposeIntoIndexes (syllable: char) =
         let sylIndex = int syllable - int HangulSyllableFirst
         sylIndex / (JungseongCount * JongseongCount),
