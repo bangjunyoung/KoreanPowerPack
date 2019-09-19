@@ -104,10 +104,10 @@ module internal KoreanJosaFormatter =
                 | NullOrEmpty -> formA
                 | Number lastChar
                 | Hangul lastChar ->
-                    let _, _, jongseong = KoreanChar.decomposeCompatIntoStrings lastChar
-                    if jongseong = "" then formV
-                    elif jongseong = "ㄹ" then formL
-                    else formC
+                    match KoreanChar.getJongseong lastChar with
+                    | '\u0000' -> formV
+                    | 'ᆯ' -> formL
+                    | _  -> formC
                 | LatinSingleChar lastChar ->
                     if lastChar = 'l' then formL
                     elif lastChar =~ "mnr"  then formC

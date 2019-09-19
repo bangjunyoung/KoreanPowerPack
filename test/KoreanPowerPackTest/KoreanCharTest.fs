@@ -117,6 +117,7 @@ let ``isCompatJongseong with invalid arguments`` c =
 let ``joinJamo with valid arguments`` jamo =
     joinJamo jamo
 
+[<TestCase('\u0000', ExpectedResult = "")>]
 [<TestCase('\u1100', ExpectedResult = "ᄀ")>]
 [<TestCase('\u1161', ExpectedResult = "ᅡ")>]
 [<TestCase('\u11C2', ExpectedResult = "ᇂ")>]
@@ -129,7 +130,6 @@ let ``joinJamo with valid arguments`` jamo =
 let ``splitJamo with valid arguments`` jamo =
      splitJamo jamo
 
-[<TestCase('\u0000')>]
 [<TestCase('A')>]
 [<TestCase('가')>]
 let ``splitJamo with invalid arguments throws ArgumentException`` jamo =
@@ -163,3 +163,17 @@ let ``composeWithStrings with valid arguments`` cho jung jong =
 let ``composeWithString with invalid arguments throws ArgumentException`` cho jung jong =
     Assert.That(System.Func<_>(fun () -> composeWithStrings cho jung jong),
         Throws.ArgumentException)
+
+[<TestCase('가', ExpectedResult = [|"ᄀ"; "ᅡ"|])>]
+[<TestCase('힣', ExpectedResult = [|"ᄒ"; "ᅵ"; "ᇂ"|])>]
+[<TestCase('쐈', ExpectedResult = [|"ᄉᄉ"; "ᅩᅡ"; "ᆺᆺ"|])>]
+[<TestCase('뛇', ExpectedResult = [|"ᄃᄃ"; "ᅮᅥ"; "ᆯᇂ"|])>]
+let ``decompose with valid arguments`` syllable =
+    decompose syllable
+
+[<TestCase('가', ExpectedResult = [|"ㄱ"; "ㅏ"|])>]
+[<TestCase('힣', ExpectedResult = [|"ㅎ"; "ㅣ"; "ㅎ"|])>]
+[<TestCase('쐈', ExpectedResult = [|"ㅆ"; "ㅗㅏ"; "ㅆ"|])>]
+[<TestCase('뛇', ExpectedResult = [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|])>]
+let ``decomposeCompat with valid arguments`` syllable =
+    decomposeCompat syllable

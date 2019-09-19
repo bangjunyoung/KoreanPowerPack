@@ -31,14 +31,21 @@ module internal KoreanCharInternal =
     let [<Literal>] HangulSyllableFirst = '가'
     let [<Literal>] HangulSyllableLast = '힣'
 
+    let syllableToIndex (syllable: char) =
+        int syllable - int HangulSyllableFirst
+
     let [<Literal>] ChoseongCount = 19
     let [<Literal>] JungseongCount = 21
     let [<Literal>] JongseongCount = 28
 
-    let decomposeIntoIndexes (syllable: char) =
-        let sylIndex = int syllable - int HangulSyllableFirst
-        sylIndex / (JungseongCount * JongseongCount),
-        sylIndex % (JungseongCount * JongseongCount) / JongseongCount,
+    let getChoseongIndex syllable =
+        let sylIndex = syllableToIndex syllable
+        sylIndex / (JungseongCount * JongseongCount)
+    let getJungseongIndex syllable =
+        let sylIndex = syllableToIndex syllable
+        sylIndex % (JungseongCount * JongseongCount) / JongseongCount
+    let getJongseongIndex syllable =
+        let sylIndex = syllableToIndex syllable
         sylIndex % JongseongCount
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
@@ -81,8 +88,8 @@ module internal KoreanCharInternal =
 
     let compatJamoStringCollection = {
         Choseong = [|
-            "ㄱ"; "ㄱㄱ"; "ㄴ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅅ"
-            "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
+            "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
+            "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
         |]
         Jungseong = [|
             "ㅏ"; "ㅐ"; "ㅑ"; "ㅒ"; "ㅓ"; "ㅔ"; "ㅕ"; "ㅖ"; "ㅗ"; "ㅗㅏ"
