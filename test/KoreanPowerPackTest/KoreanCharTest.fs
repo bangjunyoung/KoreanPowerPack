@@ -104,14 +104,15 @@ let ``isCompatJongseong with invalid arguments`` c =
     Assert.That(isCompatJongseong c, Is.False)
 
 [<TestCase("", ExpectedResult = '\u0000')>]
-[<TestCase("\u1100", ExpectedResult = 'ᄀ')>]
+[<TestCase("\u1101", ExpectedResult = 'ᄁ')>]
 [<TestCase("\u1161", ExpectedResult = 'ᅡ')>]
 [<TestCase("\u11C2", ExpectedResult = 'ᇂ')>]
-[<TestCase("\u3131", ExpectedResult = 'ㄱ')>]
+[<TestCase("\u3132", ExpectedResult = 'ㄲ')>]
 [<TestCase("\u314F", ExpectedResult = 'ㅏ')>]
+[<TestCase("\u314E", ExpectedResult = 'ㅎ')>]
 [<TestCase("\u1100\u1100", ExpectedResult = 'ᄁ')>]
 [<TestCase("\u1169\u1161", ExpectedResult = 'ᅪ')>]
-[<TestCase("\u3131\u3145", ExpectedResult = 'ㄳ')>]
+[<TestCase("\u3131\u3131", ExpectedResult = 'ㄲ')>]
 [<TestCase("\u3157\u314F", ExpectedResult = 'ㅘ')>]
 let ``joinJamo with valid arguments`` jamo =
     joinJamo jamo
