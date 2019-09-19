@@ -137,7 +137,8 @@ module internal KoreanCharInternal =
     let compatJongseongToIndex jongseong =
         compatJamoCharCollection.Jongseong |> Array.tryBinarySearch jongseong
 
-    let jamoStrings = [|
+    let splittedJamoCollection = [|
+        // Hangul Jamo
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
         "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
 
@@ -149,6 +150,7 @@ module internal KoreanCharInternal =
         "ᆯᆸ"; "ᆯᆺ"; "ᆯᇀ"; "ᆯᇁ"; "ᆯᇂ"; "ᆷ"; "ᆸ"; "ᆸᆺ"; "ᆺ"; "ᆺᆺ"
         "ᆼ"; "ᆽ"; "ᆾ"; "ᆿ"; "ᇀ"; "ᇁ"; "ᇂ"
 
+        // Hangul Compatibility Jamo
         "ㄱ"; "ㄱㄱ"; "ㄱㅅ"; "ㄴ"; "ㄴㅈ"; "ㄴㅎ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㄹㄱ"
         "ㄹㅁ"; "ㄹㅂ"; "ㄹㅅ"; "ㄹㅌ"; "ㄹㅍ"; "ㄹㅎ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅂㅅ"
         "ㅅ"; "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅈㅈ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
@@ -157,7 +159,8 @@ module internal KoreanCharInternal =
         "ㅗㅐ"; "ㅗㅣ"; "ㅛ"; "ㅜ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅠ"; "ㅡ"; "ㅡㅣ"
         "ㅣ"
     |]
-    let jamoChars = [|
+    let joinedJamoCollection = [|
+        // Hangul Jamo
         'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
         'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
 
@@ -169,6 +172,7 @@ module internal KoreanCharInternal =
         'ᆲ'; 'ᆳ'; 'ᆴ'; 'ᆵ'; 'ᆶ'; 'ᆷ'; 'ᆸ'; 'ᆹ'; 'ᆺ'; 'ᆻ'
         'ᆼ'; 'ᆽ'; 'ᆾ'; 'ᆿ'; 'ᇀ'; 'ᇁ'; 'ᇂ'
 
+        // Hangul Compatibility Jamo
         'ㄱ'; 'ㄲ'; 'ㄳ'; 'ㄴ'; 'ㄵ'; 'ㄶ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㄺ'
         'ㄻ'; 'ㄼ'; 'ㄽ'; 'ㄾ'; 'ㄿ'; 'ㅀ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅄ'
         'ㅅ'; 'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
@@ -177,9 +181,4 @@ module internal KoreanCharInternal =
         'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
         'ㅣ'
     |]
-    assert (jamoStrings.Length = jamoChars.Length)
-
-    let map keys values = (keys, values) ||> Array.zip |> Map.ofArray
-
-    let jamoJoinMap = map jamoStrings jamoChars
-    let jamoSplitMap = map jamoChars jamoStrings
+    assert (splittedJamoCollection.Length = joinedJamoCollection.Length)

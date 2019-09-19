@@ -42,10 +42,12 @@ module KoreanChar =
     let tryJoinJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'
-        | 1 -> match jamoChars |> Array.tryBinarySearch jamo.[0] with
-               | Some index -> Some jamoChars.[index]
+        | 1 -> match joinedJamoCollection |> Array.tryBinarySearch jamo.[0] with
+               | Some index -> Some joinedJamoCollection.[index]
                | None -> None
-        | 2 -> jamoJoinMap |> Map.tryFind jamo
+        | 2 -> match splittedJamoCollection |> Array.tryBinarySearch jamo with
+               | Some index -> Some joinedJamoCollection.[index]
+               | None -> None
         | _ -> None
 
     let joinJamo jamo =
@@ -54,7 +56,11 @@ module KoreanChar =
         | None -> invalidArg "jamo" <| sprintf "%s is not a Hangul jamo" jamo
 
     let trySplitJamo jamo =
-        jamoSplitMap |> Map.tryFind jamo
+        match jamo with
+        | '\u0000' -> Some ""
+        | _ -> match joinedJamoCollection |> Array.tryBinarySearch jamo with
+               | Some index -> Some splittedJamoCollection.[index]
+               | None -> None
 
     let splitJamo jamo =
         match trySplitJamo jamo with
