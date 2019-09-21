@@ -28,8 +28,8 @@ module KoreanPowerPack.KoreanCharTest
 open NUnit.Framework
 open KoreanChar
 
-[<TestCase('\uAC00')>]
-[<TestCase('\uD7A3')>]
+[<TestCase('가')>]
+[<TestCase('힣')>]
 let ``isSyllable with valid arguments`` c =
     Assert.That(isSyllable c)
 
