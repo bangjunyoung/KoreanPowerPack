@@ -138,6 +138,9 @@ module KoreanChar =
     let decomposeCompat syllable =
         decomposeWith compatJamoStringCollection syllable
 
+    let decomposeDubeolsik syllable =
+        decomposeWith dubeolsikJamoStringCollection syllable
+
 open KoreanChar
 open System.Runtime.InteropServices
 
@@ -183,3 +186,6 @@ type KoreanChar private () =
 
     static member DecomposeCompat syllable =
         decomposeCompat syllable
+
+    static member DecomposeDubeolsik syllable =
+        decomposeDubeolsik syllable

@@ -173,7 +173,14 @@ let ``decompose with valid arguments`` syllable =
 
 [<TestCase('가', ExpectedResult = [|"ㄱ"; "ㅏ"|])>]
 [<TestCase('힣', ExpectedResult = [|"ㅎ"; "ㅣ"; "ㅎ"|])>]
-[<TestCase('쐈', ExpectedResult = [|"ㅆ"; "ㅗㅏ"; "ㅆ"|])>]
-[<TestCase('뛇', ExpectedResult = [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|])>]
+[<TestCase('쐈', ExpectedResult = [|"ㅅㅅ"; "ㅗㅏ"; "ㅅㅅ"|])>]
+[<TestCase('뛇', ExpectedResult = [|"ㄷㄷ"; "ㅜㅓ"; "ㄹㅎ"|])>]
 let ``decomposeCompat with valid arguments`` syllable =
     decomposeCompat syllable
+
+[<TestCase('가', ExpectedResult = [|"ㄱ"; "ㅏ"|])>]
+[<TestCase('힣', ExpectedResult = [|"ㅎ"; "ㅣ"; "ㅎ"|])>]
+[<TestCase('쐈', ExpectedResult = [|"ㅆ"; "ㅗㅏ"; "ㅆ"|])>]
+[<TestCase('뛇', ExpectedResult = [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|])>]
+let ``decomposeDubeolsik with valid arguments`` syllable =
+    decomposeDubeolsik syllable

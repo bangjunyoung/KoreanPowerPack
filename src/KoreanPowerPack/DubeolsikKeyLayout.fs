@@ -59,7 +59,7 @@ let unparse str =
         if c |> KoreanChar.isCompatJungseong then
             KoreanChar.splitJamo c
         elif c |> KoreanChar.isSyllable then
-            KoreanChar.decomposeCompat c |> String.concat ""
+            KoreanChar.decomposeDubeolsik c |> String.concat ""
         else
             string c)
     |> String.map dubeolsikToQwerty
