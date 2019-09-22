@@ -15,6 +15,8 @@
   <ItemGroup>
     <Compile Include="KoreanCharTest.fs" />
     <Compile Include="KoreanCharApproxMatcherTest.fs" />
+    <Compile Include="KoreanTextMatchTest.fs" />
+    <Compile Include="KoreanTextMatcherTest.fs" />
     <Compile Include="KoreanJosaFormatterTest.fs" />
     <Compile Include="DubeolsikKeyLayoutTest.fs" />
     <Compile Include="Sebeolsik391KeyLayoutTest.fs" />

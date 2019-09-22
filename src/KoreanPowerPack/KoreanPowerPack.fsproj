@@ -12,6 +12,7 @@
     <Compile Include="KoreanCharInternal.fs" />
     <Compile Include="KoreanChar.fs" />
     <Compile Include="KoreanCharApproxMatcher.fs" />
+    <Compile Include="KoreanTextMatcher.fs" />
     <Compile Include="KoreanJosaFormatter.fs" />
     <Compile Include="HangulKeyLayout.fs" />
     <Compile Include="FParsec.fs" />
