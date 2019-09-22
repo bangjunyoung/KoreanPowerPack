@@ -84,16 +84,13 @@ and KoreanTextMatcher(pattern: string) =
         if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
         elif length < pattern.Length then KoreanTextMatch.Empty
         else
-            let isMatch xs ys =
-                (xs, ys)
-                ||> Seq.zip
-                |> Seq.forall (fun (x, y) -> KoreanCharApproxMatcher.isMatch x y)
-
             text
             |> Seq.skip startIndex
             |> Seq.take length
             |> Seq.windowed pattern.Length
-            |> Seq.tryFindIndex (fun subtext -> isMatch subtext pattern)
+            |> Seq.tryFindIndex (fun subtext ->
+                (subtext, pattern)
+                ||> Seq.forall2 KoreanCharApproxMatcher.isMatch)
             |> function
                | Some index -> KoreanTextMatch(this, text, index, pattern.Length)
                | None -> KoreanTextMatch.Empty
