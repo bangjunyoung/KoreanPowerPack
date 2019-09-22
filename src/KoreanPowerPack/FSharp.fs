@@ -31,15 +31,6 @@ module String =
         ||> Seq.fold (fun builder c -> builder.Append(c))
         |> string
 
-[<AutoOpen>]
-module Exception =
-    let invalidArgNull argName (message: string) =
-        raise <| System.ArgumentNullException(argName, message)
-
-    let raiseIfNull argName arg =
-        if arg = null then
-            invalidArgNull argName (argName + " can't be null")
-
 module Array =
     let tryBinarySearchWith comparer (value: 'a) (source: 'a[]) =
         let rec loop lo hi =
