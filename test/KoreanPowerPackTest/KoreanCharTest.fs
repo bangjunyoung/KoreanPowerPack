@@ -154,7 +154,7 @@ let ``splitJamo with valid arguments`` jamo =
 [<TestCase('가')>]
 let ``splitJamo with invalid arguments throws ArgumentException`` jamo =
      Assert.That(System.Func<_>(fun () -> splitJamo jamo),
-        Throws.ArgumentException)
+         Throws.ArgumentException)
 
 [<TestCase('\u1101', '\u116A', '\u0000', ExpectedResult = '꽈')>]
 [<TestCase('\u1101', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
