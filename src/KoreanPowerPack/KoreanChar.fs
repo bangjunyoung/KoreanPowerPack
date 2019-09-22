@@ -58,6 +58,17 @@ module KoreanChar =
     let getCompatJongseong syllable =
         getJamoWith getJongseongIndex compatJamoCharCollection.Jongseong syllable
 
+    let choseongToCompatChoseong c =
+        if not (isChoseong c) then
+            invalidArg "c" <| sprintf "c: %c is not a choseong" c
+
+        compatJamoCharCollection.Choseong.[int c - 0x1100]
+
+    let compatChoseongToChoseong c =
+        match compatJamoCharCollection.Choseong |> Array.tryBinarySearch c with
+        | None -> invalidArg "c" <| sprintf "c: %c is not a Compatibility choseong" c
+        | Some index -> char (0x1100 + index)
+
     let tryJoinJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'

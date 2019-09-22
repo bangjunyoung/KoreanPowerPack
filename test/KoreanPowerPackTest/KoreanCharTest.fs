@@ -103,6 +103,26 @@ let ``isCompatJongseong with valid arguments`` c =
 let ``isCompatJongseong with invalid arguments`` c =
     Assert.That(isCompatJongseong c, Is.False)
 
+[<TestCase('\u1100', ExpectedResult = '\u3131')>]
+[<TestCase('\u1112', ExpectedResult = '\u314E')>]
+let ``choseongToCompatChoseong with valid arguments`` c =
+    choseongToCompatChoseong c
+
+[<TestCase('A')>]
+let ``choseongToCompatChoseong with invalid arguments throws ArgumentException`` c =
+     Assert.That(System.Func<_>(fun () -> choseongToCompatChoseong c),
+         Throws.ArgumentException)
+
+[<TestCase('\u3131', ExpectedResult = '\u1100')>]
+[<TestCase('\u314E', ExpectedResult = '\u1112')>]
+let ``compatChoseongToChoseong with valid arguments`` c =
+    compatChoseongToChoseong c
+
+[<TestCase('ㄳ')>]
+let ``compatChoseongToChoseong with invalid arguments throws ArgumentException`` c =
+     Assert.That(System.Func<_>(fun () -> compatChoseongToChoseong c),
+         Throws.ArgumentException)
+
 [<TestCase("", ExpectedResult = '\u0000')>]
 [<TestCase("\u1101", ExpectedResult = 'ᄁ')>]
 [<TestCase("\u1161", ExpectedResult = 'ᅡ')>]
