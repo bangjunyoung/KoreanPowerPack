@@ -31,23 +31,22 @@ open System.Runtime.InteropServices
 type KoreanTextMatch
     private (matcher: KoreanTextMatcher, text: string, startIndex: int,
              length: int, success: bool) =
-
     do
         if isNull text then nullArg "text"
         if startIndex < 0 ||
            text.Length = 0 && startIndex > 0 ||
            text.Length > 0 && startIndex >= text.Length then
             raise <| ArgumentOutOfRangeException("startIndex",
-                        sprintf "startIndex: %d is out of range 0 .. %d"
-                            startIndex (text.Length - 1))
+                         sprintf "startIndex: %d is out of range 0 .. %d"
+                             startIndex (text.Length - 1))
         if length < 0 || length > text.Length then
             raise <| ArgumentOutOfRangeException("length",
-                        sprintf "length: %d is out of range 0 .. %d"
-                            length (text.Length - 1))
+                         sprintf "length: %d is out of range 0 .. %d"
+                             length (text.Length - 1))
         if startIndex + length > text.Length then
             raise <| ArgumentOutOfRangeException("length",
-                        sprintf "startIndex + length: %d is out of range 0 .. %d"
-                            (startIndex + length) (text.Length - 1))
+                         sprintf "startIndex + length: %d is out of range 0 .. %d"
+                             (startIndex + length) (text.Length - 1))
 
     static let empty = KoreanTextMatch(KoreanTextMatcher(""), "", 0, 0, false)
 
@@ -106,8 +105,8 @@ and KoreanTextMatcher(pattern: string) =
            text.Length = 0 && startIndex > 0 ||
            text.Length > 0 && startIndex >= text.Length then
             raise <| ArgumentOutOfRangeException("startIndex",
-                        sprintf "startIndex: %d is out of range 0 .. %d"
-                            startIndex (text.Length - 1))
+                         sprintf "startIndex: %d is out of range 0 .. %d"
+                             startIndex (text.Length - 1))
 
         let textSpan =
             let length = text.Length - startIndex
