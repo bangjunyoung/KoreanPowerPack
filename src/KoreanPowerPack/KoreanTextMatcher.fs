@@ -128,7 +128,7 @@ and KoreanTextMatcher(pattern: string) =
             else this.Match(text, startIndex, length)
 
     member this.Matches(text,
-                        [<Optional; DefaultParameterValue(0)>] startIndex: int) =
+                        [<Optional; DefaultParameterValue(0)>] startIndex) =
         let rec loop (m: KoreanTextMatch) = seq {
             if m.Success then
                 yield m
