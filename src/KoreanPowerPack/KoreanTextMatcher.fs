@@ -69,7 +69,8 @@ type KoreanTextMatch
         else matcher.Match(text, startIndex + length)
 
 and KoreanTextMatcher(pattern: string) =
-    do if isNull pattern then nullArg "pattern"
+    do
+        if isNull pattern then nullArg "pattern"
 
     let pattern, startAnchorFound, endAnchorFound =
         if pattern.Length = 0 then pattern, false, false
