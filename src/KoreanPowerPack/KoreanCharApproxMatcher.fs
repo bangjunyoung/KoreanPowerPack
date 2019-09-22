@@ -28,8 +28,8 @@ namespace KoreanPowerPack
 open KoreanChar
 
 module KoreanCharApproxMatcher =
-    [<CompiledName("Match")>]
-    let ``match`` t p =
+    [<CompiledName("IsMatch")>]
+    let isMatch t p =
         let decompose c =
             if isSyllable c then String.concat "" (decomposeCompat c)
             elif isCompatChoseong c then splitJamo c
