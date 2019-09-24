@@ -55,7 +55,7 @@ type KoreanTextMatch
     new(matcher, text, startIndex, length) =
         KoreanTextMatch(matcher, text, startIndex, length, true)
 
-    member __.Value = text.AsMemory().Slice(startIndex, length)
+    member __.Value = text.AsSpan().Slice(startIndex, length)
 
     member __.Index = startIndex
 
