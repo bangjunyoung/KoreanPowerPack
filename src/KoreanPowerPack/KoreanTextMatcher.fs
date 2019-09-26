@@ -27,6 +27,7 @@ namespace KoreanPowerPack
 
 open System
 open System.Runtime.InteropServices
+open FSharpCoreMissingParts
 
 type KoreanTextMatch
     private (matcher: KoreanTextMatcher, text: string, startIndex: int,
@@ -84,13 +85,11 @@ and KoreanTextMatcher(pattern: string) =
         if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
         elif length < pattern.Length then KoreanTextMatch.Empty
         else
-            text
-            |> Seq.skip startIndex
-            |> Seq.take length
-            |> Seq.windowed pattern.Length
+            text.AsMemory(startIndex, length)
+            |> Memory.windowed pattern.Length
             |> Seq.tryFindIndex (fun subtext ->
-                (subtext, pattern)
-                ||> Seq.forall2 KoreanCharApproxMatcher.isMatch)
+                (subtext, pattern.AsMemory())
+                ||> Memory.forall2 KoreanCharApproxMatcher.isMatch)
             |> function
                | Some index -> KoreanTextMatch(this, text, index, pattern.Length)
                | None -> KoreanTextMatch.Empty
