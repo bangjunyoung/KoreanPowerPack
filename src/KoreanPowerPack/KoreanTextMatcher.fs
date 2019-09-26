@@ -51,12 +51,14 @@ type KoreanTextMatch
 
     static let empty = KoreanTextMatch(KoreanTextMatcher(""), "", 0, 0, false)
 
+    let value = text.AsMemory(startIndex, length)
+
     static member Empty = empty
 
     new(matcher, text, startIndex, length) =
         KoreanTextMatch(matcher, text, startIndex, length, true)
 
-    member __.Value = text.AsSpan().Slice(startIndex, length)
+    member __.Value = value
 
     member __.Index = startIndex
 
