@@ -26,6 +26,7 @@
 module KoreanPowerPack.DubeolsikKeyLayoutTest
 
 open NUnit.Framework
+open KoreanPowerPack.FSharp
 
 let parse_TestParameters =
     [
@@ -48,7 +49,9 @@ let parse_TestParameters =
          "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected))
+        TestCaseData(actual).Returns(expected)
+            .SetName(sprintf "parse {0:15} returns \"%s\""
+                         (expected |> String.truncate 15)))
 
 [<TestCaseSource("parse_TestParameters")>]
 let ``parse with valid argument`` actual =
@@ -71,7 +74,9 @@ let unparse_TestParameters =
          "dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek.")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected))
+        TestCaseData(actual).Returns(expected)
+            .SetName(sprintf "unparse {0:15} returns \"%s\""
+                         (expected |> String.truncate 15)))
 
 [<TestCaseSource("unparse_TestParameters")>]
 let ``unparse with valid argument`` actual =
