@@ -142,17 +142,17 @@ let testPunctuations =
     generateTestCaseData testStrings expected
 
 [<TestCaseSource("testHangulLetters")>]
-let ``handle Hangul``cheeon josa =
+let ``format Hangul + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testLatinLetters")>]
-let ``handle Latin letters``cheeon josa =
+let ``format Latin letters + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]
-let ``handle numbers`` cheeon josa =
+let ``format numbers + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testPunctuations")>]
-let ``handle punctuations`` cheeon josa =
+let ``format punctuations + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)

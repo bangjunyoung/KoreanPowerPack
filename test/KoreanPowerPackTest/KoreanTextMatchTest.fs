@@ -36,6 +36,9 @@ let ``new KoreanTextMatch() with valid arguments`` () =
     Assert.That(m.Value.ToString(), Is.EqualTo "12345")
 
 [<Test>]
-let ``Two properties of Empty`` () =
+let ``Success of Empty is false`` () =
     Assert.That(KoreanTextMatch.Empty.Success, Is.False)
+
+[<Test>]
+let ``NextMatch() of Empty is Empty`` () =
     Assert.That(KoreanTextMatch.Empty.NextMatch(), Is.EqualTo KoreanTextMatch.Empty)
