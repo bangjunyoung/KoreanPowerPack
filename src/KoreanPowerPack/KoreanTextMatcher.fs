@@ -87,11 +87,12 @@ and KoreanTextMatcher(pattern: string) =
         if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
         elif length < pattern.Length then KoreanTextMatch.Empty
         else
-            text.AsMemory(startIndex, length)
-            |> Memory.windowed pattern.Length
+            text
+            |> Mem.ofStringSlice startIndex length
+            |> Mem.windowed pattern.Length
             |> Seq.tryFindIndex (fun subtext ->
-                (subtext, pattern.AsMemory())
-                ||> Memory.forall2 KoreanCharApproxMatcher.isMatch)
+                (subtext, Mem.ofString pattern)
+                ||> Mem.forall2 KoreanCharApproxMatcher.isMatch)
             |> function
                | Some index -> KoreanTextMatch(this, text, index, pattern.Length)
                | None -> KoreanTextMatch.Empty

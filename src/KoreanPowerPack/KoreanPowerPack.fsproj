@@ -7,7 +7,7 @@
   <ItemGroup>
     <Compile Include="FSharp.fs" />
     <Compile Include="Casting.fs" />
-    <Compile Include="Memory.fs" />
+    <Compile Include="Mem.fs" />
     <Compile Include="KoreanNumericConverter.fs" />
     <Compile Include="KoreanNumericFormatter.fs" />
     <Compile Include="KoreanCharInternal.fs" />
