@@ -27,7 +27,7 @@ module KoreanPowerPack.DubeolsikKeyLayoutTest
 
 open NUnit.Framework
 
-let parseTestParameters =
+let parse_TestParameters =
     [
         ("", "")
         ("rsefaqtdwczxvg",
@@ -50,11 +50,11 @@ let parseTestParameters =
     |> List.map (fun (actual, expected) ->
         TestCaseData(actual).Returns(expected))
 
-[<TestCaseSource("parseTestParameters")>]
-let ``parse with valid arguments`` actual =
+[<TestCaseSource("parse_TestParameters")>]
+let ``parse with valid argument`` actual =
     DubeolsikKeyLayout.parse actual
 
-let unparseTestParameters =
+let unparse_TestParameters =
     [
         ("", "")
         ("ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ",
@@ -73,6 +73,6 @@ let unparseTestParameters =
     |> List.map (fun (actual, expected) ->
         TestCaseData(actual).Returns(expected))
 
-[<TestCaseSource("unparseTestParameters")>]
-let ``unparse with valid arguments`` actual =
+[<TestCaseSource("unparse_TestParameters")>]
+let ``unparse with valid argument`` actual =
     DubeolsikKeyLayout.unparse actual
