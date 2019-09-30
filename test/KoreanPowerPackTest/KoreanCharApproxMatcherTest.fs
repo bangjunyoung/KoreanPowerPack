@@ -44,12 +44,12 @@ open NUnit.Framework
 [<TestCase('꽜', '꽈')>]
 [<TestCase('꽜', '꽛')>]
 [<TestCase('꽜', '꽜')>]
-let ``isMatch with matched arguments`` t p =
+let ``isMatch returns true for matched arguments`` t p =
     Assert.That(KoreanCharApproxMatcher.isMatch t p)
 
 [<TestCase('H', 'h')>]
 [<TestCase('하', '한')>]
 [<TestCase('한', 'ㅏ')>]
 [<TestCase('한', '핞')>]
-let ``isMatch with unmatched arguments`` t p =
+let ``isMatch returns false for unmatched arguments`` t p =
     Assert.That(KoreanCharApproxMatcher.isMatch t p, Is.False)

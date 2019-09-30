@@ -81,20 +81,20 @@ let generateTestCaseData testStrings expected =
         TestCaseData(cheeon, josa).Returns(combined))
 
 let testHangulLetters =
-    let beforeFormV = ["피"]
-    let beforeFormC = ["땀"]
-    let beforeFormL = ["눈물"]
-    let testStrings = beforeFormV @ beforeFormC @ beforeFormL
+    let cheeonFormV = ["피"]
+    let cheeonFormC = ["땀"]
+    let cheeonFormL = ["눈물"]
+    let testStrings = cheeonFormV @ cheeonFormC @ cheeonFormL
 
     let expected =
-        join beforeFormV josasFormV @
-        join beforeFormC josasFormC @
-        join beforeFormL josasFormL
+        join cheeonFormV josasFormV @
+        join cheeonFormC josasFormC @
+        join cheeonFormL josasFormL
 
     generateTestCaseData testStrings expected
 
 let testLatinLetters =
-    let beforeFormV = [
+    let cheeonFormV = [
         "Asia"; "elf"; "phi"; "Troj"; "halo"; "Mars"
         "you"; "luv"; "cow"; "six"; "by"; "jazz"
         "calc"; "fold"; "milk"; "help"; "silq"; "bolt"
@@ -104,40 +104,40 @@ let testLatinLetters =
         "bear"; "user"; "pair"; "door"; "tour"
         "orb";  "more"; "centre"
     ]
-    let beforeFormL = ["ball"]
-    let beforeFormC = ["mom"; "bun"; "ring"]
-    let beforeFormA = ["mob"; "food"; "good"; "sec"; "bag"]
-    let testStrings = beforeFormV @ beforeFormC @ beforeFormL @ beforeFormA
+    let cheeonFormL = ["ball"]
+    let cheeonFormC = ["mom"; "bun"; "ring"]
+    let cheeonFormA = ["mob"; "food"; "good"; "sec"; "bag"]
+    let testStrings = cheeonFormV @ cheeonFormC @ cheeonFormL @ cheeonFormA
 
     let expected =
-        join beforeFormV josasFormV @
-        join beforeFormC josasFormC @
-        join beforeFormL josasFormL @
-        join beforeFormA josasFormA
+        join cheeonFormV josasFormV @
+        join cheeonFormC josasFormC @
+        join cheeonFormL josasFormL @
+        join cheeonFormA josasFormA
 
     generateTestCaseData testStrings expected
 
 let testNumbers =
-    let beforeFormV = ["2"; "3000000000000"]
-    let beforeFormC = ["0"]
-    let beforeFormL = ["1"]
-    let testStrings = beforeFormV @ beforeFormC @ beforeFormL
+    let cheeonFormV = ["2"; "3000000000000"]
+    let cheeonFormC = ["0"]
+    let cheeonFormL = ["1"]
+    let testStrings = cheeonFormV @ cheeonFormC @ cheeonFormL
 
     let expected =
-        join beforeFormV josasFormV @
-        join beforeFormC josasFormC @
-        join beforeFormL josasFormL
+        join cheeonFormV josasFormV @
+        join cheeonFormC josasFormC @
+        join cheeonFormL josasFormL
 
     generateTestCaseData testStrings expected
 
 let testPunctuations =
-    let beforeFormV = ["%"]
-    let beforeFormC = ["#"]
-    let testStrings = beforeFormV @ beforeFormC
+    let cheeonFormV = ["%"]
+    let cheeonFormC = ["#"]
+    let testStrings = cheeonFormV @ cheeonFormC
 
     let expected =
-        join beforeFormV josasFormV @
-        join beforeFormC josasFormC
+        join cheeonFormV josasFormV @
+        join cheeonFormC josasFormC
 
     generateTestCaseData testStrings expected
 
