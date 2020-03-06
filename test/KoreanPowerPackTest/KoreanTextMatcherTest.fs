@@ -27,7 +27,7 @@ module KoreanPowerPack.KoreanTextMatcherTest
 
 open NUnit.Framework
 
-let IsMatch_TestParameters =
+let IsMatchTestParameters =
     [
         "", "", true
         "", "^$", true
@@ -80,6 +80,6 @@ let IsMatch_TestParameters =
     |> List.map (fun (text, pattern, expected) ->
         TestCaseData(text, pattern).Returns(expected))
 
-[<TestCaseSource("IsMatch_TestParameters")>]
+[<TestCaseSource("IsMatchTestParameters")>]
 let ``static IsMatch(text, pattern) with valid arguments`` text pattern =
     KoreanTextMatcher.IsMatch(text, pattern)

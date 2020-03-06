@@ -28,7 +28,7 @@ module KoreanPowerPack.Sebeolsik391KeyLayoutTest
 open NUnit.Framework
 open KoreanPowerPack.FSharp
 
-let parse_TestParameters =
+let parseTestParameters =
     [
         ("", "")
         ("khuyi;njlo0'pm",
@@ -51,11 +51,11 @@ let parse_TestParameters =
             .SetName(sprintf "parse {0:15} returns \"%s\""
                          (expected |> String.truncate 15)))
 
-[<TestCaseSource("parse_TestParameters")>]
+[<TestCaseSource("parseTestParameters")>]
 let ``parse with valid arguments`` actual =
     Sebeolsik391KeyLayout.parse actual
 
-let unparse_TestParameters =
+let unparseTestParameters =
     [
         ("", "")
         ("ᄀᄂᄃᄅᄆᄇᄉᄋᄌᄎᄏᄐᄑᄒ",
@@ -82,6 +82,6 @@ let unparse_TestParameters =
             .SetName(sprintf "unparse {0:15} returns \"%s\""
                          (expected |> String.truncate 15)))
 
-[<TestCaseSource("unparse_TestParameters")>]
+[<TestCaseSource("unparseTestParameters")>]
 let ``unparse with valid arguments`` actual =
     Sebeolsik391KeyLayout.unparse actual
