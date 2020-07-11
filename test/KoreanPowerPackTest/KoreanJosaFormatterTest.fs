@@ -30,7 +30,7 @@ open NUnit.Framework
 module List =
     let unzip4 source =
         (source, ([], [], [], []))
-        ||> List.foldBack (fun (f1, f2, f3, f4) (acc1, acc2, acc3, acc4)  ->
+        ||> List.foldBack (fun (f1, f2, f3, f4) (acc1, acc2, acc3, acc4) ->
             f1 :: acc1, f2 :: acc2, f3 :: acc3, f4 :: acc4)
 
 let validJosas = [
@@ -55,6 +55,10 @@ let validJosas = [
 #endif
 ]
 
+// Form V: 종성 없는 음절
+// Form C: 종성 있는 음절
+// Form L: 종성이 ㄹ인 음절
+// Form A: 그외 모호한 경우
 let josasFormV, josasFormC, josasFormL, josasFormA =
     validJosas |> List.unzip4
 
@@ -146,13 +150,13 @@ let ``format Hangul + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testLatinLetters")>]
-let ``format Latin letters + josa`` cheeon josa =
+let ``format Latin + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testNumbers")>]
-let ``format numbers + josa`` cheeon josa =
+let ``format number + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
 
 [<TestCaseSource("testPunctuations")>]
-let ``format punctuations + josa`` cheeon josa =
+let ``format punctuation + josa`` cheeon josa =
     KoreanJosaFormatter().Format(josa, cheeon)
