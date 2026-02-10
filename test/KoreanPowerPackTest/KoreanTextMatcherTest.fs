@@ -83,3 +83,51 @@ let IsMatchTestParameters =
 [<TestCaseSource("IsMatchTestParameters")>]
 let ``static IsMatch(text, pattern) with valid arguments`` text pattern =
     KoreanTextMatcher.IsMatch(text, pattern)
+
+let MatchesTestParameters =
+    [
+        // Hangul Compatibility Jamo
+        "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎㄹ", 0
+        "하늘 ㅎ늘 하느 ㅎㄴ", "하늘", 1
+        "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎ늘", 2
+        "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎ느", 3
+        "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎㄴ", 4
+        // Hangul Jamo
+        "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒᄅ", 0
+        "하늘 ᄒ늘 하느 ᄒᄂ", "하늘", 1
+        "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒ늘", 2
+        "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒ느", 3
+        "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒᄂ", 4
+    ]
+    |> List.map (fun (text, pattern, expected) ->
+        TestCaseData(text, pattern, expected))
+
+[<TestCaseSource("MatchesTestParameters")>]
+let ``static Matches(text, pattern) with valid arguments`` text pattern (expected: int) =
+    let matches = KoreanTextMatcher.Matches(text, pattern)
+    for ``match`` in matches do
+        Assert.That(text, Does.Contain(``match``.Value.ToString()))
+
+    Assert.That(Seq.length matches, Is.EqualTo expected);
+
+let MatchTestParameters =
+    [
+        "", "", 0, true, 0, 0
+        "0", "", 0, true, 0, 0
+        "012", "01", 0, true, 0, 2
+        "012", "12", 0, true, 1, 2
+        "012", "12", 1, true, 1, 2
+        "012", "01", 1, false, 0, 0
+        "012", "012", 1, false, 0, 0
+        "012", "0123", 0, false, 0, 0
+    ]
+    |> List.map (fun (text, pattern, startIndex, success, index, length) ->
+        TestCaseData(text, pattern, startIndex, success, index, length))
+
+[<TestCaseSource("MatchTestParameters")>]
+let ``Match(pattern, startIndex) with valid arguments`` text pattern startIndex success index length =
+    let ``match`` = KoreanTextMatcher(pattern).Match(text, startIndex)
+    Assert.That(``match``.Success, Is.EqualTo success)
+    if success then
+        Assert.That(``match``.Index, Is.EqualTo index)
+        Assert.That(``match``.Length, Is.EqualTo length)
