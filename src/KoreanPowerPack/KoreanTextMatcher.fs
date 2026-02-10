@@ -26,17 +26,19 @@
 namespace KoreanPowerPack
 
 open System
+open System.Runtime.CompilerServices
 open System.Runtime.InteropServices
 open FSharpCoreMissingParts
 
-type KoreanTextMatch
-    private (matcher: KoreanTextMatcher, text: string, startIndex: int,
-             length: int, success: bool) =
+[<assembly: InternalsVisibleTo("KoreanPowerPackTest")>]
+do ()
+
+type KoreanTextMatch private (matcher: KoreanTextMatcher, text: string,
+                              startIndex: int, length: int, success: bool) =
     do
         if isNull text then nullArg "text"
-        if startIndex < 0 ||
-           text.Length = 0 && startIndex > 0 ||
-           text.Length > 0 && startIndex >= text.Length then
+
+        if startIndex < 0 || startIndex > text.Length then
             raise <| ArgumentOutOfRangeException("startIndex",
                          sprintf "startIndex: %d is out of range 0 .. %d"
                              startIndex (text.Length - 1))
@@ -67,8 +69,9 @@ type KoreanTextMatch
     member __.Success = success
 
     member __.NextMatch() =
-        if not success then KoreanTextMatch.Empty
-        else matcher.Match(text, startIndex + length)
+        if success && startIndex + length < text.Length
+        then matcher.Match(text, startIndex + length)
+        else KoreanTextMatch.Empty
 
 and KoreanTextMatcher(pattern: string) =
     do
@@ -83,7 +86,17 @@ and KoreanTextMatcher(pattern: string) =
             | false, true  -> pattern.Substring(0, pattern.Length - 1), false, true
             | false, false -> pattern, false, false
 
-    member this.Match(text, startIndex, length) =
+    member this.Match(text: string, startIndex, length) =
+        if isNull text then nullArg "text"
+        if startIndex < 0 || startIndex > text.Length then
+            raise <| ArgumentOutOfRangeException("startIndex",
+                         sprintf "startIndex: %d is out of range [0 .. %d]"
+                             startIndex (text.Length - 1))
+        if length < 0 || length > text.Length then
+            raise <| ArgumentOutOfRangeException("length",
+                         sprintf "length: %d is out of range [0 .. %d]"
+                             length (text.Length - 1))
+
         if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
         elif length < pattern.Length then KoreanTextMatch.Empty
         else
@@ -94,15 +107,13 @@ and KoreanTextMatcher(pattern: string) =
                 (subtext, Mem.ofString pattern)
                 ||> Mem.forall2 KoreanCharApproxMatcher.isMatch)
             |> function
-               | Some index -> KoreanTextMatch(this, text, index, pattern.Length)
+               | Some index -> KoreanTextMatch(this, text, startIndex + index, pattern.Length)
                | None -> KoreanTextMatch.Empty
 
     member this.Match(text: string,
                       [<Optional; DefaultParameterValue(0)>] startIndex: int) =
         if isNull text then nullArg "text"
-        if startIndex < 0 ||
-           text.Length = 0 && startIndex > 0 ||
-           text.Length > 0 && startIndex >= text.Length then
+        if startIndex < 0 || startIndex > text.Length then
             raise <| ArgumentOutOfRangeException("startIndex",
                          sprintf "startIndex: %d is out of range 0 .. %d"
                              startIndex (text.Length - 1))
@@ -127,12 +138,12 @@ and KoreanTextMatcher(pattern: string) =
 
     member this.Matches(text,
                         [<Optional; DefaultParameterValue(0)>] startIndex) =
-        let rec loop (m: KoreanTextMatch) = seq {
-            if m.Success then
-                yield m
-                yield! loop <| m.NextMatch()
+        seq {
+            let mutable ``match`` = this.Match(text, startIndex)
+            while ``match``.Success do
+                yield ``match``
+                ``match`` <- ``match``.NextMatch()
         }
-        loop <| this.Match(text, startIndex)
 
     static member Matches(text, pattern) =
         KoreanTextMatcher(pattern).Matches(text)
