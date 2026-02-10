@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="src/KoreanPowerPack/KoreanPowerPack.fsproj" />
-  <Project Path="test/KoreanPowerPackTest/KoreanPowerPackTest.fsproj" />
+  <Project Path="tests/KoreanPowerPack.Tests/KoreanPowerPack.Tests.fsproj" />
 </Solution>

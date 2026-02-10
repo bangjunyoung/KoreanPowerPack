@@ -13,13 +13,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="KoreanCharTest.fs" />
-    <Compile Include="KoreanCharApproxMatcherTest.fs" />
-    <Compile Include="KoreanTextMatchTest.fs" />
-    <Compile Include="KoreanTextMatcherTest.fs" />
-    <Compile Include="KoreanJosaFormatterTest.fs" />
-    <Compile Include="DubeolsikKeyLayoutTest.fs" />
-    <Compile Include="Sebeolsik391KeyLayoutTest.fs" />
+    <Compile Include="KoreanCharTests.fs" />
+    <Compile Include="KoreanCharApproxMatcherTests.fs" />
+    <Compile Include="KoreanTextMatchTests.fs" />
+    <Compile Include="KoreanTextMatcherTests.fs" />
+    <Compile Include="KoreanJosaFormatterTests.fs" />
+    <Compile Include="DubeolsikKeyLayoutTests.fs" />
+    <Compile Include="Sebeolsik391KeyLayoutTests.fs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module KoreanPowerPack.KoreanCharTest
+module KoreanPowerPack.KoreanCharTests
 
 open System
 open NUnit.Framework

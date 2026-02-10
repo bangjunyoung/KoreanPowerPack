@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module KoreanPowerPack.KoreanJosaFormatterTest
+module KoreanPowerPack.KoreanJosaFormatterTests
 
 open NUnit.Framework
 

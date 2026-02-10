@@ -23,7 +23,7 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module KoreanPowerPack.Sebeolsik391KeyLayoutTest
+module KoreanPowerPack.DubeolsikKeyLayoutTests
 
 open NUnit.Framework
 open KoreanPowerPack.FSharp
@@ -31,19 +31,21 @@ open KoreanPowerPack.FSharp
 let parseTestParameters =
     [
         ("", "")
-        ("khuyi;njlo0'pm",
-         "ᄀᄂᄃᄅᄆᄇᄉᄋᄌᄎᄏᄐᄑᄒ")
-        ("kkuu;;nnll",
-         "ᄁᄄᄈᄊᄍ")
-        ("fr6Gtce7v4b5g d",
-         "ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅭᅮᅲᅳ ᅵ")
-        ("vfvrvdbtbcbdgd",
-         "ᅪᅫᅬᅯᅰᅱᅴ")
-        ("j50vrmr2uts uufqlbd 'vkkdpbw llvZkd ;f;;gz",
+        ("rsefaqtdwczxvg",
+         "ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
+        ("rreeqqttww",
+         "ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ")
+        ("REQTW",
+         "ㄲㄸㅃㅆㅉ")
+        ("kijuhynbm l",
+         "ㅏㅑㅓㅕㅗㅛㅜㅠㅡ ㅣ")
+        ("hkhohlnjnpnlml",
+         "ㅘㅙㅚㅝㅞㅟㅢ")
+        ("dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma",
          "유쾌했던 땃쥐 토끼풀 쫓기 바쁨")
-        ("hf!nd nfxq ;fAjgye jfs#ufkf nrants mfwWjfitxuts nfwxjgw ;fw3jgs",
+        ("skRtl tkrt qkedmfu dkswekrk todtjs gkfxdkajrejs tkfrdmf qkfqdms",
          "낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은")
-        ("jvdkvwqjgs nfwzjd jrufw1kv ifzjd pesofs1jf ndygw jgwQjt2uf.",
+        ("dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek.",
          "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.")
     ]
     |> List.map (fun (actual, expected) ->
@@ -52,30 +54,24 @@ let parseTestParameters =
                          (expected |> String.truncate 15)))
 
 [<TestCaseSource("parseTestParameters")>]
-let ``parse with valid arguments`` actual =
-    Sebeolsik391KeyLayout.parse actual
+let ``parse with valid argument`` actual =
+    DubeolsikKeyLayout.parse actual
 
 let unparseTestParameters =
     [
         ("", "")
-        ("ᄀᄂᄃᄅᄆᄇᄉᄋᄌᄎᄏᄐᄑᄒ",
-         "khuyi;njlo0'pm")
-        ("ᄁᄄᄈᄊᄍ",
-         "kkuu;;nnll")
-        ("ᅡᅢᅣᅤᅥᅦᅧᅨᅩᅭᅮᅲᅳ ᅵ",
-         "fr6Gtce7/4b5g d")
-        ("ᅪᅫᅬᅯᅰᅱᅴ",
-         "/f/r/dbtbcbdgd")
-        ("ᆨᆫᆮᆯᆷᆸᆺᆼᆽᆾᆿᇀᇁᇂ",
-         "xsAwz3qa#ZCWQ1")
-        ("ᆩᆪᆬᆭᆰᆱᆲᆳᆴᆵᆶᆹᆻ",
-         "xxxqs#s1wxwzw3wqwWwQw13qqq")
+        ("ㄱㄱㄷㄷㅂㅂㅅㅅㅈㅈ",
+         "rreeqqttww")
+        ("ㄲㄸㅃㅆㅉ",
+         "REQTW")
+        ("ㅘㅙㅚㅝㅞㅟㅢ",
+         "hkhohlnjnpnlml")
         ("유쾌했던 땃쥐 토끼풀 쫓기 바쁨",
-         "j50/rmrqquts uufqlbd '/kkdpbw ll/Zkd ;f;;gz")
+         "dbzhogoTejs Ektwnl xhRlvnf Whcrl qkQma")
         ("낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은",
-         "hfxxnd nfxq ;fAjgye jfs#ufkf nrants mfwWjfitxuts nfwxjgw ;fw3jgs")
+         "skRtl tkrt qkedmfu dkswekrk todtjs gkfxdkajrejs tkfrdmf qkfqdms")
         ("외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.",
-         "j/dk/wqjgs nfwzjd jrufw1k/ ifzjd pesofs1jf ndygw jgwQjtqquf>")
+         "dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek.")
     ]
     |> List.map (fun (actual, expected) ->
         TestCaseData(actual).Returns(expected)
@@ -83,5 +79,5 @@ let unparseTestParameters =
                          (expected |> String.truncate 15)))
 
 [<TestCaseSource("unparseTestParameters")>]
-let ``unparse with valid arguments`` actual =
-    Sebeolsik391KeyLayout.unparse actual
+let ``unparse with valid argument`` actual =
+    DubeolsikKeyLayout.unparse actual

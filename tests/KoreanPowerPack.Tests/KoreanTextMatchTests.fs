@@ -23,33 +23,22 @@
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-module KoreanPowerPack.KoreanCharApproxMatcherTest
+module KoreanPowerPack.KoreanTextMatchTests
 
 open NUnit.Framework
 
-[<TestCase('h', 'h')>]
-[<TestCase('\u3131', '\u1100')>]
-[<TestCase('\u314E', '\u1112')>]
-[<TestCase('\u1100', '\u3131')>]
-[<TestCase('\u1112', '\u314E')>]
-[<TestCase('또', 'ㄷ')>]
-[<TestCase('또', 'ㄸ')>]
-[<TestCase('광', '고')>]
-[<TestCase('광', '과')>]
-[<TestCase('밝', '발')>]
-[<TestCase('밝', '밝')>]
-[<TestCase('꽜', 'ㄱ')>]
-[<TestCase('꽜', 'ㄲ')>]
-[<TestCase('꽜', '꼬')>]
-[<TestCase('꽜', '꽈')>]
-[<TestCase('꽜', '꽛')>]
-[<TestCase('꽜', '꽜')>]
-let ``isMatch returns true for matched arguments`` t p =
-    Assert.That(KoreanCharApproxMatcher.isMatch t p)
+[<Test>]
+let ``new KoreanTextMatch() with valid arguments`` () =
+    let m = KoreanTextMatch(KoreanTextMatcher(""), "0123456789", 1, 5)
+    Assert.That(m.Index, Is.EqualTo 1)
+    Assert.That(m.Length, Is.EqualTo 5)
+    Assert.That(m.Success)
+    Assert.That(m.Value.ToString(), Is.EqualTo "12345")
 
-[<TestCase('H', 'h')>]
-[<TestCase('하', '한')>]
-[<TestCase('한', 'ㅏ')>]
-[<TestCase('한', '핞')>]
-let ``isMatch returns false for unmatched arguments`` t p =
-    Assert.That(KoreanCharApproxMatcher.isMatch t p, Is.False)
+[<Test>]
+let ``Success property of Empty is false`` () =
+    Assert.That(KoreanTextMatch.Empty.Success, Is.False)
+
+[<Test>]
+let ``NextMatch() of Empty is Empty`` () =
+    Assert.That(KoreanTextMatch.Empty.NextMatch(), Is.EqualTo KoreanTextMatch.Empty)
