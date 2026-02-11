@@ -371,7 +371,7 @@ let composeWithStringsTestParameters =
 
 [<TestCaseSource(nameof composeWithStringsTestParameters)>]
 let composeWithStringsTest cho jung jong =
-    KoreanChar.composeWithStrings cho jung jong
+    KoreanChar.composeFromStrings cho jung jong
 
 let composeWithStringsExceptionTestParameters =
     [
@@ -385,7 +385,7 @@ let composeWithStringsExceptionTestParameters =
 
 [<TestCaseSource(nameof composeWithStringsExceptionTestParameters)>]
 let composeWithStringExceptionTest cho jung jong =
-    Assert.That(Func<_>(fun () -> KoreanChar.composeWithStrings cho jung jong), Throws.ArgumentException)
+    Assert.That(Func<_>(fun () -> KoreanChar.composeFromStrings cho jung jong), Throws.ArgumentException)
 
 let decomposeTestParameters =
     [

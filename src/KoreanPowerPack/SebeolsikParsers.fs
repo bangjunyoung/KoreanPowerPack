@@ -42,8 +42,8 @@ type Syllable =
         | Choseong cho -> joinJamo cho
         | Jungseong jung -> joinJamo jung
         | Jongseong jong -> joinJamo jong
-        | ChoJungseong(cho, jung) -> composeWithStrings cho jung ""
-        | ChoJungJongseong(cho, jung, jong) -> composeWithStrings cho jung jong
+        | ChoJungseong(cho, jung) -> composeFromStrings cho jung ""
+        | ChoJungJongseong(cho, jung, jong) -> composeFromStrings cho jung jong
 
 let pchoseong = anyStringOf [
     "ᄀᄀ"; "ᄃᄃ"; "ᄇᄇ"; "ᄉᄉ"; "ᄌᄌ"

@@ -117,7 +117,7 @@ module KoreanChar =
             jongIndex
         |> char
 
-    let composeWithStrings choseong jungseong jongseong =
+    let composeFromStrings choseong jungseong jongseong =
         let invalidJamo argName arg =
             invalidArg argName <| sprintf "%A is not a %s" arg argName
 
@@ -178,7 +178,7 @@ type KoreanChar private () =
     static member Compose(choseong, jungseong,
                           [<Optional; DefaultParameterValue("")>]
                           jongseong) =
-        composeWithStrings choseong jungseong jongseong
+        composeFromStrings choseong jungseong jongseong
 
     static member Compose(jamo: char[]) =
         match jamo with
