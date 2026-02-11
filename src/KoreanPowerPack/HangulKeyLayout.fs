@@ -34,7 +34,7 @@ let parse syllableParser str =
     let parser = many (syllableParser <|> anyChar) |>> String.ofSeq
     match run parser str with
     | Success(result, _, _) -> result
-    | Failure(errorMsg, _, _) -> invalidArg "str" errorMsg
+    | Failure(errorMsg, _, _) -> invalidArg (nameof str) errorMsg
 
 let unparse syllableDecomposer (str: string) =
     assert (str <> null)

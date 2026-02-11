@@ -44,7 +44,7 @@ let qwertyToDubeolsik, dubeolsikToQwerty =
 
 [<CompiledName("Parse")>]
 let parse str =
-    if isNull str then nullArg "str"
+    if isNull str then nullArg (nameof str)
 
     str
     |> String.map qwertyToDubeolsik
@@ -52,7 +52,7 @@ let parse str =
 
 [<CompiledName("Unparse")>]
 let unparse str =
-    if isNull str then nullArg "str"
+    if isNull str then nullArg (nameof str)
 
     str
     |> HangulKeyLayout.unparse (fun c ->
