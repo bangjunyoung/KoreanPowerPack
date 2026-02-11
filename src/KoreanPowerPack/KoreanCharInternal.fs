@@ -31,8 +31,8 @@ module internal KoreanCharInternal =
     let [<Literal>] HangulSyllableFirst = '가'
     let [<Literal>] HangulSyllableLast = '힣'
 
-    let syllableToIndex (syllable: char) =
-        int syllable - int HangulSyllableFirst
+    let syllableToIndex syllable =
+        int (syllable - HangulSyllableFirst)
 
     let [<Literal>] ChoseongCount = 19
     let [<Literal>] JungseongCount = 21
@@ -140,18 +140,18 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let choseongToIndex (choseong: char) =
-        let index = int choseong - int '\u1100'
+    let choseongToIndex choseong =
+        let index = int (choseong - '\u1100')
         if 0 <= index && index < ChoseongCount then Some index
         else None
-    let jungseongToIndex (jungseong: char) =
-        let index = int jungseong - int '\u1161'
+    let jungseongToIndex jungseong =
+        let index = int (jungseong - '\u1161')
         if 0 <= index && index < JungseongCount then Some index
         else None
     let jongseongToIndex jongseong =
         if jongseong = '\u0000' then Some 0
         else
-            let index = int jongseong - int '\u11A8' + 1
+            let index = int (jongseong - '\u11A8') + 1
             if 0 <= index && index < JongseongCount then Some index
             else None
 
