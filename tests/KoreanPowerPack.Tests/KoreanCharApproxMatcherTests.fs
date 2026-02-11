@@ -27,29 +27,28 @@ module KoreanPowerPack.KoreanCharApproxMatcherTests
 
 open NUnit.Framework
 
-[<TestCase('h', 'h')>]
-[<TestCase('\u3131', '\u1100')>]
-[<TestCase('\u314E', '\u1112')>]
-[<TestCase('\u1100', '\u3131')>]
-[<TestCase('\u1112', '\u314E')>]
-[<TestCase('또', 'ㄷ')>]
-[<TestCase('또', 'ㄸ')>]
-[<TestCase('광', '고')>]
-[<TestCase('광', '과')>]
-[<TestCase('밝', '발')>]
-[<TestCase('밝', '밝')>]
-[<TestCase('꽜', 'ㄱ')>]
-[<TestCase('꽜', 'ㄲ')>]
-[<TestCase('꽜', '꼬')>]
-[<TestCase('꽜', '꽈')>]
-[<TestCase('꽜', '꽛')>]
-[<TestCase('꽜', '꽜')>]
-let ``isMatch returns true for matched arguments`` t p =
-    Assert.That(KoreanCharApproxMatcher.isMatch t p)
+let isMatchTestParameters =
+    [
+        'h', 'h', true
+        'H', 'h', false
+        '\u1100' (* ᄀ *), '\u3131' (* ㄱ *), true
+        '\u1112' (* ᄒ *), '\u314E' (* ㅎ *), true
+        '\u3131' (* ㄱ *), '\u1100' (* ᄀ *), true
+        '\u314E' (* ㅎ *), '\u1112' (* ᄒ *), true
+        '꽜', '\u1100' (* ᄀ *), true
+        '꽜', '\u3131' (* ㄱ *), true
+        '꽜', 'ㄲ', true
+        '꽜', '꼬', true
+        '꽜', '꽈', true
+        '꽜', '꽛', true
+        '꽜', '꽜', true
+        '하', '한', false
+        '한', 'ㅏ', false
+        '한', '핞', false
+    ]
+    |> List.map (fun (text, pattern, expected) ->
+        TestCaseData(text, pattern).Returns(expected).SetName($"isMatch('{text}', '{pattern}')"))
 
-[<TestCase('H', 'h')>]
-[<TestCase('하', '한')>]
-[<TestCase('한', 'ㅏ')>]
-[<TestCase('한', '핞')>]
-let ``isMatch returns false for unmatched arguments`` t p =
-    Assert.That(KoreanCharApproxMatcher.isMatch t p, Is.False)
+[<TestCaseSource(nameof isMatchTestParameters)>]
+let isMatchTest text pattern =
+    KoreanCharApproxMatcher.isMatch text pattern

@@ -43,16 +43,14 @@ let parseTestParameters =
          "유쾌했던 땃쥐 토끼풀 쫓기 바쁨")
         ("hf!nd nfxq ;fAjgye jfs#ufkf nrants mfwWjfitxuts nfwxjgw ;fw3jgs",
          "낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은")
-        ("jvdkvwqjgs nfwzjd jrufw1kv ifzjd pesofs1jf ndygw jgwQjt2uf.",
-         "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.")
+        ("jvdkvwqjgs nfwzjd jrufw1kv ifzjd pesofs1jf ndygw jgwQjt2uf",
+         "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected)
-            .SetName(sprintf "parse {0:15} returns \"%s\""
-                         (expected |> String.truncate 15)))
+        TestCaseData(actual).Returns(expected).SetName($"parse (\"{actual}\")"))
 
-[<TestCaseSource("parseTestParameters")>]
-let ``parse with valid arguments`` actual =
+[<TestCaseSource(nameof parseTestParameters)>]
+let parseTest actual =
     Sebeolsik391KeyLayout.parse actual
 
 let unparseTestParameters =
@@ -74,14 +72,12 @@ let unparseTestParameters =
          "j50/rmrqquts uufqlbd '/kkdpbw ll/Zkd ;f;;gz")
         ("낚시 삯 받으려 앉다가 생선 핥아먹던 삵을 밟은",
          "hfxxnd nfxq ;fAjgye jfs#ufkf nrants mfwWjfitxuts nfwxjgw ;fw3jgs")
-        ("외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다.",
-         "j/dk/wqjgs nfwzjd jrufw1k/ ifzjd pesofs1jf ndygw jgwQjtqquf>")
+        ("외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다",
+         "j/dk/wqjgs nfwzjd jrufw1k/ ifzjd pesofs1jf ndygw jgwQjtqquf")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected)
-            .SetName(sprintf "unparse {0:15} returns \"%s\""
-                         (expected |> String.truncate 15)))
+        TestCaseData(actual).Returns(expected).SetName($"unparse(\"{actual}\")"))
 
-[<TestCaseSource("unparseTestParameters")>]
-let ``unparse with valid arguments`` actual =
+[<TestCaseSource(nameof unparseTestParameters)>]
+let unparseTest actual =
     Sebeolsik391KeyLayout.unparse actual

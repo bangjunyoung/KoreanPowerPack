@@ -27,196 +27,443 @@ module KoreanPowerPack.KoreanCharTests
 
 open System
 open NUnit.Framework
-open KoreanChar
 
-[<TestCase('가')>]
-[<TestCase('힣')>]
-let ``isSyllable returns true for a syllable`` c =
-    Assert.That(isSyllable c)
+let formatChar c =
+    if Char.IsControl(c) || c = '\uFFFF' then
+        $"\\u{(int c):X4}"
+    else
+        string c
 
-[<TestCase('\uABFF')>]
-[<TestCase('\uD7A4')>]
-let ``isSyllable returns false for a non-syllable`` c =
-    Assert.That(isSyllable c, Is.False)
+let isSyllableTestParameters =
+    [
+        '\u0041' (* A *), false
+        '\uAC00' (* 가 *), true
+        '\uD7A3' (* 힣 *), true
+        '\uFFE6' (* ￦ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isSyllable('{c}')"))
 
-[<TestCase('\u1100')>]
-[<TestCase('\u1112')>]
-let ``isChoseong returns true for a choseong`` c =
-    Assert.That(isChoseong c)
+[<TestCaseSource(nameof isSyllableTestParameters)>]
+let isSyllableTest c expected =
+    Assert.That(KoreanChar.isSyllable c, Is.EqualTo expected)
 
-[<TestCase('\u1009')>]
-[<TestCase('\u1113')>]
-[<TestCase('\u3131')>]
-let ``isChoseong returns false for a non-choseong`` c =
-    Assert.That(isChoseong c, Is.False)
+let isChoseongTestParameters =
+    [
+        '\u0041' (* A *), false
+        '\u1100' (* ᄀ *), true
+        '\u1112' (* ᄒ *), true
+        '\u3131' (* ㄱ *), false
+        '\u314E' (* ㅎ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isChoseong('{c}')"))
 
-[<TestCase('\u1161')>]
-[<TestCase('\u1175')>]
-let ``isJungseong returns true for a jungseong`` c =
-    Assert.That(isJungseong c)
+[<TestCaseSource(nameof isChoseongTestParameters)>]
+let isChoseongTest c expected =
+    Assert.That(KoreanChar.isChoseong c, Is.EqualTo expected)
 
-[<TestCase('\u1160')>]
-[<TestCase('\u1176')>]
-[<TestCase('\u314F')>]
-let ``isJungseong returns false for a non-jungseong`` c =
-    Assert.That(isJungseong c, Is.False)
+let isJungseongTestParameters =
+    [
+        '\u0041' (* A *), false
+        '\u1161' (* ᅡ *), true
+        '\u1175' (* ᅵ *), true
+        '\u314F' (* ㅏ *), false
+        '\u3163' (* ㅣ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isJungseong('{c}')"))
 
-[<TestCase('\u11A8')>]
-[<TestCase('\u11C2')>]
-let ``isJongseong returns true for a jongseong`` c =
-    Assert.That(isJongseong c)
+[<TestCaseSource(nameof isJungseongTestParameters)>]
+let isJungseongTest c expected =
+    Assert.That(KoreanChar.isJungseong c, Is.EqualTo expected)
 
-[<TestCase('\u11A7')>]
-[<TestCase('\u11C3')>]
-[<TestCase('\u3131')>]
-let ``isJongseong returns false for a non-jongseong`` c =
-    Assert.That(isJongseong c, Is.False)
+let isJongseongTestParameters =
+    [
+        '\u0041' (* A *), false
+        '\u11A8' (* ᆨ *), true
+        '\u11C2' (* ᇂ *), true
+        '\u3131' (* ㄱ *), false
+        '\u314E' (* ㅎ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isJongseong('{c}')"))
 
-[<TestCase('\u3131')>]
-[<TestCase('\u314E')>]
-let ``isCompatChoseong returns true for a Compat choseong`` c =
-    Assert.That(isCompatChoseong c)
+[<TestCaseSource(nameof isJongseongTestParameters)>]
+let isJongseongTest c expected =
+    Assert.That(KoreanChar.isJongseong c, Is.EqualTo expected)
 
-[<TestCase('\u3130')>]
-[<TestCase('\u314F')>]
-[<TestCase('\u3133')>]
-let ``isCompatChoseong returns false for a non-Compat choseong`` c =
-    Assert.That(isCompatChoseong c, Is.False)
+let isCompatChoseongTestParameters =
+    [
+        '\u1100' (* ᄀ *), false
+        '\u1112' (* ᄒ *), false
+        '\u3131' (* ㄱ *), true
+        '\u314E' (* ㅎ *), true
+        '\uFFE6' (* ￦ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isCompatChoseong('{c}')"))
 
-[<TestCase('\u314F')>]
-[<TestCase('\u3163')>]
-let ``isCompatJungseong returns true for a Compat jungseong`` c =
-    Assert.That(isCompatJungseong c)
+[<TestCaseSource(nameof isCompatChoseongTestParameters)>]
+let isCompatChoseongTest c expected =
+    Assert.That(KoreanChar.isCompatChoseong c, Is.EqualTo expected)
 
-[<TestCase('\u314E')>]
-[<TestCase('\u3164')>]
-let ``isCompatJungseong returns false for a non-Compat jungseong`` c =
-    Assert.That(isCompatJungseong c, Is.False)
+let isCompatJungseongTestParameters =
+    [
+        '\u1161' (* ᅡ *), false
+        '\u1175' (* ᅵ *), false
+        '\u314F' (* ㅏ *), true
+        '\u3163' (* ㅣ *), true
+        '￦' (* \uFFE6 *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isCompatJungseong('{c}')"))
 
-[<TestCase('\u3131')>]
-[<TestCase('\u314E')>]
-let ``isCompatJongseong returns true for a Compat jongseong`` c =
-    Assert.That(isCompatJongseong c)
+[<TestCaseSource(nameof isCompatJungseongTestParameters)>]
+let isCompatJungseongTest c expected =
+    Assert.That(KoreanChar.isCompatJungseong c, Is.EqualTo expected)
 
-[<TestCase('\u3138')>]
-[<TestCase('\u3143')>]
-[<TestCase('\u3149')>]
-let ``isCompatJongseong returns false for a non-Compat jongseong`` c =
-    Assert.That(isCompatJongseong c, Is.False)
+let isCompatJongseongTestParameters =
+    [
+        '\u11A8' (* ᆨ *), false
+        '\u11C2' (* ᇂ *), false
+        '\u3131' (* ㄱ *), true
+        '\u314E' (* ㅎ *), true
+        '\uFFE6' (* ￦ *), false
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"isCompatJongseong('{c}')"))
 
-[<TestCase('\u1100', ExpectedResult = '\u3131')>]
-[<TestCase('\u1112', ExpectedResult = '\u314E')>]
-let ``choseongToCompatChoseong returns the corresponding Compat choseong to a choseong`` c =
-    choseongToCompatChoseong c
+[<TestCaseSource(nameof isCompatJongseongTestParameters)>]
+let isCompatJongseongTest c expected =
+    Assert.That(KoreanChar.isCompatJongseong c, Is.EqualTo expected)
 
-[<TestCase('A')>]
-let ``choseongToCompatChoseong throws ArgumentException for an invalid argument`` c =
-     Assert.That(Func<_>(fun () -> choseongToCompatChoseong c),
+let getChoseongTestParameters =
+    [
+         '가' (* \uAC00 *), '\u1100' (* ᄀ *)
+         '힣' (* \uD7A3 *), '\u1112' (* ᄒ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getChoseong('{c}')"))
+
+[<TestCaseSource(nameof getChoseongTestParameters)>]
+let getChoseongTest c expected =
+    Assert.That(KoreanChar.getChoseong c, Is.EqualTo expected)
+
+let getJungseongTestParameters =
+    [
+        '가' (* \uAC00 *), '\u1161' (* ᅡ *)
+        '힣' (* \uD7A3 *), '\u1175' (* ᅵ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getJungseong('{c}')"))
+
+[<TestCaseSource(nameof getJungseongTestParameters)>]
+let getJungseongTest c expected =
+    Assert.That(KoreanChar.getJungseong c, Is.EqualTo expected)
+
+let getJongseongTestParameters =
+    [
+        '가' (* \uAC00 *), '\u0000'
+        '각' (* \uAC01 *), '\u11A8' (* ᆨ *)
+        '힣' (* \uD7A3 *), '\u11C2' (* ᇂ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getJongseong('{c}')"))
+
+[<TestCaseSource(nameof getJongseongTestParameters)>]
+let getJongseongTest c expected =
+    Assert.That(KoreanChar.getJongseong c, Is.EqualTo expected)
+
+let getCompatChoseongTestParameters =
+    [
+        '가' (* \uAC00 *), '\u3131' (* ㄱ *)
+        '힣' (* \uD7A3 *), '\u314E' (* ㅎ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getCompatChoseong('{c}')"))
+
+[<TestCaseSource(nameof getCompatChoseongTestParameters)>]
+let getCompatChoseongTest c expected =
+    Assert.That(KoreanChar.getCompatChoseong c, Is.EqualTo expected)
+
+let getCompatJungseongTestParameters =
+    [
+        '가' (* \uAC00 *), '\u314F' (* ㅏ *)
+        '힣' (* \uD7A3 *), '\u3163' (* ㅣ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getCompatJungseong('{c}')"))
+
+[<TestCaseSource(nameof getCompatJungseongTestParameters)>]
+let getCompatJungseongTest c expected =
+    Assert.That(KoreanChar.getCompatJungseong c, Is.EqualTo expected)
+
+let getCompatJongseongTestParameters =
+    [
+        '가' (* \uAC00 *), '\u0000'
+        '각' (* \uAC01 *), '\u3131' (* ㄱ *)
+        '힣' (* \uD7A3 *), '\u314E' (* ㅎ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"getCompatJongseong('{c}')"))
+
+[<TestCaseSource(nameof getCompatJongseongTestParameters)>]
+let getCompatJongseongTest c expected =
+    Assert.That(KoreanChar.getCompatJongseong c, Is.EqualTo expected)
+
+let choseongToCompatChoseongTestParameters =
+    [
+        '\u1100' (* ᄀ *), '\u3131' (* ㄱ *)
+        '\u1112' (* ᄒ *), '\u314E' (* ㅎ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"choseongToCompatChoseong('{c}')"))
+
+[<TestCaseSource(nameof choseongToCompatChoseongTestParameters)>]
+let choseongToCompatChoseongTest c expected =
+    Assert.That(KoreanChar.choseongToCompatChoseong c, Is.EqualTo expected)
+
+let choseongToCompatChoseongExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\uAC00' (* 가 *)
+        '\u3131' (* ㄱ *)
+        '\u314E' (* ㅎ *)
+    ]
+    |> List.map (fun c ->
+        TestCaseData(c).SetName($"choseongToCompatChoseong('{c}') throws ArgumentException"))
+
+[<TestCaseSource(nameof choseongToCompatChoseongExceptionTestParameters)>]
+let choseongToCompatChoseongExceptionTest c =
+     Assert.That(Func<_>(fun () -> KoreanChar.choseongToCompatChoseong c),
          Throws.ArgumentException)
 
-[<TestCase('\u3131', ExpectedResult = '\u1100')>]
-[<TestCase('\u314E', ExpectedResult = '\u1112')>]
-let ``compatChoseongToChoseong returns the corresponding choseong to a Compat choseong`` c =
-    compatChoseongToChoseong c
+let compatChoseongToChoseongTestParameters =
+    [
+        '\u3131' (* ㄱ *), '\u1100' (* ᄀ *)
+        '\u314E' (* ㅎ *), '\u1112' (* ᄒ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c, expected).SetName($"compatChoseongToChoseong('{c}')"))
 
-[<TestCase('ㄳ')>]
-let ``compatChoseongToChoseong throws ArgumentException for an invalid argument`` c =
-     Assert.That(Func<_>(fun () -> compatChoseongToChoseong c),
-         Throws.ArgumentException)
+[<TestCaseSource(nameof compatChoseongToChoseongTestParameters)>]
+let compatChoseongToChoseongTest c expected =
+    Assert.That(KoreanChar.compatChoseongToChoseong c, Is.EqualTo expected)
 
-[<TestCase("", ExpectedResult = '\u0000')>]
-[<TestCase("\u1101", ExpectedResult = 'ᄁ')>]
-[<TestCase("\u1161", ExpectedResult = 'ᅡ')>]
-[<TestCase("\u11C2", ExpectedResult = 'ᇂ')>]
-[<TestCase("\u3132", ExpectedResult = 'ㄲ')>]
-[<TestCase("\u314F", ExpectedResult = 'ㅏ')>]
-[<TestCase("\u314E", ExpectedResult = 'ㅎ')>]
-[<TestCase("\u1100\u1100", ExpectedResult = 'ᄁ')>]
-[<TestCase("\u1169\u1161", ExpectedResult = 'ᅪ')>]
-[<TestCase("\u3131\u3131", ExpectedResult = 'ㄲ')>]
-[<TestCase("\u3157\u314F", ExpectedResult = 'ㅘ')>]
-let ``joinJamo with a valid argument`` jamo =
-    joinJamo jamo
+let compatChoseongToChoseongExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\uAC00' (* 가 *)
+        '\u1100' (* ᄀ *)
+        '\u1112' (* ᄒ *)
+    ]
+    |> List.map (fun c ->
+        TestCaseData(c).SetName($"compatChoseongToChoseong('{c}') throws ArgumentException"))
 
-[<TestCase('\u0000', ExpectedResult = "")>]
-[<TestCase('\u1100', ExpectedResult = "ᄀ")>]
-[<TestCase('\u1161', ExpectedResult = "ᅡ")>]
-[<TestCase('\u11C2', ExpectedResult = "ᇂ")>]
-[<TestCase('\u3131', ExpectedResult = "ㄱ")>]
-[<TestCase('\u314F', ExpectedResult = "ㅏ")>]
-[<TestCase('ᄁ', ExpectedResult = "\u1100\u1100")>]
-[<TestCase('ᅪ', ExpectedResult = "\u1169\u1161")>]
-[<TestCase('ㄳ', ExpectedResult = "\u3131\u3145")>]
-[<TestCase('ㅘ', ExpectedResult = "\u3157\u314F")>]
-let ``splitJamo with a valid argument`` jamo =
-     splitJamo jamo
+[<TestCaseSource(nameof compatChoseongToChoseongExceptionTestParameters)>]
+let compatChoseongToChoseongExceptionTest c =
+     Assert.That(Func<_>(fun () -> KoreanChar.compatChoseongToChoseong c), Throws.ArgumentException)
 
-[<TestCase('A')>]
-[<TestCase('가')>]
-let ``splitJamo throws ArgumentException for an invalid argument`` jamo =
-     Assert.That(Func<_>(fun () -> splitJamo jamo),
-         Throws.ArgumentException)
+let joinJamoTestParameters =
+    [
+        "", '\u0000'
+        "\u1101" (* ᄁ *), 'ᄁ'
+        "\u1161" (* ᅡ *), 'ᅡ'
+        "\u11C2" (* ᇂ *), 'ᇂ'
+        "\u3132" (* ㄲ *), 'ㄲ'
+        "\u314F" (* ㅏ *), 'ㅏ'
+        "\u314E" (* ㅎ *), 'ㅎ'
+        "\u1100\u1100" (* ᄀᄀ *), '\u1101' (* ᄁ *)
+        "\u1169\u1161" (* ᅩᅡ *), '\u116A' (* ᅪ *)
+        "\u3131\u3131" (* ㄱㄱ *), '\u3132' (* ㄲ *)
+        "\u3157\u314F" (* ㅗㅏ *), '\u3158' (* ㅘ *)
+    ]
+    |> List.map (fun (jamo, expected) ->
+        TestCaseData(jamo).Returns(expected).SetName($"joinJamo('{jamo}')"))
 
-[<TestCase('\u1101', '\u116A', '\u0000', ExpectedResult = '꽈')>]
-[<TestCase('\u1101', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
-[<TestCase('\u3132', '\u116A', '\u11A9', ExpectedResult = '꽊')>]
-[<TestCase('\u3132', '\u3158', '\u11A9', ExpectedResult = '꽊')>]
-[<TestCase('\u3132', '\u3158', '\u3132', ExpectedResult = '꽊')>]
-let ``compose with valid arguments`` cho jung jong =
-    compose cho jung jong
+[<TestCaseSource(nameof joinJamoTestParameters)>]
+let joinJamoTest jamo =
+    KoreanChar.joinJamo jamo
 
-[<TestCase('\u10FF', '\u116A', '\u11A9')>]
-[<TestCase('\u3132', '\u1160', '\u11A9')>]
-[<TestCase('\u3132', '\u3158', '\u11C3')>]
-let ``compose throws ArgumentException for invalid arguments`` cho jung jong =
-    Assert.That(Func<_>(fun () -> compose cho jung jong),
-        Throws.ArgumentException)
+let joinJamoExceptionTestParameters =
+    [
+        "\u0041" (* A *)
+        "\uAC00" (* 가 *)
+        "\u1100\u1161" (* 가 *)
+        "\u3131\u314F" (* ㄱㅏ *)
+    ]
+    |> List.map (fun jamo ->
+        TestCaseData(jamo).SetName($"joinJamo('{jamo}') throws ArgumentException"))
 
-[<TestCase("\u1101", "\u116A", "", ExpectedResult = '꽈')>]
-[<TestCase("\u1101", "\u116A", "\u11A9", ExpectedResult = '꽊')>]
-[<TestCase("\u1100\u1100", "\u1169\u1161", "\u11A8\u11A8", ExpectedResult = '꽊')>]
-let ``composeWithStrings with valid arguments`` cho jung jong =
-    composeWithStrings cho jung jong
+[<TestCaseSource(nameof joinJamoExceptionTestParameters)>]
+let joinJamoExceptionTest jamo =
+     Assert.That(Func<_>(fun () -> KoreanChar.joinJamo jamo), Throws.ArgumentException)
 
-[<TestCase("\u10FF", "\u116A", "\u11A9")>]
-[<TestCase("\u3132", "\u1160", "\u11A9")>]
-[<TestCase("\u3132", "\u3158", "\u11C3")>]
-let ``composeWithString throws ArgumentException for invalid arguments`` cho jung jong =
-    Assert.That(Func<_>(fun () -> composeWithStrings cho jung jong),
-        Throws.ArgumentException)
+let splitJamoTestParameters =
+    [
+        '\u0000', ""
+        '\u1100' (* ᄀ *), "\u1100" (* ᄀ *)
+        '\u1161' (* ᅡ *), "\u1161" (* ᅡ *)
+        '\u11A8' (* ᆨ *), "\u11A8" (* ᆨ *)
+        '\u3131' (* ㄱ *), "\u3131" (* ㄱ *)
+        '\u314F' (* ㅏ *), "\u314F" (* ㅏ *)
+        '\u1101' (* ᄁ *), "\u1100\u1100" (* ᄀᄀ *)
+        '\u116A' (* ᅪ *), "\u1169\u1161" (* ᅩᅡ *)
+        '\u3132' (* ㄲ *), "\u3131\u3131" (* ㄱㄱ *)
+        '\u3158' (* ㅘ *), "\u3157\u314F" (* ㅗㅏ *)
+    ]
+    |> List.map (fun (c, expected) ->
+        TestCaseData(c).Returns(expected).SetName($"splitJamo('{formatChar c}')"))
 
-[<TestCase('가', ExpectedResult = [|"ᄀ"; "ᅡ"|])>]
-[<TestCase('힣', ExpectedResult = [|"ᄒ"; "ᅵ"; "ᇂ"|])>]
-[<TestCase('쐈', ExpectedResult = [|"ᄉᄉ"; "ᅩᅡ"; "ᆺᆺ"|])>]
-[<TestCase('뛇', ExpectedResult = [|"ᄃᄃ"; "ᅮᅥ"; "ᆯᇂ"|])>]
-let ``decompose with a valid argument`` syllable =
-    decompose syllable
+[<TestCaseSource(nameof splitJamoTestParameters)>]
+let splitJamoTest jamo =
+     KoreanChar.splitJamo jamo
 
-[<TestCase('A')>]
-let ``decompose throws ArgumentException for an invalid argument`` syllable =
-    Assert.That(Func<_>(fun () -> decompose syllable),
-        Throws.ArgumentException)
+let splitJamoExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\uAC00' (* 가 *)
+    ]
+    |> List.map (fun jamo ->
+        TestCaseData(jamo).SetName($"splitJamo('{jamo}') throws ArgumentException"))
 
-[<TestCase('가', ExpectedResult = [|"ㄱ"; "ㅏ"|])>]
-[<TestCase('힣', ExpectedResult = [|"ㅎ"; "ㅣ"; "ㅎ"|])>]
-[<TestCase('쐈', ExpectedResult = [|"ㅅㅅ"; "ㅗㅏ"; "ㅅㅅ"|])>]
-[<TestCase('뛇', ExpectedResult = [|"ㄷㄷ"; "ㅜㅓ"; "ㄹㅎ"|])>]
-let ``decomposeCompat with a valid argument`` syllable =
-    decomposeCompat syllable
+[<TestCaseSource(nameof splitJamoExceptionTestParameters)>]
+let splitJamoExceptionTest jamo =
+     Assert.That(Func<_>(fun () -> KoreanChar.splitJamo jamo), Throws.ArgumentException)
 
-[<TestCase('A')>]
-let ``decomposeCompat throws ArgumentException for an invalid argument`` syllable =
-    Assert.That(Func<_>(fun () -> decomposeCompat syllable),
-        Throws.ArgumentException)
+let composeTestParameters =
+    [
+        '\u1101' (* ᄁ *), '\u116A' (* ᅪ *), '\u0000'         , '꽈'
+        '\u1101' (* ᄁ *), '\u116A' (* ᅪ *), '\u11A9' (* ᆩ *), '꽊'
+        '\u3132' (* ㄲ *), '\u116A' (* ᅪ *), '\u11A9' (* ᆩ *), '꽊'
+        '\u3132' (* ㄲ *), '\u3158' (* ㅘ *), '\u11A9' (* ᆩ *), '꽊'
+        '\u3132' (* ㄲ *), '\u3158' (* ㅘ *), '\u3132' (* ㄲ *), '꽊'
+    ]
+    |> List.map (fun (cho, jung, jong, expected) ->
+        TestCaseData(cho, jung, jong).Returns(expected).SetName($"compose('{cho}', '{jung}', '{formatChar jong}')"))
 
-[<TestCase('가', ExpectedResult = [|"ㄱ"; "ㅏ"|])>]
-[<TestCase('힣', ExpectedResult = [|"ㅎ"; "ㅣ"; "ㅎ"|])>]
-[<TestCase('쐈', ExpectedResult = [|"ㅆ"; "ㅗㅏ"; "ㅆ"|])>]
-[<TestCase('뛇', ExpectedResult = [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|])>]
-let ``decomposeDubeolsik with a valid argument`` syllable =
-    decomposeDubeolsik syllable
+[<TestCaseSource(nameof composeTestParameters)>]
+let composeTest cho jung jong =
+    KoreanChar.compose cho jung jong
 
-[<TestCase('A')>]
-let ``decomposeDubeolsik throws ArgumentException for an invalid argument`` syllable =
-    Assert.That(Func<_>(fun () -> decomposeDubeolsik syllable),
-        Throws.ArgumentException)
+let composeExceptionTestParameters =
+    [
+        '\u10FF' (* invalid choseong *), '\u116A' (* ᅪ *), '\u11A9' (* ᆩ *)
+        '\u3132' (* ㄲ *), '\u1160' (* invalid jungseong *), '\u11A9' (* ᆩ *)
+        '\u3132' (* ㄲ *), '\u3158' (* ㅘ *), '\u11C3' (* invalid jongseong *)
+    ]
+    |> List.map (fun (cho, jung, jong) ->
+        TestCaseData(cho, jung, jong).SetName($"compose('{cho}', '{jung}', '{jong}') throws ArgumentException"))
+
+[<TestCaseSource(nameof composeExceptionTestParameters)>]
+let composeExceptionTest cho jung jong =
+    Assert.That(Func<_>(fun () -> KoreanChar.compose cho jung jong), Throws.ArgumentException)
+
+let composeWithStringsTestParameters =
+    [
+        "\u1101" (* ᄁ *), "\u116A" (* ᅪ *), "", '꽈'
+        "\u1101" (* ᄁ *), "\u116A" (* ᅪ *), "\u11A9" (* ᆩ *), '꽊'
+        "\u1100\u1100" (* ᄀᄀ *), "\u1169\u1161" (* ᅩᅡ *), "\u11A8\u11A8" (* ᆨᆨ *), '꽊'
+    ]
+    |> List.map (fun (cho, jung, jong, expected) ->
+        TestCaseData(cho, jung, jong).Returns(expected).SetName($"composeWithStrings('{cho}', '{jung}', '{jong}')"))
+
+[<TestCaseSource(nameof composeWithStringsTestParameters)>]
+let composeWithStringsTest cho jung jong =
+    KoreanChar.composeWithStrings cho jung jong
+
+let composeWithStringsExceptionTestParameters =
+    [
+        "\u10FF" (* invalid choseong *), "\u116A" (* ᅪ *), "\u11A9" (* ᆩ *)
+        "\u3132" (* ㄲ *), "\u1160" (* invalid jungseong *), "\u11A9" (* ᆩ *)
+        "\u3132" (* ㄲ *), "\u3158" (* ㅘ *), "\u11C3" (* invalid jongseong *)
+    ]
+    |> List.map (fun (cho, jung, jong) ->
+        TestCaseData(cho, jung, jong)
+            .SetName($"composeWithStrings('{cho}', '{jung}', '{jong}') throws ArgumentException"))
+
+[<TestCaseSource(nameof composeWithStringsExceptionTestParameters)>]
+let composeWithStringExceptionTest cho jung jong =
+    Assert.That(Func<_>(fun () -> KoreanChar.composeWithStrings cho jung jong), Throws.ArgumentException)
+
+let decomposeTestParameters =
+    [
+        '가' (* \uAC00 *), [|"ᄀ"; "ᅡ"|]
+        '힣' (* \uD7A3 *), [|"ᄒ"; "ᅵ"; "ᇂ"|]
+        '쐈' (* \uC370 *), [|"ᄉᄉ"; "ᅩᅡ"; "ᆺᆺ"|]
+        '뛇' (* \uB5C7 *), [|"ᄃᄃ"; "ᅮᅥ"; "ᆯᇂ"|]
+    ]
+    |> List.map (fun (syllable, expected) ->
+        TestCaseData(syllable).Returns(expected).SetName($"decompose('{syllable}')"))
+
+[<TestCaseSource(nameof decomposeTestParameters)>]
+let decomposeTest syllable =
+    KoreanChar.decompose syllable
+
+let decomposeExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\u1100' (* ᄀ *)
+        '\u3131' (* ㄱ *)
+    ]
+    |> List.map (fun syllable ->
+        TestCaseData(syllable).SetName($"decompose('{syllable}') throws ArgumentException"))
+
+[<TestCaseSource(nameof decomposeExceptionTestParameters)>]
+let decomposeExceptionTest syllable =
+    Assert.That(Func<_>(fun () -> KoreanChar.decompose syllable), Throws.ArgumentException)
+
+let decomposeCompatTestParametersTestParameters =
+    [
+        '가' (* \uAC00 *), [|"ㄱ"; "ㅏ"|]
+        '뛇' (* \uB5C7 *), [|"ㄷㄷ"; "ㅜㅓ"; "ㄹㅎ"|]
+        '쐈' (* \uC370 *), [|"ㅅㅅ"; "ㅗㅏ"; "ㅅㅅ"|]
+        '힣' (* \uD7A3 *), [|"ㅎ"; "ㅣ"; "ㅎ"|]
+    ]
+    |>List.map (fun (syllable, expected) ->
+        TestCaseData(syllable).Returns(expected).SetName($"decomposeCompat('{syllable}')"))
+
+[<TestCaseSource(nameof decomposeCompatTestParametersTestParameters)>]
+let decomposeCompatTest syllable =
+    KoreanChar.decomposeCompat syllable
+
+let decomposeCompatExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\u1100' (* ᄀ *)
+        '\u3131' (* ㄱ *)
+    ]
+    |> List.map (fun syllable ->
+        TestCaseData(syllable).SetName($"decomposeCompat('{syllable}') throws ArgumentException"))
+
+[<TestCaseSource(nameof decomposeCompatExceptionTestParameters)>]
+let decomposeCompatExceptionTest syllable =
+    Assert.That(Func<_>(fun () -> KoreanChar.decomposeCompat syllable), Throws.ArgumentException)
+
+let decomposeDubeolsikTestParameters =
+    [
+        '가' (* \uAC00 *), [|"ㄱ"; "ㅏ"|]
+        '뛇' (* \uB5C7 *), [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|]
+        '쐈' (* \uC370 *), [|"ㅆ"; "ㅗㅏ"; "ㅆ"|]
+        '힣' (* \uD7A3 *), [|"ㅎ"; "ㅣ"; "ㅎ"|]
+    ]
+    |>List.map (fun (syllable, expected) ->
+        TestCaseData(syllable).Returns(expected).SetName($"decomposeDubeolsik('{syllable}')"))
+
+[<TestCaseSource(nameof decomposeDubeolsikTestParameters)>]
+let decomposeDubeolsikTest syllable =
+    KoreanChar.decomposeDubeolsik syllable
+
+let decomposeDubeolsikExceptionTestParameters =
+    [
+        '\u0041' (* A *)
+        '\u1100' (* ᄀ *)
+        '\u3131' (* ㄱ *)
+    ]
+    |> List.map (fun syllable ->
+        TestCaseData(syllable).SetName($"decomposeDubeolsik('{syllable}') throws ArgumentException"))
+
+[<TestCaseSource(nameof decomposeDubeolsikExceptionTestParameters)>]
+let decomposeDubeolsikExceptionTest syllable =
+    Assert.That(Func<_>(fun () -> KoreanChar.decomposeDubeolsik syllable), Throws.ArgumentException)

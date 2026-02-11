@@ -27,7 +27,7 @@ module KoreanPowerPack.KoreanTextMatcherTests
 
 open NUnit.Framework
 
-let IsMatchTestParameters =
+let staticIsMatchTestParameters =
     [
         "", "", true
         "", "^$", true
@@ -78,13 +78,13 @@ let IsMatchTestParameters =
         "하늘 ", "^하늘$", false
     ]
     |> List.map (fun (text, pattern, expected) ->
-        TestCaseData(text, pattern).Returns(expected))
+        TestCaseData(text, pattern).Returns(expected).SetName($"static IsMatch(\"{text}\", \"{pattern}\")"))
 
-[<TestCaseSource("IsMatchTestParameters")>]
-let ``static IsMatch(text, pattern) with valid arguments`` text pattern =
+[<TestCaseSource(nameof staticIsMatchTestParameters)>]
+let staticIsMatchTest text pattern =
     KoreanTextMatcher.IsMatch(text, pattern)
 
-let MatchesTestParameters =
+let staticMatchesTestParameters =
     [
         // Hangul Compatibility Jamo
         "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎㄹ", 0
@@ -100,10 +100,10 @@ let MatchesTestParameters =
         "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒᄂ", 4
     ]
     |> List.map (fun (text, pattern, expected) ->
-        TestCaseData(text, pattern, expected))
+        TestCaseData(text, pattern, expected).SetName($"static Matches(\"{text}\", \"{pattern}\")"))
 
-[<TestCaseSource("MatchesTestParameters")>]
-let ``static Matches(text, pattern) with valid arguments`` text pattern (expected: int) =
+[<TestCaseSource(nameof staticMatchesTestParameters)>]
+let staticMatchesTest text pattern (expected: int) =
     let matches = KoreanTextMatcher.Matches(text, pattern)
     for ``match`` in matches do
         Assert.That(text, Does.Contain(``match``.Value.ToString()))
@@ -112,20 +112,21 @@ let ``static Matches(text, pattern) with valid arguments`` text pattern (expecte
 
 let MatchTestParameters =
     [
-        "", "", 0, true, 0, 0
-        "0", "", 0, true, 0, 0
-        "012", "01", 0, true, 0, 2
-        "012", "12", 0, true, 1, 2
-        "012", "12", 1, true, 1, 2
-        "012", "01", 1, false, 0, 0
-        "012", "012", 1, false, 0, 0
+        "",    "",     0, true,  0, 0
+        "0",   "",     0, true,  0, 0
+        "012", "01",   0, true,  0, 2
+        "012", "12",   0, true,  1, 2
+        "012", "12",   1, true,  1, 2
+        "012", "01",   1, false, 0, 0
+        "012", "012",  1, false, 0, 0
         "012", "0123", 0, false, 0, 0
     ]
     |> List.map (fun (text, pattern, startIndex, success, index, length) ->
-        TestCaseData(text, pattern, startIndex, success, index, length))
+        TestCaseData(text, pattern, startIndex, success, index, length)
+            .SetName($"Match(\"{pattern}\", {startIndex})"))
 
-[<TestCaseSource("MatchTestParameters")>]
-let ``Match(pattern, startIndex) with valid arguments`` text pattern startIndex success index length =
+[<TestCaseSource(nameof MatchTestParameters)>]
+let MatchTest text pattern startIndex success index length =
     let ``match`` = KoreanTextMatcher(pattern).Match(text, startIndex)
     Assert.That(``match``.Success, Is.EqualTo success)
     if success then

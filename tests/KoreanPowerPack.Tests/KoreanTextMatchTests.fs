@@ -28,7 +28,7 @@ module KoreanPowerPack.KoreanTextMatchTests
 open NUnit.Framework
 
 [<Test>]
-let ``new KoreanTextMatch() with valid arguments`` () =
+let ``KoreanTextMatch works as expected`` () =
     let m = KoreanTextMatch(KoreanTextMatcher(""), "0123456789", 1, 5)
     Assert.That(m.Index, Is.EqualTo 1)
     Assert.That(m.Length, Is.EqualTo 5)
@@ -36,9 +36,9 @@ let ``new KoreanTextMatch() with valid arguments`` () =
     Assert.That(m.Value.ToString(), Is.EqualTo "12345")
 
 [<Test>]
-let ``Success property of Empty is false`` () =
+let ``KoreanTextMatch․Empty․Success always returns false`` () =
     Assert.That(KoreanTextMatch.Empty.Success, Is.False)
 
 [<Test>]
-let ``NextMatch() of Empty is Empty`` () =
+let ``KoreanTextMatch․Empty․NextMatch() always returns KoreanTextMatch․Empty`` () =
     Assert.That(KoreanTextMatch.Empty.NextMatch(), Is.EqualTo KoreanTextMatch.Empty)
