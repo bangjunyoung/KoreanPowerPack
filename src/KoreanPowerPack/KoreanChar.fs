@@ -41,7 +41,7 @@ module KoreanChar =
 
     let private getJamoWith getIndex (collection: char[]) syllable =
         if not (isSyllable syllable) then
-            invalidArg "syllable" <| sprintf "%c is not a Hangul syllable" syllable
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
 
         collection.[getIndex syllable]
 
@@ -60,13 +60,13 @@ module KoreanChar =
 
     let choseongToCompatChoseong c =
         if not (isChoseong c) then
-            invalidArg "c" <| sprintf "c: %c is not a choseong" c
+            invalidArg (nameof c) $"{c} is not a Hangul choseong"
 
         compatJamoCharCollection.Choseong.[int c - 0x1100]
 
     let compatChoseongToChoseong c =
         match compatJamoCharCollection.Choseong |> Array.tryBinarySearch c with
-        | None -> invalidArg "c" <| sprintf "c: %c is not a Compatibility choseong" c
+        | None -> invalidArg (nameof c) $"{c} is not a Hangul Compatibility choseong"
         | Some index -> char (0x1100 + index)
 
     let tryJoinJamo jamo =
@@ -83,7 +83,7 @@ module KoreanChar =
     let joinJamo jamo =
         match tryJoinJamo jamo with
         | Some joinedJamo -> joinedJamo
-        | None -> invalidArg "jamo" <| sprintf "%s is not a Hangul jamo" jamo
+        | None -> invalidArg (nameof jamo) $"{jamo} is not a Hangul jamo"
 
     let trySplitJamo jamo =
         match jamo with
@@ -95,7 +95,7 @@ module KoreanChar =
     let splitJamo jamo =
         match trySplitJamo jamo with
         | Some splittedJamo -> splittedJamo
-        | None -> invalidArg "jamo" <| sprintf "%c is not a Hangul jamo" jamo
+        | None -> invalidArg (nameof jamo) $"{jamo} is not a Hangul jamo"
 
     let compose choseong jungseong jongseong =
         let convert argName f g x =
@@ -107,9 +107,9 @@ module KoreanChar =
                 | None -> invalidArg argName <| sprintf "%A is not a %s" x argName
 
         let choIndex, jungIndex, jongIndex =
-            convert "choseong" compatChoseongToIndex choseongToIndex choseong,
-            convert "jungseong" compatJungseongToIndex jungseongToIndex jungseong,
-            convert "jongseong" compatJongseongToIndex jongseongToIndex jongseong
+            convert (nameof choseong) compatChoseongToIndex choseongToIndex choseong,
+            convert (nameof jungseong) compatJungseongToIndex jungseongToIndex jungseong,
+            convert (nameof jongseong) compatJongseongToIndex jongseongToIndex jongseong
 
         int HangulSyllableFirst +
             choIndex * (JungseongCount * JongseongCount) +
@@ -119,7 +119,7 @@ module KoreanChar =
 
     let composeFromStrings choseong jungseong jongseong =
         let invalidJamo argName arg =
-            invalidArg argName <| sprintf "%A is not a %s" arg argName
+            invalidArg argName $"%A{arg} is not a %s{argName}"
 
         let cho = tryJoinJamo choseong
         let jung = tryJoinJamo jungseong
@@ -127,13 +127,13 @@ module KoreanChar =
 
         match cho, jung, jong with
         | Some cho, Some jung, Some jong -> compose cho jung jong
-        | None, _, _ -> invalidJamo "choseong" choseong
-        | _, None, _ -> invalidJamo "jungseong" jungseong
-        | _, _, None -> invalidJamo "jongseong" jongseong
+        | None, _, _ -> invalidJamo (nameof choseong) choseong
+        | _, None, _ -> invalidJamo (nameof jungseong) jungseong
+        | _, _, None -> invalidJamo (nameof jongseong) jongseong
 
     let private decomposeWith collection syllable =
         if not (syllable |> isSyllable) then
-            invalidArg "syllable" <| sprintf "%c is not a Hangul syllable" syllable
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
 
         let cho = collection.Choseong.[getChoseongIndex syllable]
         let jung = collection.Jungseong.[getJungseongIndex syllable]
@@ -184,13 +184,13 @@ type KoreanChar private () =
         match jamo with
         | [|cho; jung|] -> KoreanChar.Compose(cho, jung)
         | [|cho; jung; jong|] -> KoreanChar.Compose(cho, jung, jong)
-        | _ -> invalidArg "jamo" <| sprintf "%A is not a valid form" jamo
+        | _ -> invalidArg (nameof jamo) $"%A{jamo} is not a valid form"
 
     static member Compose(jamo: string[]) =
         match jamo with
         | [|cho; jung|] -> KoreanChar.Compose(cho, jung)
         | [|cho; jung; jong|] -> KoreanChar.Compose(cho, jung, jong)
-        | _ -> invalidArg "jamo" <| sprintf "%A is not a valid form" jamo
+        | _ -> invalidArg (nameof jamo) $"%A{jamo} is not a valid form"
 
     static member Decompose syllable =
         decompose syllable
