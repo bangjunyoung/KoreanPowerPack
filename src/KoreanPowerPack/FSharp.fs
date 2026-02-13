@@ -34,22 +34,6 @@ module String =
         ||> Seq.fold (fun builder c -> builder.Append(c))
         |> string
 
-    let truncate count source =
-        if count < 0 then
-            invalidArg "count" <| sprintf "%d must be positive." count
-
-        if String.length source > count then
-            let ellipsis = "\u2026"
-            if count >= ellipsis.Length then
-                StringBuilder(count)
-                    .Append(source.AsSpan(0, count - ellipsis.Length))
-                    .Append(ellipsis)
-                    .ToString()
-            else
-                source.Substring(0, count)
-        else
-            source
-
 module Array =
     let tryBinarySearchWith comparer (value: 'a) (source: 'a[]) =
         let rec loop lo hi =
