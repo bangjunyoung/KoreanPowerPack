@@ -32,12 +32,13 @@ open KoreanNumericConverter
 [<AutoOpen>]
 module internal KoreanNumericFormatter =
     let validFormats =
-        ["한자", Hanja
-         "한자개별", HanjaDigit
-         "한자혼합", HanjaMixed
-         "고유", Native
-         "고유관형", NativePrenoun]
-        |> Map.ofList
+        [
+            "한자", Hanja
+            "한자개별", HanjaDigit
+            "한자혼합", HanjaMixed
+            "고유", Native
+            "고유관형", NativePrenoun
+        ] |> Map.ofList
 
     let handleInvalidFormat format (arg: obj) =
         match arg with
