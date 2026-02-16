@@ -142,7 +142,7 @@ module KoreanChar =
     let decompose syllable =
         decomposeWith JamosAsString syllable
 
-    let decomposeCompat syllable =
+    let decomposeToCompat syllable =
         decomposeWith CompatJamosAsString syllable
 
     let decomposeDubeolsik syllable =
@@ -191,8 +191,8 @@ type KoreanChar private () =
     static member Decompose syllable =
         decompose syllable
 
-    static member DecomposeCompat syllable =
-        decomposeCompat syllable
+    static member DecomposeToCompat syllable =
+        decomposeToCompat syllable
 
     static member DecomposeDubeolsik syllable =
         decomposeDubeolsik syllable

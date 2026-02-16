@@ -31,7 +31,7 @@ module KoreanCharApproxMatcher =
     [<CompiledName("IsMatch")>]
     let isMatch t p =
         let decompose c =
-            if isSyllable c then String.concat "" (decomposeCompat c)
+            if isSyllable c then String.concat "" (decomposeToCompat c)
             elif isCompatChoseong c then splitJamo c
             elif isChoseong c then splitJamo (choseongToCompatChoseong c)
             else string c

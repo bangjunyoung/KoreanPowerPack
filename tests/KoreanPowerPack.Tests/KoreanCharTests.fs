@@ -414,7 +414,7 @@ let decomposeExceptionTestParameters =
 let decomposeExceptionTest syllable =
     Assert.That(Func<_>(fun () -> KoreanChar.decompose syllable), Throws.ArgumentException)
 
-let decomposeCompatTestParametersTestParameters =
+let decomposeToCompatTestParameters =
     [
         '가' (* \uAC00 *), [|"ㄱ"; "ㅏ"|]
         '뛇' (* \uB5C7 *), [|"ㄷㄷ"; "ㅜㅓ"; "ㄹㅎ"|]
@@ -422,24 +422,24 @@ let decomposeCompatTestParametersTestParameters =
         '힣' (* \uD7A3 *), [|"ㅎ"; "ㅣ"; "ㅎ"|]
     ]
     |>List.map (fun (syllable, expected) ->
-        TestCaseData(syllable).Returns(expected).SetName($"decomposeCompat('{syllable}')"))
+        TestCaseData(syllable).Returns(expected).SetName($"decomposeToCompat('{syllable}')"))
 
-[<TestCaseSource(nameof decomposeCompatTestParametersTestParameters)>]
-let decomposeCompatTest syllable =
-    KoreanChar.decomposeCompat syllable
+[<TestCaseSource(nameof decomposeToCompatTestParameters)>]
+let decomposeToCompatTest syllable =
+    KoreanChar.decomposeToCompat syllable
 
-let decomposeCompatExceptionTestParameters =
+let decomposeToCompatExceptionTestParameters =
     [
         '\u0041' (* A *)
         '\u1100' (* ᄀ *)
         '\u3131' (* ㄱ *)
     ]
     |> List.map (fun syllable ->
-        TestCaseData(syllable).SetName($"decomposeCompat('{syllable}') throws ArgumentException"))
+        TestCaseData(syllable).SetName($"decomposeToCompat('{syllable}') throws ArgumentException"))
 
-[<TestCaseSource(nameof decomposeCompatExceptionTestParameters)>]
-let decomposeCompatExceptionTest syllable =
-    Assert.That(Func<_>(fun () -> KoreanChar.decomposeCompat syllable), Throws.ArgumentException)
+[<TestCaseSource(nameof decomposeToCompatExceptionTestParameters)>]
+let decomposeToCompatExceptionTest syllable =
+    Assert.That(Func<_>(fun () -> KoreanChar.decomposeToCompat syllable), Throws.ArgumentException)
 
 let decomposeDubeolsikTestParameters =
     [
