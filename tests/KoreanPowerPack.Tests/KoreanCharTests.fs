@@ -360,7 +360,7 @@ let composeExceptionTestParameters =
 let composeExceptionTest cho jung jong =
     Assert.That(Func<_>(fun () -> KoreanChar.compose cho jung jong), Throws.ArgumentException)
 
-let composeWithStringsTestParameters =
+let composeFromStringsTestParameters =
     [
         "\u1101" (* ᄁ *), "\u116A" (* ᅪ *), "", '꽈'
         "\u1101" (* ᄁ *), "\u116A" (* ᅪ *), "\u11A9" (* ᆩ *), '꽊'
@@ -369,11 +369,11 @@ let composeWithStringsTestParameters =
     |> List.map (fun (cho, jung, jong, expected) ->
         TestCaseData(cho, jung, jong).Returns(expected).SetName($"composeWithStrings('{cho}', '{jung}', '{jong}')"))
 
-[<TestCaseSource(nameof composeWithStringsTestParameters)>]
-let composeWithStringsTest cho jung jong =
+[<TestCaseSource(nameof composeFromStringsTestParameters)>]
+let composeFromStringsTest cho jung jong =
     KoreanChar.composeFromStrings cho jung jong
 
-let composeWithStringsExceptionTestParameters =
+let composeFromStringsExceptionTestParameters =
     [
         "\u10FF" (* invalid choseong *), "\u116A" (* ᅪ *), "\u11A9" (* ᆩ *)
         "\u3132" (* ㄲ *), "\u1160" (* invalid jungseong *), "\u11A9" (* ᆩ *)
@@ -383,8 +383,8 @@ let composeWithStringsExceptionTestParameters =
         TestCaseData(cho, jung, jong)
             .SetName($"composeWithStrings('{cho}', '{jung}', '{jong}') throws ArgumentException"))
 
-[<TestCaseSource(nameof composeWithStringsExceptionTestParameters)>]
-let composeWithStringExceptionTest cho jung jong =
+[<TestCaseSource(nameof composeFromStringsExceptionTestParameters)>]
+let composeFromStringsExceptionTest cho jung jong =
     Assert.That(Func<_>(fun () -> KoreanChar.composeFromStrings cho jung jong), Throws.ArgumentException)
 
 let decomposeTestParameters =
