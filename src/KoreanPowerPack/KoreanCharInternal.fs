@@ -157,8 +157,12 @@ module internal KoreanCharInternal =
 
     let compatChoseongToIndex choseong =
         JoinedCompatJamos.Choseong |> Array.tryBinarySearch choseong
+
     let compatJungseongToIndex jungseong =
-        JoinedCompatJamos.Jungseong |> Array.tryBinarySearch jungseong
+        let index = int (jungseong - '\u314F')
+        if 0 <= index && index < JungseongCount then Some index
+        else None
+
     let compatJongseongToIndex jongseong =
         JoinedCompatJamos.Jongseong |> Array.tryBinarySearch jongseong
 

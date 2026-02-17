@@ -39,24 +39,43 @@ module KoreanChar =
     let isCompatJungseong c = c |> compatJungseongToIndex |> Option.isSome
     let isCompatJongseong c = c |> compatJongseongToIndex |> Option.isSome
 
-    let private getJamoWith getIndex (collection: char[]) syllable =
+    let getChoseong syllable =
         if not (isSyllable syllable) then
             invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
 
-        collection[getIndex syllable]
+        char (0x1100 + (getChoseongIndex syllable))
 
-    let getChoseong syllable =
-        getJamoWith getChoseongIndex JoinedJamos.Choseong syllable
     let getJungseong syllable =
-        getJamoWith getJungseongIndex JoinedJamos.Jungseong syllable
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        char (0x1161 + (getJungseongIndex syllable))
+
     let getJongseong syllable =
-        getJamoWith getJongseongIndex JoinedJamos.Jongseong syllable
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        let index = getJongseongIndex syllable
+        if index = 0 then '\u0000'
+        else char (0x11A8 + index - 1)
+
     let getCompatChoseong syllable =
-        getJamoWith getChoseongIndex JoinedCompatJamos.Choseong syllable
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        JoinedCompatJamos.Choseong[getChoseongIndex syllable]
+
     let getCompatJungseong syllable =
-        getJamoWith getJungseongIndex JoinedCompatJamos.Jungseong syllable
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        char (0x314F + (getJungseongIndex syllable))
+
     let getCompatJongseong syllable =
-        getJamoWith getJongseongIndex JoinedCompatJamos.Jongseong syllable
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        JoinedCompatJamos.Jongseong[getJongseongIndex syllable]
 
     let choseongToCompatChoseong c =
         if not (isChoseong c) then
@@ -135,9 +154,9 @@ module KoreanChar =
         let jungseong = collection.Jungseong[getJungseongIndex syllable]
         let jongseong = collection.Jongseong[getJongseongIndex syllable]
 
-        match jongseong with
-        | "" -> [|choseong; jungseong|]
-        | _  -> [|choseong; jungseong; jongseong|]
+        match String.length jongseong with
+        | 0 -> [|choseong; jungseong|]
+        | _ -> [|choseong; jungseong; jongseong|]
 
     let decompose syllable =
         decomposeWith SplitJamos syllable
