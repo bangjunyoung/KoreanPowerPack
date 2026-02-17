@@ -441,7 +441,7 @@ let decomposeToCompatExceptionTestParameters =
 let decomposeToCompatExceptionTest syllable =
     Assert.That(Func<_>(fun () -> KoreanChar.decomposeToCompat syllable), Throws.ArgumentException)
 
-let decomposeDubeolsikTestParameters =
+let decomposeToDubeolsikTestParameters =
     [
         '가' (* \uAC00 *), [|"ㄱ"; "ㅏ"|]
         '뛇' (* \uB5C7 *), [|"ㄸ"; "ㅜㅓ"; "ㄹㅎ"|]
@@ -449,21 +449,21 @@ let decomposeDubeolsikTestParameters =
         '힣' (* \uD7A3 *), [|"ㅎ"; "ㅣ"; "ㅎ"|]
     ]
     |>List.map (fun (syllable, expected) ->
-        TestCaseData(syllable).Returns(expected).SetName($"decomposeDubeolsik('{syllable}')"))
+        TestCaseData(syllable).Returns(expected).SetName($"decomposeToDubeolsik('{syllable}')"))
 
-[<TestCaseSource(nameof decomposeDubeolsikTestParameters)>]
+[<TestCaseSource(nameof decomposeToDubeolsikTestParameters)>]
 let decomposeDubeolsikTest syllable =
-    KoreanChar.decomposeDubeolsik syllable
+    KoreanChar.decomposeToDubeolsik syllable
 
-let decomposeDubeolsikExceptionTestParameters =
+let decomposeToDubeolsikExceptionTestParameters =
     [
         '\u0041' (* A *)
         '\u1100' (* ᄀ *)
         '\u3131' (* ㄱ *)
     ]
     |> List.map (fun syllable ->
-        TestCaseData(syllable).SetName($"decomposeDubeolsik('{syllable}') throws ArgumentException"))
+        TestCaseData(syllable).SetName($"decomposeToDubeolsik('{syllable}') throws ArgumentException"))
 
-[<TestCaseSource(nameof decomposeDubeolsikExceptionTestParameters)>]
-let decomposeDubeolsikExceptionTest syllable =
-    Assert.That(Func<_>(fun () -> KoreanChar.decomposeDubeolsik syllable), Throws.ArgumentException)
+[<TestCaseSource(nameof decomposeToDubeolsikExceptionTestParameters)>]
+let decomposeToDubeolsikExceptionTest syllable =
+    Assert.That(Func<_>(fun () -> KoreanChar.decomposeToDubeolsik syllable), Throws.ArgumentException)
