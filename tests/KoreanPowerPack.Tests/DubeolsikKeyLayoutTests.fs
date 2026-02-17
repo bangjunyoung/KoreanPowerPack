@@ -49,7 +49,8 @@ let parseTestParameters =
          "외곬은 삶이 애닳고 맘이 편찮아 시를 읊었다")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected).SetName($"parse(\"{actual}\")"))
+        TestCaseData(actual).Returns(expected)
+            .SetName($"{nameof DubeolsikKeyLayout.parse}(\"{actual}\")"))
 
 
 [<TestCaseSource(nameof parseTestParameters)>]
@@ -73,7 +74,8 @@ let unparseTestParameters =
          "dhlrhftdms tkfadl doekfgrh akadl vuscksgdk tlfmf dmfvdjTek")
     ]
     |> List.map (fun (actual, expected) ->
-        TestCaseData(actual).Returns(expected).SetName($"unparse(\"{actual}\")"))
+        TestCaseData(actual).Returns(expected)
+            .SetName($"{nameof DubeolsikKeyLayout.unparse}(\"{actual}\")"))
 
 [<TestCaseSource(nameof unparseTestParameters)>]
 let unparseTest actual =

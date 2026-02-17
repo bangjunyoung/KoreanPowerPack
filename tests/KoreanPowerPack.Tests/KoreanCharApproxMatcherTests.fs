@@ -47,7 +47,8 @@ let isMatchTestParameters =
         '한', '핞', false
     ]
     |> List.map (fun (text, pattern, expected) ->
-        TestCaseData(text, pattern).Returns(expected).SetName($"isMatch('{text}', '{pattern}')"))
+        TestCaseData(text, pattern).Returns(expected)
+            .SetName($"{nameof KoreanCharApproxMatcher.isMatch}('{text}', '{pattern}')"))
 
 [<TestCaseSource(nameof isMatchTestParameters)>]
 let isMatchTest text pattern =

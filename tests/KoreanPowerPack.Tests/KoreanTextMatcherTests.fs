@@ -78,7 +78,8 @@ let staticIsMatchTestParameters =
         "하늘 ", "^하늘$", false
     ]
     |> List.map (fun (text, pattern, expected) ->
-        TestCaseData(text, pattern).Returns(expected).SetName($"static IsMatch(\"{text}\", \"{pattern}\")"))
+        TestCaseData(text, pattern).Returns(expected)
+            .SetName($"static {nameof KoreanTextMatcher.IsMatch}(\"{text}\", \"{pattern}\")"))
 
 [<TestCaseSource(nameof staticIsMatchTestParameters)>]
 let staticIsMatchTest text pattern =
@@ -100,7 +101,8 @@ let staticMatchesTestParameters =
         "하늘 ᄒ늘 하느 ᄒᄂ", "ᄒᄂ", 4
     ]
     |> List.map (fun (text, pattern, expected) ->
-        TestCaseData(text, pattern, expected).SetName($"static Matches(\"{text}\", \"{pattern}\")"))
+        TestCaseData(text, pattern, expected)
+            .SetName($"static {nameof KoreanTextMatcher.Matches}(\"{text}\", \"{pattern}\")"))
 
 [<TestCaseSource(nameof staticMatchesTestParameters)>]
 let staticMatchesTest text pattern (expected: int) =
@@ -123,7 +125,7 @@ let MatchTestParameters =
     ]
     |> List.map (fun (text, pattern, startIndex, success, index, length) ->
         TestCaseData(text, pattern, startIndex, success, index, length)
-            .SetName($"Match(\"{pattern}\", {startIndex})"))
+            .SetName($"{nameof KoreanTextMatcher.Match}(\"{pattern}\", {startIndex})"))
 
 [<TestCaseSource(nameof MatchTestParameters)>]
 let MatchTest text pattern startIndex success index length =
