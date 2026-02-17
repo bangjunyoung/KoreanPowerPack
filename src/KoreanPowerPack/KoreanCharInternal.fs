@@ -50,7 +50,7 @@ module internal KoreanCharInternal =
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
-    let JamosAsString = {
+    let SplitJamos = {
         Choseong = [|
             "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
             "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
@@ -68,7 +68,7 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let JamosAsChar = {
+    let JoinedJamos = {
         Choseong = [|
             'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
             'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
@@ -86,7 +86,7 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let CompatJamosAsString = {
+    let SplitCompatJamos = {
         Choseong = [|
             "ㄱ"; "ㄱㄱ"; "ㄴ"; "ㄷ"; "ㄷㄷ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅂㅂ"; "ㅅ"
             "ㅅㅅ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
@@ -104,7 +104,7 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let DubeolsikJamosAsString = {
+    let DubeolsikJamos = {
         Choseong = [|
             "ㄱ"; "ㄲ"; "ㄴ"; "ㄷ"; "ㄸ"; "ㄹ"; "ㅁ"; "ㅂ"; "ㅃ"; "ㅅ"
             "ㅆ"; "ㅇ"; "ㅈ"; "ㅉ"; "ㅊ"; "ㅋ"; "ㅌ"; "ㅍ"; "ㅎ"
@@ -122,7 +122,7 @@ module internal KoreanCharInternal =
         |]
     }
 
-    let CompatJamosAsChar = {
+    let JoinedCompatJamos = {
         Choseong = [|
             'ㄱ'; 'ㄲ'; 'ㄴ'; 'ㄷ'; 'ㄸ'; 'ㄹ'; 'ㅁ'; 'ㅂ'; 'ㅃ'; 'ㅅ'
             'ㅆ'; 'ㅇ'; 'ㅈ'; 'ㅉ'; 'ㅊ'; 'ㅋ'; 'ㅌ'; 'ㅍ'; 'ㅎ'
@@ -156,13 +156,13 @@ module internal KoreanCharInternal =
             else None
 
     let compatChoseongToIndex choseong =
-        CompatJamosAsChar.Choseong |> Array.tryBinarySearch choseong
+        JoinedCompatJamos.Choseong |> Array.tryBinarySearch choseong
     let compatJungseongToIndex jungseong =
-        CompatJamosAsChar.Jungseong |> Array.tryBinarySearch jungseong
+        JoinedCompatJamos.Jungseong |> Array.tryBinarySearch jungseong
     let compatJongseongToIndex jongseong =
-        CompatJamosAsChar.Jongseong |> Array.tryBinarySearch jongseong
+        JoinedCompatJamos.Jongseong |> Array.tryBinarySearch jongseong
 
-    let SplittedJamos = [|
+    let SplitUnifiedJamos = [|
         // Hangul Jamo
         "ᄀ"; "ᄀᄀ"; "ᄂ"; "ᄃ"; "ᄃᄃ"; "ᄅ"; "ᄆ"; "ᄇ"; "ᄇᄇ"; "ᄉ"
         "ᄉᄉ"; "ᄋ"; "ᄌ"; "ᄌᄌ"; "ᄎ"; "ᄏ"; "ᄐ"; "ᄑ"; "ᄒ"
@@ -184,7 +184,7 @@ module internal KoreanCharInternal =
         "ㅗㅐ"; "ㅗㅣ"; "ㅛ"; "ㅜ"; "ㅜㅓ"; "ㅜㅔ"; "ㅜㅣ"; "ㅠ"; "ㅡ"; "ㅡㅣ"
         "ㅣ"
     |]
-    let JoinedJamos = [|
+    let JoinedUnifiedJamos = [|
         // Hangul Jamo
         'ᄀ'; 'ᄁ'; 'ᄂ'; 'ᄃ'; 'ᄄ'; 'ᄅ'; 'ᄆ'; 'ᄇ'; 'ᄈ'; 'ᄉ'
         'ᄊ'; 'ᄋ'; 'ᄌ'; 'ᄍ'; 'ᄎ'; 'ᄏ'; 'ᄐ'; 'ᄑ'; 'ᄒ'
@@ -206,4 +206,4 @@ module internal KoreanCharInternal =
         'ㅙ'; 'ㅚ'; 'ㅛ'; 'ㅜ'; 'ㅝ'; 'ㅞ'; 'ㅟ'; 'ㅠ'; 'ㅡ'; 'ㅢ'
         'ㅣ'
     |]
-    assert (SplittedJamos.Length = JoinedJamos.Length)
+    assert (SplitUnifiedJamos.Length = JoinedUnifiedJamos.Length)

@@ -46,37 +46,37 @@ module KoreanChar =
         collection[getIndex syllable]
 
     let getChoseong syllable =
-        getJamoWith getChoseongIndex JamosAsChar.Choseong syllable
+        getJamoWith getChoseongIndex JoinedJamos.Choseong syllable
     let getJungseong syllable =
-        getJamoWith getJungseongIndex JamosAsChar.Jungseong syllable
+        getJamoWith getJungseongIndex JoinedJamos.Jungseong syllable
     let getJongseong syllable =
-        getJamoWith getJongseongIndex JamosAsChar.Jongseong syllable
+        getJamoWith getJongseongIndex JoinedJamos.Jongseong syllable
     let getCompatChoseong syllable =
-        getJamoWith getChoseongIndex CompatJamosAsChar.Choseong syllable
+        getJamoWith getChoseongIndex JoinedCompatJamos.Choseong syllable
     let getCompatJungseong syllable =
-        getJamoWith getJungseongIndex CompatJamosAsChar.Jungseong syllable
+        getJamoWith getJungseongIndex JoinedCompatJamos.Jungseong syllable
     let getCompatJongseong syllable =
-        getJamoWith getJongseongIndex CompatJamosAsChar.Jongseong syllable
+        getJamoWith getJongseongIndex JoinedCompatJamos.Jongseong syllable
 
     let choseongToCompatChoseong c =
         if not (isChoseong c) then
             invalidArg (nameof c) $"{c} is not a Hangul choseong"
 
-        CompatJamosAsChar.Choseong[int c - 0x1100]
+        JoinedCompatJamos.Choseong[int c - 0x1100]
 
     let compatChoseongToChoseong c =
-        match CompatJamosAsChar.Choseong |> Array.tryBinarySearch c with
+        match JoinedCompatJamos.Choseong |> Array.tryBinarySearch c with
         | None -> invalidArg (nameof c) $"{c} is not a Hangul Compatibility choseong"
         | Some index -> char (0x1100 + index)
 
     let tryJoinJamo jamo =
         match String.length jamo with
         | 0 -> Some '\u0000'
-        | 1 -> match JoinedJamos |> Array.tryBinarySearch jamo[0] with
-               | Some index -> Some JoinedJamos[index]
+        | 1 -> match JoinedUnifiedJamos |> Array.tryBinarySearch jamo[0] with
+               | Some index -> Some JoinedUnifiedJamos[index]
                | None -> None
-        | 2 -> match SplittedJamos |> Array.tryBinarySearch jamo with
-               | Some index -> Some JoinedJamos[index]
+        | 2 -> match SplitUnifiedJamos |> Array.tryBinarySearch jamo with
+               | Some index -> Some JoinedUnifiedJamos[index]
                | None -> None
         | _ -> None
 
@@ -88,13 +88,13 @@ module KoreanChar =
     let trySplitJamo jamo =
         match jamo with
         | '\u0000' -> Some ""
-        | _ -> match JoinedJamos |> Array.tryBinarySearch jamo with
-               | Some index -> Some SplittedJamos[index]
+        | _ -> match JoinedUnifiedJamos |> Array.tryBinarySearch jamo with
+               | Some index -> Some SplitUnifiedJamos[index]
                | None -> None
 
     let splitJamo jamo =
         match trySplitJamo jamo with
-        | Some splittedJamo -> splittedJamo
+        | Some splitJamo -> splitJamo
         | None -> invalidArg (nameof jamo) $"{jamo} is not a Hangul jamo"
 
     let compose choseong jungseong jongseong =
@@ -140,13 +140,13 @@ module KoreanChar =
         | _  -> [|choseong; jungseong; jongseong|]
 
     let decompose syllable =
-        decomposeWith JamosAsString syllable
+        decomposeWith SplitJamos syllable
 
     let decomposeToCompat syllable =
-        decomposeWith CompatJamosAsString syllable
+        decomposeWith SplitCompatJamos syllable
 
     let decomposeToDubeolsik syllable =
-        decomposeWith DubeolsikJamosAsString syllable
+        decomposeWith DubeolsikJamos syllable
 
 open KoreanChar
 open System.Runtime.InteropServices
