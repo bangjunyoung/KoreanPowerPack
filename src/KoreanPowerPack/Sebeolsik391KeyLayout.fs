@@ -25,7 +25,6 @@
 
 module KoreanPowerPack.Sebeolsik391KeyLayout
 
-open KoreanPowerPack.FSharp
 open HangulKeyLayout
 
 let qwertyToSebeolsik391, sebeolsik391ToQwerty =

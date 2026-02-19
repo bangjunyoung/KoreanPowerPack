@@ -25,7 +25,7 @@
 
 namespace KoreanPowerPack
 
-open KoreanPowerPack.FSharp
+open FSharpCoreMissingParts
 open KoreanCharInternal
 
 module KoreanChar =

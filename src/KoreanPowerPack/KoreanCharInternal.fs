@@ -25,7 +25,7 @@
 
 namespace KoreanPowerPack
 
-open KoreanPowerPack.FSharp
+open FSharpCoreMissingParts
 
 module internal KoreanCharInternal =
     let [<Literal>] HangulSyllableFirst = '가'

@@ -26,7 +26,7 @@
 module KoreanPowerPack.HangulKeyLayout
 
 open FParsec
-open KoreanPowerPack.FSharp
+open FSharpCoreMissingParts
 
 let parse syllableParser str =
     assert (str <> null)

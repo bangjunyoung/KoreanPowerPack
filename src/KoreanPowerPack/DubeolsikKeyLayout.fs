@@ -25,7 +25,6 @@
 
 module KoreanPowerPack.DubeolsikKeyLayout
 
-open KoreanPowerPack.FSharp
 open HangulKeyLayout
 
 let qwertyToDubeolsik, dubeolsikToQwerty =

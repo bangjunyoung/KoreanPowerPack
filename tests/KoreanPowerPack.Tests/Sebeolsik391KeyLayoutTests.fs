@@ -26,7 +26,6 @@
 module KoreanPowerPack.Sebeolsik391KeyLayoutTests
 
 open NUnit.Framework
-open KoreanPowerPack.FSharp
 
 let parseTestParameters =
     [

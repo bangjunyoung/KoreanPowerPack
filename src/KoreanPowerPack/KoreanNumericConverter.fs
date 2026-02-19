@@ -25,7 +25,7 @@
 
 module KoreanPowerPack.KoreanNumericConverter
 
-open KoreanPowerPack.FSharp
+open FSharpCoreMissingParts.Casting
 
 type FormatKind = Hanja | HanjaDigit | HanjaMixed | Native | NativePrenoun
 
