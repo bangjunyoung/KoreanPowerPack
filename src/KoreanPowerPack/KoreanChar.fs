@@ -1,5 +1,5 @@
 ﻿//
-// Copyright 2019 Bang Jun-young
+// Copyright 2019, 2026 Bang Jun-young
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,6 +25,7 @@
 
 namespace KoreanPowerPack
 
+open System
 open FSharpCoreMissingParts
 open KoreanCharInternal
 
@@ -158,14 +159,42 @@ module KoreanChar =
         | 0 -> [|choseong; jungseong|]
         | _ -> [|choseong; jungseong; jongseong|]
 
+    let private decomposeIntoWith (buffer: Span<char>) (collection: JamoCollection<string>) syllable =
+        if not (isSyllable syllable) then
+            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+
+        let choseong = collection.Choseong[getChoseongIndex syllable]
+        let jungseong = collection.Jungseong[getJungseongIndex syllable]
+        let jongseong = collection.Jongseong[getJongseongIndex syllable]
+
+        let totalLength = choseong.Length + jungseong.Length + jongseong.Length
+        if buffer.Length < totalLength then
+            invalidArg (nameof buffer) "Destination buffer is too short"
+
+        choseong.AsSpan().CopyTo(buffer)
+        jungseong.AsSpan().CopyTo(buffer.Slice(choseong.Length))
+        if jongseong.Length > 0 then
+            jongseong.AsSpan().CopyTo(buffer.Slice(choseong.Length + jungseong.Length))
+
+        totalLength
+
     let decompose syllable =
         decomposeWith SplitJamos syllable
+
+    let decomposeInto buffer syllable =
+        decomposeIntoWith buffer SplitJamos syllable
 
     let decomposeToCompat syllable =
         decomposeWith SplitCompatJamos syllable
 
+    let decomposeToCompatInto buffer syllable =
+        decomposeIntoWith buffer SplitCompatJamos syllable
+
     let decomposeToDubeolsik syllable =
         decomposeWith DubeolsikJamos syllable
+
+    let decomposeToDubeolsikInto buffer syllable =
+        decomposeIntoWith buffer DubeolsikJamos syllable
 
 open KoreanChar
 open System.Runtime.InteropServices
@@ -210,8 +239,14 @@ type KoreanChar private () =
     static member Decompose syllable =
         decompose syllable
 
+    static member Decompose(syllable, buffer) =
+        decomposeInto buffer syllable
+
     static member DecomposeToCompat syllable =
         decomposeToCompat syllable
+
+    static member DecomposeToCompat(syllable, buffer) =
+        decomposeToCompatInto buffer syllable
 
     static member DecomposeToDubeolsik syllable =
         decomposeToDubeolsik syllable

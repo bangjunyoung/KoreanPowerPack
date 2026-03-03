@@ -1,5 +1,5 @@
 ﻿//
-// Copyright 2019 Bang Jun-young
+// Copyright 2019, 2026 Bang Jun-young
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
@@ -25,15 +25,36 @@
 
 namespace KoreanPowerPack
 
+open System
+open Microsoft.FSharp.NativeInterop
 open KoreanChar
 
+module Span =
+    #nowarn "9"
+    let inline stackalloc<'T when 'T : unmanaged> length =
+        Span<'T>(NativePtr.toVoidPtr (NativePtr.stackalloc<'T> length), length)
+
+    #nowarn "3391"
+    let inline toReadOnlySpan<'T> (span: Span<'T>) : ReadOnlySpan<'T> = span
+
 module KoreanCharApproxMatcher =
+    let private decompose buffer c =
+        if isSyllable c then
+            let length = decomposeToCompatInto buffer c
+            Span.toReadOnlySpan<char>(buffer.Slice(0, length))
+        elif isCompatChoseong c then
+            (splitJamo c).AsSpan()
+        elif isChoseong c then
+            (splitJamo (choseongToCompatChoseong c)).AsSpan()
+        else
+            buffer[0] <- c
+            Span.toReadOnlySpan<char>(buffer.Slice(0, 1))
+
     [<CompiledName("IsMatch")>]
     let isMatch t p =
-        let decompose c =
-            if isSyllable c then String.concat "" (decomposeToCompat c)
-            elif isCompatChoseong c then splitJamo c
-            elif isChoseong c then splitJamo (choseongToCompatChoseong c)
-            else string c
+        if t = p then true
+        else
+            let tBuffer = Span.stackalloc<char> 6
+            let pBuffer = Span.stackalloc<char> 6
 
-        (decompose t).StartsWith(decompose p)
+            (decompose tBuffer t).StartsWith(decompose pBuffer p)
