@@ -153,7 +153,7 @@ module internal KoreanCharInternal =
         if jongseong = '\u0000' then Some 0
         else
             let index = int (jongseong - '\u11A8') + 1
-            if 0 <= index && index < JongseongCount then Some index
+            if 1 <= index && index < JongseongCount then Some index
             else None
 
     let compatChoseongToIndex choseong =
