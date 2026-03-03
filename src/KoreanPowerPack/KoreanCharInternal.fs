@@ -31,21 +31,18 @@ module internal KoreanCharInternal =
     let [<Literal>] HangulSyllableFirst = '가'
     let [<Literal>] HangulSyllableLast = '힣'
 
-    let syllableToIndex syllable =
-        int (syllable - HangulSyllableFirst)
-
     let [<Literal>] ChoseongCount = 19
     let [<Literal>] JungseongCount = 21
     let [<Literal>] JongseongCount = 27 + 1 // 종성 없는 경우 포함
 
     let getChoseongIndex syllable =
-        (syllableToIndex syllable) / (JungseongCount * JongseongCount)
+        int (syllable - HangulSyllableFirst) / (JungseongCount * JongseongCount)
 
     let getJungseongIndex syllable =
-        (syllableToIndex syllable) % (JungseongCount * JongseongCount) / JongseongCount
+        int (syllable - HangulSyllableFirst) % (JungseongCount * JongseongCount) / JongseongCount
 
     let getJongseongIndex syllable =
-        (syllableToIndex syllable) % JongseongCount
+        int (syllable - HangulSyllableFirst) % JongseongCount
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
