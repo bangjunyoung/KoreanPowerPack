@@ -36,17 +36,16 @@ module internal KoreanCharInternal =
 
     let [<Literal>] ChoseongCount = 19
     let [<Literal>] JungseongCount = 21
-    let [<Literal>] JongseongCount = 28
+    let [<Literal>] JongseongCount = 27 + 1 // 종성 없는 경우 포함
 
     let getChoseongIndex syllable =
-        let sylIndex = syllableToIndex syllable
-        sylIndex / (JungseongCount * JongseongCount)
+        (syllableToIndex syllable) / (JungseongCount * JongseongCount)
+
     let getJungseongIndex syllable =
-        let sylIndex = syllableToIndex syllable
-        sylIndex % (JungseongCount * JongseongCount) / JongseongCount
+        (syllableToIndex syllable) % (JungseongCount * JongseongCount) / JongseongCount
+
     let getJongseongIndex syllable =
-        let sylIndex = syllableToIndex syllable
-        sylIndex % JongseongCount
+        (syllableToIndex syllable) % JongseongCount
 
     type JamoCollection<'a> = { Choseong: 'a[]; Jungseong: 'a[]; Jongseong: 'a[] }
 
@@ -144,10 +143,12 @@ module internal KoreanCharInternal =
         let index = int (choseong - '\u1100')
         if 0 <= index && index < ChoseongCount then Some index
         else None
+
     let jungseongToIndex jungseong =
         let index = int (jungseong - '\u1161')
         if 0 <= index && index < JungseongCount then Some index
         else None
+
     let jongseongToIndex jongseong =
         if jongseong = '\u0000' then Some 0
         else
