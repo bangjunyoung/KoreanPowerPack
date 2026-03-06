@@ -119,12 +119,9 @@ module KoreanChar =
 
     let compose choseong jungseong jongseong =
         let convert argName f g x =
-            match f x with
-            | Some index -> index
-            | None ->
-                match g x with
-                | Some index -> index
-                | None -> invalidArg argName $"{x} is not a {argName}"
+            f x
+            |> Option.orElseWith (fun () -> g x)
+            |> Option.defaultWith (fun () -> invalidArg argName $"{x} is not a {argName}")
 
         let choseongIndex, jungseongIndex, jongseongIndex =
             convert (nameof choseong) compatChoseongToIndex choseongToIndex choseong,
