@@ -40,41 +40,39 @@ module KoreanChar =
     let isCompatJungseong c = c |> compatJungseongToIndex |> Option.isSome
     let isCompatJongseong c = c |> compatJongseongToIndex |> Option.isSome
 
-    let getChoseong syllable =
+    let private checkIfSyllable syllable =
         if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+            invalidArg (nameof syllable) $"'{syllable}' (\\u{int syllable:X4}) is not a Hangul syllable"
+
+    let getChoseong syllable =
+        checkIfSyllable syllable
 
         char (0x1100 + (getChoseongIndex syllable))
 
     let getJungseong syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         char (0x1161 + (getJungseongIndex syllable))
 
     let getJongseong syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         let index = getJongseongIndex syllable
         if index = 0 then '\u0000'
         else char (0x11A8 + index - 1)
 
     let getCompatChoseong syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         JoinedCompatJamos.Choseong[getChoseongIndex syllable]
 
     let getCompatJungseong syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         char (0x314F + (getJungseongIndex syllable))
 
     let getCompatJongseong syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         JoinedCompatJamos.Jongseong[getJongseongIndex syllable]
 
@@ -145,8 +143,7 @@ module KoreanChar =
         | _, _, None -> invalidJamo (nameof jongseong) jongseong
 
     let private decomposeWith collection syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         let choseong = collection.Choseong[getChoseongIndex syllable]
         let jungseong = collection.Jungseong[getJungseongIndex syllable]
@@ -157,8 +154,7 @@ module KoreanChar =
         | _ -> [|choseong; jungseong; jongseong|]
 
     let private decomposeIntoWith (buffer: Span<char>) (collection: JamoCollection<string>) syllable =
-        if not (isSyllable syllable) then
-            invalidArg (nameof syllable) $"{syllable} is not a Hangul syllable"
+        checkIfSyllable syllable
 
         let choseong = collection.Choseong[getChoseongIndex syllable]
         let jungseong = collection.Jungseong[getJungseongIndex syllable]
