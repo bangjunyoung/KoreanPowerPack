@@ -212,19 +212,19 @@ let getCompatJongseongTestParameters =
 let getCompatJongseongTest c expected =
     Assert.That(KoreanChar.getCompatJongseong c, Is.EqualTo expected)
 
-let choseongToCompatChoseongTestParameters =
+let convertChoseongToCompatTestParameters =
     [
         '\u1100' (* ᄀ *), '\u3131' (* ㄱ *)
         '\u1112' (* ᄒ *), '\u314E' (* ㅎ *)
     ]
     |> List.map (fun (c, expected) ->
-        TestCaseData(c, expected).SetName($"{nameof KoreanChar.choseongToCompatChoseong}('{c}')"))
+        TestCaseData(c, expected).SetName($"{nameof KoreanChar.convertChoseongToCompat}('{c}')"))
 
-[<TestCaseSource(nameof choseongToCompatChoseongTestParameters)>]
-let choseongToCompatChoseongTest c expected =
-    Assert.That(KoreanChar.choseongToCompatChoseong c, Is.EqualTo expected)
+[<TestCaseSource(nameof convertChoseongToCompatTestParameters)>]
+let convertChoseongToCompatTest c expected =
+    Assert.That(KoreanChar.convertChoseongToCompat c, Is.EqualTo expected)
 
-let choseongToCompatChoseongExceptionTestParameters =
+let convertChoseongToCompatExceptionTestParameters =
     [
         '\u0041' (* A *)
         '\uAC00' (* 가 *)
@@ -232,26 +232,26 @@ let choseongToCompatChoseongExceptionTestParameters =
         '\u314E' (* ㅎ *)
     ]
     |> List.map (fun c ->
-        TestCaseData(c).SetName($"{nameof KoreanChar.choseongToCompatChoseong}('{c}') throws ArgumentException"))
+        TestCaseData(c).SetName($"{nameof KoreanChar.convertChoseongToCompat}('{c}') throws ArgumentException"))
 
-[<TestCaseSource(nameof choseongToCompatChoseongExceptionTestParameters)>]
-let choseongToCompatChoseongExceptionTest c =
-     Assert.That(Func<_>(fun () -> KoreanChar.choseongToCompatChoseong c),
+[<TestCaseSource(nameof convertChoseongToCompatExceptionTestParameters)>]
+let convertChoseongToCompatExceptionTest c =
+     Assert.That(Func<_>(fun () -> KoreanChar.convertChoseongToCompat c),
          Throws.ArgumentException)
 
-let compatChoseongToChoseongTestParameters =
+let convertCompatToChoseongTestParameters =
     [
         '\u3131' (* ㄱ *), '\u1100' (* ᄀ *)
         '\u314E' (* ㅎ *), '\u1112' (* ᄒ *)
     ]
     |> List.map (fun (c, expected) ->
-        TestCaseData(c, expected).SetName($"{nameof KoreanChar.compatChoseongToChoseong}('{c}')"))
+        TestCaseData(c, expected).SetName($"{nameof KoreanChar.convertCompatToChoseong}('{c}')"))
 
-[<TestCaseSource(nameof compatChoseongToChoseongTestParameters)>]
-let compatChoseongToChoseongTest c expected =
-    Assert.That(KoreanChar.compatChoseongToChoseong c, Is.EqualTo expected)
+[<TestCaseSource(nameof convertCompatToChoseongTestParameters)>]
+let convertCompatToChoseongTest c expected =
+    Assert.That(KoreanChar.convertCompatToChoseong c, Is.EqualTo expected)
 
-let compatChoseongToChoseongExceptionTestParameters =
+let convertCompatToChoseongExceptionTestParameters =
     [
         '\u0041' (* A *)
         '\uAC00' (* 가 *)
@@ -259,11 +259,11 @@ let compatChoseongToChoseongExceptionTestParameters =
         '\u1112' (* ᄒ *)
     ]
     |> List.map (fun c ->
-        TestCaseData(c).SetName($"{nameof KoreanChar.compatChoseongToChoseong}('{c}') throws ArgumentException"))
+        TestCaseData(c).SetName($"{nameof KoreanChar.convertCompatToChoseong}('{c}') throws ArgumentException"))
 
-[<TestCaseSource(nameof compatChoseongToChoseongExceptionTestParameters)>]
-let compatChoseongToChoseongExceptionTest c =
-     Assert.That(Func<_>(fun () -> KoreanChar.compatChoseongToChoseong c), Throws.ArgumentException)
+[<TestCaseSource(nameof convertCompatToChoseongExceptionTestParameters)>]
+let convertCompatToChoseongExceptionTest c =
+     Assert.That(Func<_>(fun () -> KoreanChar.convertCompatToChoseong c), Throws.ArgumentException)
 
 let joinJamoTestParameters =
     [

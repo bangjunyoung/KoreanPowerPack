@@ -45,7 +45,7 @@ module KoreanCharApproxMatcher =
         elif isCompatChoseong c then
             (splitJamo c).AsSpan()
         elif isChoseong c then
-            (splitJamo (choseongToCompatChoseong c)).AsSpan()
+            (splitJamo (convertChoseongToCompat c)).AsSpan()
         else
             buffer[0] <- c
             Span.toReadOnlySpan<char>(buffer.Slice(0, 1))

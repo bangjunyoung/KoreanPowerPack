@@ -76,13 +76,13 @@ module KoreanChar =
 
         JoinedCompatJamos.Jongseong[getJongseongIndex syllable]
 
-    let choseongToCompatChoseong c =
+    let convertChoseongToCompat c =
         if not (isChoseong c) then
             invalidArg (nameof c) $"{c} is not a Hangul choseong"
 
         JoinedCompatJamos.Choseong[int c - 0x1100]
 
-    let compatChoseongToChoseong c =
+    let convertCompatToChoseong c =
         match JoinedCompatJamos.Choseong |> Array.tryBinarySearch c with
         | None -> invalidArg (nameof c) $"{c} is not a Hangul Compatibility choseong"
         | Some index -> char (0x1100 + index)
