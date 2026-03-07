@@ -74,8 +74,8 @@ and KoreanTextMatcher(pattern: string) =
     do
         if isNull pattern then nullArg (nameof pattern)
 
-    let pattern, startAnchorFound, endAnchorFound =
-        if pattern.Length = 0 then pattern, false, false
+    let _pattern, _hasStartAnchor, _hasEndAnchor =
+        if pattern.Length = 0 then "", false, false
         else
             match pattern.[0] = '^', pattern.[pattern.Length - 1] = '$' with
             | true,  true  -> pattern.Substring(1, pattern.Length - 2), true, true
@@ -92,17 +92,17 @@ and KoreanTextMatcher(pattern: string) =
             raise <| ArgumentOutOfRangeException(nameof length,
                          $"length: {length} is out of range 0 .. {text.Length - 1}")
 
-        if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
-        elif length < pattern.Length then KoreanTextMatch.Empty
+        if _pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
+        elif length < _pattern.Length then KoreanTextMatch.Empty
         else
             text
             |> Mem.ofStringSlice startIndex length
-            |> Mem.windowed pattern.Length
+            |> Mem.windowed _pattern.Length
             |> Seq.tryFindIndex (fun subtext ->
-                (subtext, Mem.ofString pattern)
+                (subtext, Mem.ofString _pattern)
                 ||> Mem.forall2 KoreanCharApproxMatcher.isMatch)
             |> function
-               | Some index -> KoreanTextMatch(this, text, startIndex + index, pattern.Length)
+               | Some index -> KoreanTextMatch(this, text, startIndex + index, _pattern.Length)
                | None -> KoreanTextMatch.Empty
 
     member this.Match(text: string,
@@ -112,19 +112,19 @@ and KoreanTextMatcher(pattern: string) =
             raise <| ArgumentOutOfRangeException(nameof startIndex,
                          $"startIndex: {startIndex} is out of range 0 .. {text.Length - 1}")
 
-        let textSpan =
+        let searchRange =
             let length = text.Length - startIndex
-            if length < pattern.Length then None
+            if length < _pattern.Length then None
             else
-                match startAnchorFound, endAnchorFound with
-                | true,  true  -> if text.Length <> pattern.Length then None
+                match _hasStartAnchor, _hasEndAnchor with
+                | true,  true  -> if text.Length <> _pattern.Length then None
                                   else Some(startIndex, length)
                 | true,  false -> if startIndex <> 0 then None
-                                  else Some(startIndex, pattern.Length)
-                | false, true  -> Some(text.Length - pattern.Length, pattern.Length)
+                                  else Some(startIndex, _pattern.Length)
+                | false, true  -> Some(text.Length - _pattern.Length, _pattern.Length)
                 | false, false -> Some(startIndex, length)
 
-        match textSpan with
+        match searchRange with
         | None -> KoreanTextMatch.Empty
         | Some(startIndex, length) ->
             if length = 0 then KoreanTextMatch(this, text, 0, 0)
