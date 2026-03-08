@@ -66,8 +66,9 @@ type KoreanTextMatch private (matcher: KoreanTextMatcher, text: string,
     member __.Success = success
 
     member __.NextMatch() =
-        if success && startIndex + length < text.Length
-        then matcher.Match(text, startIndex + length)
+        let nextIndex = startIndex + if value.IsEmpty then 1 else value.Length
+        if success && nextIndex <= text.Length
+        then matcher.Match(text, nextIndex)
         else KoreanTextMatch.Empty
 
 and KoreanTextMatcher(pattern: string) =
@@ -92,7 +93,7 @@ and KoreanTextMatcher(pattern: string) =
             raise <| ArgumentOutOfRangeException(nameof length,
                          $"length: {length} is out of range 0 .. {text.Length - 1}")
 
-        if pattern.Length = 0 then KoreanTextMatch(this, text, 0, 0)
+        if pattern.Length = 0 then KoreanTextMatch(this, text, startIndex, 0)
         elif length < pattern.Length then KoreanTextMatch.Empty
         else
             text
@@ -126,9 +127,7 @@ and KoreanTextMatcher(pattern: string) =
 
         match searchRange with
         | None -> KoreanTextMatch.Empty
-        | Some(startIndex, length) ->
-            if length = 0 then KoreanTextMatch(this, text, 0, 0)
-            else this.Match(text, startIndex, length)
+        | Some(startIndex, length) -> this.Match(text, startIndex, length)
 
     member this.Matches(text,
                         [<Optional; DefaultParameterValue(0)>] startIndex) =

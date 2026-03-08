@@ -87,6 +87,7 @@ let staticIsMatchTest text pattern =
 
 let staticMatchesTestParameters =
     [
+        "가나다", "", 4
         // Hangul Compatibility Jamo
         "하늘 ㅎ늘 하느 ㅎㄴ", "ㅎㄹ", 0
         "하늘 ㅎ늘 하느 ㅎㄴ", "하늘", 1
@@ -112,25 +113,27 @@ let staticMatchesTest text pattern (expected: int) =
 
     Assert.That(Seq.length matches, Is.EqualTo expected);
 
-let MatchTestParameters =
+let staticMatchTestParameters =
     [
-        "",    "",     0, true,  0, 0
-        "0",   "",     0, true,  0, 0
-        "012", "01",   0, true,  0, 2
-        "012", "12",   0, true,  1, 2
-        "012", "12",   1, true,  1, 2
-        "012", "01",   1, false, 0, 0
-        "012", "012",  1, false, 0, 0
-        "012", "0123", 0, false, 0, 0
+        "하늘", "", true, 0, 0
+        "하늘", "^", true, 0, 0
+        "하늘", "$", true, 2, 0
+        "하늘", "^$", false, 0, 0
+        "하늘", "ㅎ", true, 0, 1
+        "하늘", "^ㅎ", true, 0, 1
+        "하늘", "ㅎ$", false, 0, 0
+        "하늘", "ㄴ$", true, 1, 1
+        "하늘", "^ㅎㄴ$", true, 0, 2
+        "하늘", "^ㅎ니$", false, 0, 0
     ]
-    |> List.map (fun (text, pattern, startIndex, success, index, length) ->
-        TestCaseData(text, pattern, startIndex, success, index, length)
-            .SetName($"{nameof KoreanTextMatcher.Match}(\"{pattern}\", {startIndex})"))
+    |> List.map (fun (text, pattern, expectedSuccess, expectedIndex, expectedLength) ->
+        TestCaseData(text, pattern, expectedSuccess, expectedIndex, expectedLength)
+            .SetName($"static {nameof KoreanTextMatcher.Match}(\"{text}\", \"{pattern}\")"))
 
-[<TestCaseSource(nameof MatchTestParameters)>]
-let MatchTest text pattern startIndex success index length =
-    let ``match`` = KoreanTextMatcher(pattern).Match(text, startIndex)
-    Assert.That(``match``.Success, Is.EqualTo success)
-    if success then
-        Assert.That(``match``.Index, Is.EqualTo index)
-        Assert.That(``match``.Length, Is.EqualTo length)
+[<TestCaseSource(nameof staticMatchTestParameters)>]
+let staticMatchTest text pattern expectedSuccess expectedIndex expectedLength =
+    let ``match`` = KoreanTextMatcher.Match(text, pattern)
+    Assert.That(``match``.Success, Is.EqualTo expectedSuccess)
+    if expectedSuccess then
+        Assert.That(``match``.Index, Is.EqualTo expectedIndex)
+        Assert.That(``match``.Length, Is.EqualTo expectedLength)
