@@ -36,19 +36,19 @@ do ()
 type KoreanTextMatch private (matcher: KoreanTextMatcher, text: string,
                               startIndex: int, length: int, success: bool) =
     do
-        if isNull text then nullArg (nameof text)
+        if success then
+            if isNull text then nullArg (nameof text)
+            if startIndex < 0 || startIndex > text.Length then
+                raise <| ArgumentOutOfRangeException(nameof startIndex,
+                            $"startIndex: {startIndex} is out of range 0 .. {text.Length}")
+            if length < 0 || length > text.Length then
+                raise <| ArgumentOutOfRangeException(nameof length,
+                            $"length: {length} is out of range 0 .. {text.Length}")
+            if startIndex + length > text.Length then
+                raise <| ArgumentOutOfRangeException(nameof length,
+                            $"startIndex + length: {startIndex + length} is out of range 0 .. {text.Length}")
 
-        if startIndex < 0 || startIndex > text.Length then
-            raise <| ArgumentOutOfRangeException(nameof startIndex,
-                         $"startIndex: {startIndex} is out of range 0 .. {text.Length - 1}")
-        if length < 0 || length > text.Length then
-            raise <| ArgumentOutOfRangeException(nameof length,
-                         $"length: {length} is out of range 0 .. {text.Length - 1}")
-        if startIndex + length > text.Length then
-            raise <| ArgumentOutOfRangeException(nameof length,
-                         $"startIndex + length: {startIndex + length} is out of range 0 .. {text.Length - 1}")
-
-    static let empty = KoreanTextMatch(KoreanTextMatcher(""), "", 0, 0, false)
+    static let empty = KoreanTextMatch(null, null, 0, 0, false)
 
     let value = text.AsMemory(startIndex, length)
 
@@ -74,8 +74,8 @@ and KoreanTextMatcher(pattern: string) =
     do
         if isNull pattern then nullArg (nameof pattern)
 
-    let pattern, startAnchorFound, endAnchorFound =
-        if pattern.Length = 0 then pattern, false, false
+    let pattern, hasStartAnchor, hasEndAnchor =
+        if pattern.Length = 0 then "", false, false
         else
             match pattern.[0] = '^', pattern.[pattern.Length - 1] = '$' with
             | true,  true  -> pattern.Substring(1, pattern.Length - 2), true, true
@@ -112,11 +112,11 @@ and KoreanTextMatcher(pattern: string) =
             raise <| ArgumentOutOfRangeException(nameof startIndex,
                          $"startIndex: {startIndex} is out of range 0 .. {text.Length - 1}")
 
-        let textSpan =
+        let searchRange =
             let length = text.Length - startIndex
             if length < pattern.Length then None
             else
-                match startAnchorFound, endAnchorFound with
+                match hasStartAnchor, hasEndAnchor with
                 | true,  true  -> if text.Length <> pattern.Length then None
                                   else Some(startIndex, length)
                 | true,  false -> if startIndex <> 0 then None
@@ -124,7 +124,7 @@ and KoreanTextMatcher(pattern: string) =
                 | false, true  -> Some(text.Length - pattern.Length, pattern.Length)
                 | false, false -> Some(startIndex, length)
 
-        match textSpan with
+        match searchRange with
         | None -> KoreanTextMatch.Empty
         | Some(startIndex, length) ->
             if length = 0 then KoreanTextMatch(this, text, 0, 0)
