@@ -30,9 +30,6 @@ open System.Runtime.CompilerServices
 open System.Runtime.InteropServices
 open FSharpCoreMissingParts
 
-[<assembly: InternalsVisibleTo("KoreanPowerPackTest")>]
-do ()
-
 type KoreanTextMatch private (matcher: KoreanTextMatcher, text: string,
                               startIndex: int, length: int, success: bool) =
     do
