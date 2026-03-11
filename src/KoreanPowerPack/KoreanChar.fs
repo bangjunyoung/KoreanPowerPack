@@ -153,7 +153,7 @@ module KoreanChar =
         | 0 -> [|choseong; jungseong|]
         | _ -> [|choseong; jungseong; jongseong|]
 
-    let private decomposeIntoWith (buffer: Span<char>) (collection: JamoCollection<string>) syllable =
+    let private decomposeIntoWith (destination: Span<char>) (collection: JamoCollection<string>) syllable =
         checkIfSyllable syllable
 
         let choseong = collection.Choseong[getChoseongIndex syllable]
@@ -161,33 +161,33 @@ module KoreanChar =
         let jongseong = collection.Jongseong[getJongseongIndex syllable]
 
         let totalLength = choseong.Length + jungseong.Length + jongseong.Length
-        if buffer.Length < totalLength then
-            invalidArg (nameof buffer) "Destination buffer is too short"
+        if destination.Length < totalLength then
+            invalidArg (nameof destination) "Destination buffer is too short"
 
-        choseong.AsSpan().CopyTo(buffer)
-        jungseong.AsSpan().CopyTo(buffer.Slice(choseong.Length))
+        choseong.AsSpan().CopyTo(destination)
+        jungseong.AsSpan().CopyTo(destination.Slice(choseong.Length))
         if jongseong.Length > 0 then
-            jongseong.AsSpan().CopyTo(buffer.Slice(choseong.Length + jungseong.Length))
+            jongseong.AsSpan().CopyTo(destination.Slice(choseong.Length + jungseong.Length))
 
         totalLength
 
     let decompose syllable =
         decomposeWith SplitJamos syllable
 
-    let decomposeInto buffer syllable =
-        decomposeIntoWith buffer SplitJamos syllable
+    let decomposeInto destination syllable =
+        decomposeIntoWith destination SplitJamos syllable
 
     let decomposeToCompat syllable =
         decomposeWith SplitCompatJamos syllable
 
-    let decomposeToCompatInto buffer syllable =
-        decomposeIntoWith buffer SplitCompatJamos syllable
+    let decomposeToCompatInto destination syllable =
+        decomposeIntoWith destination SplitCompatJamos syllable
 
     let decomposeToDubeolsik syllable =
         decomposeWith DubeolsikJamos syllable
 
-    let decomposeToDubeolsikInto buffer syllable =
-        decomposeIntoWith buffer DubeolsikJamos syllable
+    let decomposeToDubeolsikInto destination syllable =
+        decomposeIntoWith destination DubeolsikJamos syllable
 
 open KoreanChar
 open System.Runtime.InteropServices

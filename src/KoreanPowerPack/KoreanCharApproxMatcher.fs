@@ -38,17 +38,17 @@ module Span =
     let inline toReadOnlySpan<'T> (span: Span<'T>) : ReadOnlySpan<'T> = span
 
 module KoreanCharApproxMatcher =
-    let private decompose buffer c =
+    let private decompose destination c =
         if isSyllable c then
-            let length = decomposeToCompatInto buffer c
-            Span.toReadOnlySpan<char>(buffer.Slice(0, length))
+            let length = decomposeToCompatInto destination c
+            Span.toReadOnlySpan<char>(destination.Slice(0, length))
         elif isCompatChoseong c then
             (splitJamo c).AsSpan()
         elif isChoseong c then
             (splitJamo (convertChoseongToCompat c)).AsSpan()
         else
-            buffer[0] <- c
-            Span.toReadOnlySpan<char>(buffer.Slice(0, 1))
+            destination[0] <- c
+            Span.toReadOnlySpan<char>(destination.Slice(0, 1))
 
     [<CompiledName("IsMatch")>]
     let isMatch t p =
