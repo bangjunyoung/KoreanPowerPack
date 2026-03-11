@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <PackageReference Include="FParsec" Version="1.1.1" />
-    <PackageReference Include="FSharpCoreMissingParts" Version="1.0.1" />
+    <PackageReference Include="FSharpCoreMissingParts" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

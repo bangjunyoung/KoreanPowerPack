@@ -26,16 +26,8 @@
 namespace KoreanPowerPack
 
 open System
-open Microsoft.FSharp.NativeInterop
+open FSharpCoreMissingParts
 open KoreanChar
-
-module Span =
-    #nowarn "9"
-    let inline stackalloc<'T when 'T : unmanaged> length =
-        Span<'T>(NativePtr.toVoidPtr (NativePtr.stackalloc<'T> length), length)
-
-    #nowarn "3391"
-    let inline toReadOnlySpan<'T> (span: Span<'T>) : ReadOnlySpan<'T> = span
 
 module KoreanCharApproxMatcher =
     let private decompose destination c =
