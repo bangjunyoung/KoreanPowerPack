@@ -33,14 +33,14 @@ module KoreanCharApproxMatcher =
     let private decompose destination c =
         if isSyllable c then
             let length = decomposeToCompatInto destination c
-            Span.toReadOnlySpan<char>(destination.Slice(0, length))
+            Span.toReadOnlySpan(destination.Slice(0, length))
         elif isCompatChoseong c then
             (splitJamo c).AsSpan()
         elif isChoseong c then
             (splitJamo (convertChoseongToCompat c)).AsSpan()
         else
             destination[0] <- c
-            Span.toReadOnlySpan<char>(destination.Slice(0, 1))
+            Span.toReadOnlySpan(destination.Slice(0, 1))
 
     [<CompiledName("IsMatch")>]
     let isMatch t p =
